@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "hash_algorithm": "sha256",
+  "sources": [
+    {
+      "key": "ATIGA-TEXT",
+      "title": "ASEAN Trade in Goods Agreement, Cha-am, 26 February 2009",
+      "publisher": "Ministry of Foreign Affairs of Thailand",
+      "id": "source-b12db37d655fea764df514c9804c1bb739d2ca943fef0f0622d55687d6bc024d",
+      "url": "https://image.mfa.go.th/mfa/0/6p4M7ae5k9/ATIGA%28ASEAN_Trade_in_Goods_Agreement%29.pdf",
+      "authority": "Para Pihak ASEAN Trade in Goods Agreement",
+      "acquired_at": "2026-11-15T16:34:17.624274+00:00",
+      "content_hash": "46c6d3367e1453c907e8b0091efda16316266a5bc139bbe1489f4686d228c0f6",
+      "local_ref": "sources/raw/46c6d3367e1453c907e8b0091efda16316266a5bc139bbe1489f4686d228c0f6.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2010-05-17",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ATIGA-PSR22",
+      "title": "ATIGA Annex 3: Product Specific Rules (HS 2022), 36th AFTA Council",
+      "publisher": "Kementerian Perdagangan Kamboja",
+      "id": "source-0c6a52c13c745b6e3a0e7baf75b0e59d313d9b66646c3b7de4966b252fe1c068",
+      "url": "https://storageftaportal.moc.gov.kh/68_product_specific_rules.pdf",
+      "authority": "Para Pihak ASEAN Trade in Goods Agreement",
+      "acquired_at": "2026-11-15T16:34:19.196826+00:00",
+      "content_hash": "b1bea28980ea79525ad427d6da78c12a6a30c6b4369f89bcefeb6bb003a2b0e5",
+      "local_ref": "sources/raw/b1bea28980ea79525ad427d6da78c12a6a30c6b4369f89bcefeb6bb003a2b0e5.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-04-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-ATIGA",
+      "title": "PMK 43/PMK.010/2022, tarif ATIGA dan lampiran pos tarif",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-889632f119c203ed3fd31ca5748e230703dfedbf2cf2e390bb3d2ee0988eefc8",
+      "url": "https://jdih.kemenkeu.go.id/api/download/2067f4b6-8151-4b82-a641-7aea6b289eba/43~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:33:04.753522+00:00",
+      "content_hash": "bb8f0f455782ae1733f61bac0bb3d28afa63c737e8b7ee119b986de1be88c70c",
+      "local_ref": "sources/raw/bb8f0f455782ae1733f61bac0bb3d28afa63c737e8b7ee119b986de1be88c70c.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2022-04-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-ASAL-ATIGA",
+      "title": "PMK 131/PMK.04/2020, tata cara tarif preferensi ATIGA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-0bdfe3958e7aa24c97e11e5c13bcc393911578eabdb237c624e23c9d83a06f5f",
+      "url": "https://jdih.kemenkeu.go.id/api/download/b4649a17-cf79-4cdb-ad6a-7efa4b40ca3d/131~PMK.04~2020Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:33:02.042582+00:00",
+      "content_hash": "02ce85ca2b053bec39e7031e554773b2277b6f45b4206fa595bbf668185dae4d",
+      "local_ref": "sources/raw/02ce85ca2b053bec39e7031e554773b2277b6f45b4206fa595bbf668185dae4d.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2020-09-20",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-ASAL-ATIGA-AMEND",
+      "title": "PMK 81/PMK.04/2022, perubahan PMK 131/PMK.04/2020",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-50d887b50b97c08ab2cc9a0d674e51e5663b523d028061025b44d85e1941eeb5",
+      "url": "https://jdih.kemenkeu.go.id/api/download/d17b2d7d-8804-4a5e-8358-c8eeb088cf65/81~PMK.04~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:33:03.854335+00:00",
+      "content_hash": "d3c991eac9872e54ec63c86cbd7da0165379444f819dab45596d9289056b6aa0",
+      "local_ref": "sources/raw/d3c991eac9872e54ec63c86cbd7da0165379444f819dab45596d9289056b6aa0.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2022-05-17",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-SKA-DAB",
+      "title": "PMK 35 Tahun 2023, penyerahan SKA dan DAB",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-3404660f1cfeef0055fadf694756fc880eaa3d78b32ab6651bc82ac1bb519eb2",
+      "url": "https://jdih.kemenkeu.go.id/api/download/b5462fd0-fd59-4244-b752-fa4ce471370e/2023pmkeuangan035.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:33:02.423679+00:00",
+      "content_hash": "e0a8583ff0271969721142083de89ff6af6ff312dddbb0a67a5adb1a3807c166",
+      "local_ref": "sources/raw/e0a8583ff0271969721142083de89ff6af6ff312dddbb0a67a5adb1a3807c166.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-04-28",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-IMPOR-GENERAL",
+      "title": "Permendag 16 Tahun 2025, kebijakan dan pengaturan impor",
+      "publisher": "Direktorat Jenderal Peraturan Perundang-undangan",
+      "id": "source-d01b6a1d305caa7d627ca19c313fd00512016c8c70021f31bec778e8221c7411",
+      "url": "https://peraturan.go.id/files/permendag-no-16-tahun-2025.pdf",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:34:17.473572+00:00",
+      "content_hash": "120f588ff62ef29e39cf2e3090714fd7be25edc291804d06a95803f9b5721b1b",
+      "local_ref": "sources/raw/120f588ff62ef29e39cf2e3090714fd7be25edc291804d06a95803f9b5721b1b.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-08-29",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-IMPOR-SEMENTARA",
+      "title": "PMK 178/PMK.04/2017, impor sementara",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-e0cb283537e446f30685cb025827d5897ec478793d62d0aede16e2d3852ee4a2",
+      "url": "https://jdih.kemenkeu.go.id/download/fab62b1c-a095-4547-ba42-45df9cbe2816/178~PMK.04~2017Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:33:03.762771+00:00",
+      "content_hash": "e021845904a3fbdbe25b097c8b9f11c64278b9faedf480f84b8c8bb29df0c782",
+      "local_ref": "sources/raw/e021845904a3fbdbe25b097c8b9f11c64278b9faedf480f84b8c8bb29df0c782.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2018-01-27",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-IMPOR-SEMENTARA-AMEND",
+      "title": "PMK 106/PMK.04/2019, perubahan PMK 178/PMK.04/2017",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-ebf36909b42678ec3db5cd27a4afebd9952c840a018113e9e7e912f5030a3e6d",
+      "url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2019/106~PMK.04~2019Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:33:04.988469+00:00",
+      "content_hash": "11f54478c0a251ff5bde5f7728c0147f79edbc76f862faa53be7cda18bea5f5d",
+      "local_ref": "sources/raw/11f54478c0a251ff5bde5f7728c0147f79edbc76f862faa53be7cda18bea5f5d.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2019-08-13",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-EKSPOR",
+      "title": "PMK 155/PMK.04/2022, ketentuan kepabeanan di bidang ekspor",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-32dca463f6a1259880c08b9169f0ce3554e73a65adf230e124c6baf882662a8b",
+      "url": "https://jdih.kemenkeu.go.id/api/download/ee16c00e-e189-41e3-ab54-3a432ebe7f4c/155~PMK.04~2022.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-15T16:33:04.268843+00:00",
+      "content_hash": "8731281b8aae38fe75fc468c88f5f2dce63770bcc28c11f0f8ba9ff523774faf",
+      "local_ref": "sources/raw/8731281b8aae38fe75fc468c88f5f2dce63770bcc28c11f0f8ba9ff523774faf.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-02",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "SG-CUSTOMS-PERMIT",
+      "title": "Obtain a Customs Import Permit",
+      "publisher": "Singapore Customs",
+      "id": "source-a19f02812b2b7026eb342a0cc4dd31257bba94d58426d5cf87f66133fb2422ab",
+      "url": "https://www.customs.gov.sg/businesses/importing-goods/import-procedures/apply-customs-import-permit/",
+      "authority": "Singapore Customs",
+      "acquired_at": "2026-11-15T16:34:17.062068+00:00",
+      "content_hash": "9a71a482563abb2ffe6283d07d618119f14bcccd71b15f24fc8a180e273fb3ee",
+      "local_ref": "sources/raw/9a71a482563abb2ffe6283d07d618119f14bcccd71b15f24fc8a180e273fb3ee",
+      "status": "ACQUIRED",
+      "effective_period": null
+    },
+    {
+      "key": "SG-SFA-PROCESSED",
+      "title": "Import Requirements for Food & Food Products",
+      "publisher": "Singapore Food Agency",
+      "id": "source-dc37e12282be4db7578c7d568e3bae94a153faf982f575e76619490522817225",
+      "url": "https://www.sfa.gov.sg/food-import-export/commercial-imports/import-requirements-for-food-food-products",
+      "authority": "Singapore Food Agency",
+      "acquired_at": "2026-11-15T16:33:05.686838+00:00",
+      "content_hash": "0751d897b43f9681b116a44a2b2bd7caf4b9b863f661fbaddffe07a6ecef4699",
+      "local_ref": "sources/raw/0751d897b43f9681b116a44a2b2bd7caf4b9b863f661fbaddffe07a6ecef4699",
+      "status": "ACQUIRED",
+      "effective_period": null
+    }
+  ],
+  "references_without_snapshot": [
+    {
+      "key": "SG-PERMIT",
+      "title": "Regulation of Imports and Exports Regulations, regulation 3",
+      "authority": "Singapore Statutes Online",
+      "url": "https://sso.agc.gov.sg/SL/RIEA1995-RG1?DocDate=20260928&ValidDate=20260929",
+      "checked_on": "2026-11-15",
+      "acquisition_error": "HTTP 403 pada URL versi dan URL pasal."
+    },
+    {
+      "key": "SG-SFA-CODES",
+      "title": "Product Codes for Processed Food Products",
+      "authority": "Singapore Food Agency",
+      "url": "https://www.sfa.gov.sg/docs/default-source/tools-and-resources/product-codes-for-tradenet/product-code-for-processed-food-and-food-appliances.pdf",
+      "checked_on": "2026-11-15",
+      "acquisition_error": "HTTP 404 pada unduh langsung. Nomor baris 91 terlihat pada salinan terindeks."
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+@prefix : <urn:tradegraph:test:mixed#> .
+@prefix tg: <urn:tradegraph:kb#> .
+@prefix catalog: <urn:tradegraph:catalog#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:tradegraph:test:mixed> a owl:Ontology ;
+    owl:versionIRI <urn:tradegraph:test:mixed:1> ;
+    owl:versionInfo "1" ;
+    tg:compatibleEngineProfile "tradegraph-jdk21-owl2dl-swrl-comparisons-v1" ;
+    tg:currentRevision :revision .
+tg:compatibleEngineProfile a owl:AnnotationProperty .
+tg:currentRevision a owl:AnnotationProperty .
+tg:axiomId a owl:AnnotationProperty .
+tg:ruleId a owl:AnnotationProperty .
+tg:KnowledgeRevision a owl:Class .
+tg:knowledgeVersion a owl:DatatypeProperty .
+:revision a owl:NamedIndividual, tg:KnowledgeRevision ; tg:knowledgeVersion "1" .
+
+:Person a owl:Class .
+:Checked a owl:Class .
+:Selection a owl:Class ; owl:oneOf _:choices .
+_:choices rdf:first :alice ; rdf:rest [ rdf:first :bob ; rdf:rest rdf:nil ] .
+:relatedTo a owl:ObjectProperty .
+:alice a owl:NamedIndividual, :Person ; :relatedTo :bob .
+:bob a owl:NamedIndividual, :Person .
+[] a owl:Axiom ;
+    owl:annotatedSource :alice ;
+    owl:annotatedProperty :relatedTo ;
+    owl:annotatedTarget :bob ;
+    tg:axiomId "fixture-related" .
+
+:subject a swrl:Variable .
+[] a swrl:Imp ;
+    tg:ruleId "fixture-check" ;
+    rdfs:label "FixtureCheck" ;
+    swrl:body [
+        a swrl:AtomList ;
+        rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :Person ; swrl:argument1 :subject ] ;
+        rdf:rest rdf:nil
+    ] ;
+    swrl:head [
+        a swrl:AtomList ;
+        rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :Checked ; swrl:argument1 :subject ] ;
+        rdf:rest rdf:nil
+    ] .
+
+:selectionShape a sh:NodeShape ;
+    sh:targetClass :Person ;
+    sh:property [ sh:path :relatedTo ; sh:in _:choices ; sh:minCount 1 ] .
+
+:relatedField a catalog:FieldDefinition ;
+    catalog:id "relatedTo" ; rdfs:label "Related person" ;
+    catalog:property :relatedTo ; catalog:valueType :Person .
+:relatedQuery a catalog:QueryDefinition ;
+    catalog:id "CQ01" ; rdfs:label "Related people" ;
+    catalog:parameters ( "subject" ) ;
+    catalog:sparql "SELECT ?other WHERE { ?subject <urn:tradegraph:test:mixed#relatedTo> ?other }" .
+:recordAction a catalog:ActionDefinition ;
+    catalog:id "record-related" ; rdfs:label "Record a relationship" ;
+    catalog:preconditions ( [ catalog:mentions :Person ] ) ;
+    catalog:effects ( [ catalog:mentions :relatedTo ] ) .

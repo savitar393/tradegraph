@@ -1,0 +1,95 @@
+@prefix fx: <urn:tradegraph:test:feedback#> .
+@prefix tg: <urn:tradegraph:kb#> .
+@prefix catalog: <urn:tradegraph:catalog#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Appended to a temporary copy of the canonical KB.
+fx:RuleResult a owl:Class .
+fx:derived_after_rule_feedback a owl:Class .
+fx:Block a owl:Class ; owl:disjointWith fx:RuleResult .
+fx:amount a owl:DatatypeProperty .
+fx:copiedAmount a owl:DatatypeProperty .
+fx:copiedMaterial a owl:ObjectProperty .
+fx:country a owl:NamedIndividual, tg:Jurisdiction .
+fx:subject a swrl:Variable .
+fx:material a swrl:Variable .
+fx:value a swrl:Variable .
+tg:ruleId a owl:AnnotationProperty .
+tg:ruleJurisdiction a owl:AnnotationProperty .
+tg:ruleEffectiveFrom a owl:AnnotationProperty .
+tg:ruleEffectiveUntil a owl:AnnotationProperty .
+
+# This OWL consequence requires a class assertion from Drools.
+fx:RuleResult rdfs:subClassOf fx:derived_after_rule_feedback .
+
+[] a swrl:Imp ;
+    tg:ruleId "scoped-feedback" ;
+    tg:ruleJurisdiction fx:country ;
+    tg:ruleEffectiveFrom "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+    tg:ruleEffectiveUntil "2026-02-01T00:00:00Z"^^xsd:dateTime ;
+    swrl:body [
+        a swrl:AtomList ;
+        rdf:first [
+            a swrl:IndividualPropertyAtom ;
+            swrl:propertyPredicate tg:dependsOnMaterial ;
+            swrl:argument1 fx:subject ;
+            swrl:argument2 fx:material
+        ] ;
+        rdf:rest [
+            a swrl:AtomList ;
+            rdf:first [
+                a swrl:DatavaluedPropertyAtom ;
+                swrl:propertyPredicate fx:amount ;
+                swrl:argument1 fx:subject ;
+                swrl:argument2 fx:value
+            ] ;
+            rdf:rest [
+                a swrl:AtomList ;
+                rdf:first [
+                    a swrl:BuiltinAtom ;
+                    swrl:builtin swrlb:greaterThanOrEqual ;
+                    swrl:arguments ( fx:value 0.10 )
+                ] ;
+                rdf:rest rdf:nil
+            ]
+        ]
+    ] ;
+    swrl:head [
+        a swrl:AtomList ;
+        rdf:first [
+            a swrl:ClassAtom ;
+            swrl:classPredicate fx:RuleResult ;
+            swrl:argument1 fx:subject
+        ] ;
+        rdf:rest [
+            a swrl:AtomList ;
+            rdf:first [
+                a swrl:IndividualPropertyAtom ;
+                swrl:propertyPredicate fx:copiedMaterial ;
+                swrl:argument1 fx:subject ; swrl:argument2 fx:material
+            ] ;
+            rdf:rest [
+                a swrl:AtomList ;
+                rdf:first [
+                    a swrl:DatavaluedPropertyAtom ;
+                    swrl:propertyPredicate fx:copiedAmount ;
+                    swrl:argument1 fx:subject ; swrl:argument2 fx:value
+                ] ;
+                rdf:rest rdf:nil
+            ]
+        ]
+    ] .
+
+fx:query a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "feedback" ; rdfs:label "Feedback test" ;
+    catalog:parameters ( "product" ) ;
+    catalog:sparql """
+        SELECT ?product WHERE {
+            ?product a <urn:tradegraph:test:feedback#derived_after_rule_feedback>
+        }
+    """ .

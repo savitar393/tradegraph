@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tradegraph"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["rdflib==7.2.1", "pyshacl==0.31.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

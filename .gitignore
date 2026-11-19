@@ -1,0 +1,5 @@
+/.pytest_cache/
+__pycache__/
+/semantic/target/
+Plan.md
+docs/

@@ -1,0 +1,59 @@
+@prefix : <urn:tradegraph:fixture#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix swrla: <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+
+<urn:tradegraph:fixture:rules> a owl:Ontology .
+
+:dependsOnMaterial a owl:ObjectProperty .
+:sampleAmount a owl:DatatypeProperty .
+:RuleResult a owl:Class .
+:ruleId a owl:AnnotationProperty .
+swrla:isRuleEnabled a owl:AnnotationProperty .
+:product_p a owl:NamedIndividual ; :sampleAmount 0.10 .
+:material_m a owl:NamedIndividual .
+
+:product a swrl:Variable .
+:material a swrl:Variable .
+:amount a swrl:Variable .
+
+[] a swrl:Imp ;
+    :ruleId "urn:tradegraph:fixture#materialRule" ;
+    rdfs:label "materialRule" ;
+    swrla:isRuleEnabled true ;
+    swrl:body [
+        a swrl:AtomList ;
+        rdf:first [
+            a swrl:IndividualPropertyAtom ;
+            swrl:propertyPredicate :dependsOnMaterial ;
+            swrl:argument1 :product ; swrl:argument2 :material
+        ] ;
+        rdf:rest [
+            a swrl:AtomList ;
+            rdf:first [
+                a swrl:DatavaluedPropertyAtom ;
+                swrl:propertyPredicate :sampleAmount ;
+                swrl:argument1 :product ; swrl:argument2 :amount
+            ] ;
+            rdf:rest [
+                a swrl:AtomList ;
+                rdf:first [
+                    a swrl:BuiltinAtom ;
+                    swrl:builtin swrlb:greaterThanOrEqual ;
+                    swrl:arguments ( :amount 0.10 )
+                ] ;
+                rdf:rest rdf:nil
+            ]
+        ]
+    ] ;
+    swrl:head [
+        a swrl:AtomList ;
+        rdf:first [
+            a swrl:ClassAtom ;
+            swrl:classPredicate :RuleResult ; swrl:argument1 :product
+        ] ;
+        rdf:rest rdf:nil
+    ] .

@@ -1,0 +1,71 @@
+@prefix : <urn:tradegraph:fixture#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:tradegraph:fixture:core> a owl:Ontology .
+
+:Product a owl:Class .
+:Batch a owl:Class .
+:Material a owl:Class .
+:TracedProduct a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            :Product
+            [ a owl:Restriction ; owl:onProperty :dependsOnMaterial ; owl:someValuesFrom :Material ]
+        )
+    ] .
+:ReferenceMaterial a owl:Class ; owl:equivalentClass [ a owl:Class ; owl:oneOf ( :material_m ) ] .
+:TwoMaterials a owl:Class ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty :hasCandidate ;
+        owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+        owl:onClass :Material
+    ] .
+:AtMostOneMaterial a owl:Class ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty :hasCandidate ;
+        owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+        owl:onClass :Material
+    ] .
+
+:fromBatch a owl:ObjectProperty ; owl:inverseOf :batchFor .
+:batchFor a owl:ObjectProperty .
+:usesMaterial a owl:ObjectProperty .
+:dependsOnMaterial a owl:ObjectProperty ; owl:propertyChainAxiom ( :fromBatch :usesMaterial ) .
+:hasCandidate a owl:ObjectProperty .
+
+:sampleAmount a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+:sampleCount a owl:DatatypeProperty ; rdfs:range xsd:integer .
+:sampleFlag a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+:sampleInstant a owl:DatatypeProperty ; rdfs:range xsd:dateTime .
+:MeasuredProduct a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ; owl:intersectionOf (
+            [ a owl:Restriction ; owl:onProperty :sampleAmount ; owl:hasValue "0.1"^^xsd:decimal ]
+            [ a owl:Restriction ; owl:onProperty :sampleCount ; owl:hasValue "2"^^xsd:integer ]
+            [ a owl:Restriction ; owl:onProperty :sampleFlag ; owl:hasValue true ]
+            [ a owl:Restriction ; owl:onProperty :sampleInstant ;
+              owl:hasValue "2026-01-15T00:00:00Z"^^xsd:dateTime ]
+        )
+    ] .
+
+:product_p a owl:NamedIndividual, :Product ;
+    :fromBatch :batch_b ;
+    :sampleAmount 0.10 ;
+    :sampleCount 2 ;
+    :sampleFlag true ;
+    :sampleInstant "2026-01-15T00:00:00Z"^^xsd:dateTime .
+:batch_b a owl:NamedIndividual, :Batch ; :usesMaterial :material_m .
+:material_m a owl:NamedIndividual, :Material .
+:referenceAlias a owl:NamedIndividual, :ReferenceMaterial .
+
+:candidateA a owl:NamedIndividual, :Material .
+:candidateB a owl:NamedIndividual, :Material .
+:unknownCount a owl:NamedIndividual ; :hasCandidate :candidateA, :candidateB .
+:onlyOne a owl:NamedIndividual, :AtMostOneMaterial ; :hasCandidate :material_m, :anotherAlias .
+:anotherAlias a owl:NamedIndividual, :Material .

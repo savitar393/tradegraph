@@ -1,0 +1,75 @@
+@prefix fx: <urn:tradegraph:test:planning#> .
+@prefix cat: <urn:tradegraph:catalog#> .
+@prefix tg: <urn:tradegraph:kb#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# LAB transition model. Costs and symbolic effects belong to this fixture only.
+fx:phase a owl:ObjectProperty .
+fx:start a owl:NamedIndividual .
+fx:ready a owl:NamedIndividual .
+fx:done a owl:NamedIndividual .
+fx:blocked a owl:NamedIndividual .
+fx:credit a owl:NamedIndividual, tg:Currency .
+fx:day a owl:NamedIndividual, tg:Unit .
+fx:note a owl:DatatypeProperty .
+fx:estimateSource a owl:NamedIndividual, tg:SourceDocument ; tg:sourceRecordId "lab-estimates-v1" .
+fx:estimate a owl:NamedIndividual, tg:SourceClause ;
+    tg:clauseInDocument fx:estimateSource ; tg:clauseLocator "LAB estimate sheet" .
+
+fx:goal a owl:NamedIndividual, cat:GoalDefinition ;
+    cat:id "lab-goal" ; rdfs:label "LAB goal" ;
+    cat:sparql "ASK { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#done> }" .
+fx:objective a owl:NamedIndividual, cat:ObjectiveDefinition ;
+    cat:id "lab-cost" ; rdfs:label "LAB cost" ;
+    cat:metric "COST" ; cat:unit fx:credit .
+
+fx:prepare a owl:NamedIndividual, cat:ActionDefinition ;
+    cat:id "lab-prepare" ; rdfs:label "LAB preparation" ; tg:hasSourceClause tg:pmk178-article-17 ;
+    cat:goals ( fx:goal ) ;
+    cat:typedParameters ( [ cat:name "product" ; cat:valueType cat:IRI ; cat:fromContext "product" ] ) ;
+    cat:preconditions ( [ cat:sparql "ASK { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#start> }" ] ) ;
+    cat:effects (
+        [ cat:operation "DELETE" ; cat:sparql "CONSTRUCT { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#start> } WHERE {}" ]
+        [ cat:operation "ADD" ; cat:sparql "CONSTRUCT { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#ready> } WHERE {}" ]
+    ) ;
+    cat:cost [ cat:amount 2.50 ; cat:unit fx:credit ; tg:hasSourceClause fx:estimate ] ;
+    cat:duration [ cat:amount 1.25 ; cat:unit fx:day ; tg:hasSourceClause fx:estimate ] .
+
+fx:finish a owl:NamedIndividual, cat:ActionDefinition ;
+    cat:id "lab-finish" ; rdfs:label "LAB completion" ; tg:hasSourceClause tg:pmk178-article-17 ;
+    cat:goals ( fx:goal ) ; cat:dependencies ( "lab-prepare" ) ;
+    cat:typedParameters ( [ cat:name "product" ; cat:valueType cat:IRI ; cat:fromContext "product" ] ) ;
+    cat:preconditions ( [ cat:sparql "ASK { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#ready> }" ] ) ;
+    cat:effects (
+        [ cat:operation "DELETE" ; cat:sparql "CONSTRUCT { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#ready> } WHERE {}" ]
+        [ cat:operation "ADD" ; cat:sparql "CONSTRUCT { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#done> } WHERE {}" ]
+    ) ;
+    cat:duration [ cat:amount 0.75 ; cat:unit fx:day ; tg:hasSourceClause fx:estimate ] .
+
+fx:cycle a owl:NamedIndividual, cat:ActionDefinition ;
+    cat:id "lab-cycle" ; rdfs:label "LAB reversible action" ; tg:hasSourceClause tg:pmk178-article-17 ;
+    cat:goals ( fx:goal ) ;
+    cat:typedParameters ( [ cat:name "product" ; cat:valueType cat:IRI ; cat:fromContext "product" ] ) ;
+    cat:preconditions ( [ cat:sparql "ASK { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#ready> }" ] ) ;
+    cat:effects (
+        [ cat:operation "DELETE" ; cat:sparql "CONSTRUCT { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#ready> } WHERE {}" ]
+        [ cat:operation "ADD" ; cat:sparql "CONSTRUCT { ?product <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#start> } WHERE {}" ]
+    ) .
+
+fx:ground a owl:NamedIndividual, cat:ActionDefinition ;
+    cat:id "lab-ground" ; rdfs:label "LAB grounding" ; tg:hasSourceClause fx:estimate ;
+    cat:goals ( fx:goal ) ;
+    cat:typedParameters ( [ cat:name "subject" ; cat:valueType cat:IRI ] ) ;
+    cat:groundingSparql """SELECT ?subject WHERE {
+        VALUES ?subject { <urn:tradegraph:test:instance#item> <urn:tradegraph:test:instance#outside> }
+    }""" ;
+    cat:effects ( [ cat:operation "ADD" ; cat:sparql "CONSTRUCT { ?subject <urn:tradegraph:test:planning#phase> <urn:tradegraph:test:planning#done> } WHERE {}" ] ) .
+
+fx:annotate a owl:NamedIndividual, cat:ActionDefinition ;
+    cat:id "lab-annotate" ; rdfs:label "LAB annotation" ; tg:hasSourceClause fx:estimate ;
+    cat:goals ( fx:goal ) ;
+    cat:typedParameters ( [ cat:name "product" ; cat:valueType cat:IRI ; cat:fromContext "product" ] ) ;
+    cat:effects ( [ cat:operation "ADD" ; cat:sparql """CONSTRUCT {
+        ?product <urn:tradegraph:test:planning#note> "same"
+    } WHERE {}""" ] ) .

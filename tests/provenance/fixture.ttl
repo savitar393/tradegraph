@@ -1,0 +1,49 @@
+@prefix fx: <urn:tradegraph:test:provenance#> .
+@prefix tg: <urn:tradegraph:kb#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+
+# Source and reasoning are synthetic here. The test appends this to a copy of the KB.
+fx:source a owl:NamedIndividual, tg:SourceDocument ;
+    tg:sourceRecordId "lab-provenance-v1" .
+fx:clause a owl:NamedIndividual, tg:SourceClause ;
+    tg:clauseInDocument fx:source ; tg:clauseLocator "LAB clause 1" .
+fx:directLink a owl:ObjectProperty ; rdfs:subPropertyOf fx:derivedLink .
+fx:derivedLink a owl:ObjectProperty .
+fx:amount a owl:DatatypeProperty .
+fx:Reviewed a owl:Class ; rdfs:subClassOf fx:Ready .
+fx:Ready a owl:Class .
+[] a owl:Axiom ;
+    owl:annotatedSource fx:directLink ; owl:annotatedProperty rdfs:subPropertyOf ;
+    owl:annotatedTarget fx:derivedLink ; tg:axiomId "lab-derived-link" ; tg:axiomSource fx:clause .
+
+fx:x a swrl:Variable .
+fx:y a swrl:Variable .
+fx:n a swrl:Variable .
+[] a swrl:Imp ;
+    tg:ruleId "lab-reviewed-link" ; rdfs:label "lab-reviewed-link" ;
+    tg:ruleSourceClause fx:clause ;
+    swrl:body [
+        a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate fx:derivedLink ;
+                    swrl:argument1 fx:x ; swrl:argument2 fx:y ] ;
+        rdf:rest [
+            a swrl:AtomList ;
+            rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate fx:amount ;
+                        swrl:argument1 fx:x ; swrl:argument2 fx:n ] ;
+            rdf:rest [
+                a swrl:AtomList ;
+                rdf:first [ a swrl:BuiltinAtom ; swrl:builtin swrlb:greaterThanOrEqual ;
+                            swrl:arguments ( fx:n 0.10 ) ] ;
+                rdf:rest rdf:nil
+            ]
+        ]
+    ] ;
+    swrl:head [
+        a swrl:AtomList ;
+        rdf:first [ a swrl:ClassAtom ; swrl:classPredicate fx:Reviewed ; swrl:argument1 fx:x ] ;
+        rdf:rest rdf:nil
+    ] .

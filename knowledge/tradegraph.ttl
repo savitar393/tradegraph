@@ -1,0 +1,2193 @@
+@prefix : <urn:tradegraph:kb#> .
+@prefix catalog: <urn:tradegraph:catalog#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:tradegraph:kb> a owl:Ontology ;
+    owl:versionIRI <urn:tradegraph:kb:version:0.5.0> ;
+    owl:versionInfo "0.5.0" ;
+    rdfs:label "TradeGraph" ;
+    rdfs:comment "Inti ontologi perdagangan lintas negara dan referensi awal dari register pengetahuan."@id ;
+    :compatibleEngineProfile "tradegraph-jdk21-owl2dl-swrl-comparisons-v1" ;
+    :currentRevision :revision-0.5.0 .
+
+:compatibleEngineProfile a owl:AnnotationProperty .
+:currentRevision a owl:AnnotationProperty .
+:axiomId a owl:AnnotationProperty .
+:axiomSource a owl:AnnotationProperty .
+:axiomReviewStatus a owl:AnnotationProperty .
+
+# Goods and production
+
+:TradeGood a owl:Class .
+:Product a owl:Class ; rdfs:subClassOf :TradeGood .
+:Material a owl:Class ; rdfs:subClassOf :TradeGood .
+:Component a owl:Class ; rdfs:subClassOf :Material .
+:CommodityCategory a owl:Class .
+:HSCode a owl:Class .
+:Unit a owl:Class .
+:MeasuredAmount a owl:Class .
+:ProductionBatch a owl:Class .
+:Process a owl:Class .
+:Transformation a owl:Class ; rdfs:subClassOf :Process .
+:Facility a owl:Class ; rdfs:subClassOf :Location .
+
+:MultiMaterialBatch a owl:Class ;
+    rdfs:comment "Batch dengan sedikitnya dua material yang berbeda pada relasi usesMaterial."@id ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            :ProductionBatch
+            [ a owl:Restriction ;
+              owl:onProperty :usesMaterial ;
+              owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+              owl:onClass :Material ]
+        )
+    ] .
+
+:hasCommodityCategory a owl:ObjectProperty ;
+    rdfs:domain :TradeGood ; rdfs:range :CommodityCategory .
+:hasTariffClassification a owl:ObjectProperty ;
+    rdfs:domain :TradeGood ; rdfs:range :HSCode .
+:referenceCode a owl:ObjectProperty ;
+    rdfs:domain :CommodityCategory ; rdfs:range :HSCode .
+:codeValue a owl:DatatypeProperty ;
+    rdfs:domain :HSCode ; rdfs:range xsd:string .
+:nomenclature a owl:DatatypeProperty ;
+    rdfs:domain :HSCode ; rdfs:range xsd:string .
+:amountValue a owl:DatatypeProperty ;
+    rdfs:domain :MeasuredAmount ; rdfs:range xsd:decimal .
+:amountUnit a owl:ObjectProperty ;
+    rdfs:domain :MeasuredAmount ; rdfs:range :Unit .
+:Currency a owl:Class .
+:amountCurrency a owl:ObjectProperty ;
+    rdfs:domain :MeasuredAmount ; rdfs:range :Currency .
+:ComponentList a owl:Class .
+:ComponentEntry a owl:Class .
+:componentListForBatch a owl:ObjectProperty ;
+    rdfs:domain :ComponentList ; rdfs:range :ProductionBatch .
+:componentListClosed a owl:DatatypeProperty ;
+    rdfs:domain :ComponentList ; rdfs:range xsd:boolean .
+:componentEntry a owl:ObjectProperty ;
+    rdfs:domain :ComponentList ; rdfs:range :ComponentEntry .
+:componentAmount a owl:ObjectProperty ;
+    rdfs:domain :ComponentEntry ; rdfs:range :MeasuredAmount .
+
+:hasBatch a owl:ObjectProperty ;
+    rdfs:domain :Product ; rdfs:range :ProductionBatch ;
+    owl:inverseOf :batchOf .
+:batchOf a owl:ObjectProperty ;
+    rdfs:domain :ProductionBatch ; rdfs:range :Product .
+:usesMaterial a owl:ObjectProperty ;
+    rdfs:domain :ProductionBatch ; rdfs:range :Material .
+:suppliedBy a owl:ObjectProperty ;
+    rdfs:domain :Material ; rdfs:range :Organization .
+:dependsOnMaterial a owl:ObjectProperty ;
+    rdfs:domain :Product ; rdfs:range :Material ;
+    rdfs:comment "Ketergantungan teknis yang diturunkan dari batch dan input material."@id ;
+    owl:propertyChainAxiom ( :hasBatch :usesMaterial ) .
+:producedBy a owl:ObjectProperty ;
+    rdfs:domain :ProductionBatch ; rdfs:range :Organization ;
+    owl:inverseOf :produces .
+:produces a owl:ObjectProperty ;
+    rdfs:domain :Organization ; rdfs:range :ProductionBatch .
+:runsProcess a owl:ObjectProperty ;
+    rdfs:domain :ProductionBatch ; rdfs:range :Process .
+:producedAt a owl:ObjectProperty ;
+    rdfs:domain :ProductionBatch ; rdfs:range :Facility .
+
+# Actors and locations
+
+:Organization a owl:Class ; owl:disjointWith :RoleAssignment .
+:Authority a owl:Class ; rdfs:subClassOf :Organization .
+:Issuer a owl:Class ; rdfs:subClassOf :Organization .
+:ActorRole a owl:Class .
+:Authorization a owl:Class .
+:RoleAssignment a owl:Class ;
+    rdfs:subClassOf
+        [ a owl:Restriction ; owl:onProperty :roleActor ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :Organization ],
+        [ a owl:Restriction ; owl:onProperty :hasActorRole ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :ActorRole ],
+        [ a owl:Restriction ; owl:onProperty :assignedInRevision ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :TradeCaseRevision ] .
+:ImporterRoleAssignment a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            :RoleAssignment
+            [ a owl:Restriction ; owl:onProperty :hasActorRole ; owl:hasValue :roleImporter ]
+        )
+    ] .
+:ExporterRoleAssignment a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            :RoleAssignment
+            [ a owl:Restriction ; owl:onProperty :hasActorRole ; owl:hasValue :roleExporter ]
+        )
+    ] .
+
+:roleActor a owl:ObjectProperty ;
+    rdfs:domain :RoleAssignment ; rdfs:range :Organization ;
+    owl:inverseOf :hasRoleAssignment .
+:hasRoleAssignment a owl:ObjectProperty ;
+    rdfs:domain :Organization ; rdfs:range :RoleAssignment .
+:hasActorRole a owl:ObjectProperty ;
+    rdfs:domain :RoleAssignment ; rdfs:range :ActorRole .
+:assignedInRevision a owl:ObjectProperty ;
+    rdfs:domain :RoleAssignment ; rdfs:range :TradeCaseRevision ;
+    owl:inverseOf :revisionRoleAssignment .
+:revisionRoleAssignment a owl:ObjectProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range :RoleAssignment .
+:roleAuthorization a owl:ObjectProperty ;
+    rdfs:domain :RoleAssignment ; rdfs:range :Authorization .
+:grantedBy a owl:ObjectProperty ;
+    rdfs:domain :Authorization ; rdfs:range :Authority .
+
+:Location a owl:Class .
+:Country a owl:Class ; rdfs:subClassOf :Location .
+:Port a owl:Class ; rdfs:subClassOf :Location .
+:Jurisdiction a owl:Class .
+:withinLocation a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain :Location ; rdfs:range :Location .
+:jurisdictionInCountry a owl:ObjectProperty ;
+    rdfs:domain :Jurisdiction ; rdfs:range :Country .
+:countryCode a owl:DatatypeProperty ;
+    rdfs:domain :Country ; rdfs:range xsd:string .
+
+# Trade, shipments and provisions
+
+:TradeAgreement a owl:Class .
+:CustomsProcedure a owl:Class .
+:IntendedUse a owl:Class .
+:TradeCase a owl:Class ; owl:disjointWith :TradeCaseRevision .
+:TradeCaseRevision a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ; owl:onProperty :revisionOf ;
+        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :TradeCase
+    ] .
+:Shipment a owl:Class .
+:TransportLeg a owl:Class .
+:Provision a owl:Class .
+:Requirement a owl:Class .
+:Exception a owl:Class .
+
+:revisionOf a owl:ObjectProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range :TradeCase .
+:previousCaseRevision a owl:ObjectProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range :TradeCaseRevision .
+:caseRevisionNumber a owl:DatatypeProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range xsd:integer .
+:revisionShipment a owl:ObjectProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range :Shipment .
+:containsGoods a owl:ObjectProperty ;
+    rdfs:domain :Shipment ; rdfs:range :TradeGood .
+:hasTransportLeg a owl:ObjectProperty ;
+    rdfs:domain :Shipment ; rdfs:range :TransportLeg .
+:departsFrom a owl:ObjectProperty ;
+    rdfs:domain :TransportLeg ; rdfs:range :Location .
+:arrivesAt a owl:ObjectProperty ;
+    rdfs:domain :TransportLeg ; rdfs:range :Location .
+:legNumber a owl:DatatypeProperty ;
+    rdfs:domain :TransportLeg ; rdfs:range xsd:integer .
+:intendedUse a owl:ObjectProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range :IntendedUse .
+
+:agreementProvision a owl:ObjectProperty ;
+    rdfs:domain :TradeAgreement ; rdfs:range :Provision .
+:provisionJurisdiction a owl:ObjectProperty ;
+    rdfs:domain :Provision ; rdfs:range :Jurisdiction .
+:statesRequirement a owl:ObjectProperty ;
+    rdfs:domain :Provision ; rdfs:range :Requirement .
+:hasException a owl:ObjectProperty ;
+    rdfs:domain :Provision ; rdfs:range :Exception .
+:supersedesProvision a owl:ObjectProperty ;
+    rdfs:domain :Provision ; rdfs:range :Provision .
+:effectiveFromLocalDate a owl:DatatypeProperty ;
+    rdfs:domain :Provision ; rdfs:range xsd:string ;
+    rdfs:comment "Tanggal hukum lokal dalam bentuk YYYY-MM-DD. Interpretasi zona melekat pada sumber dan yurisdiksi."@id .
+:effectiveUntilLocalDateExclusive a owl:DatatypeProperty ;
+    rdfs:domain :Provision ; rdfs:range xsd:string .
+
+# Evidence and assessments
+
+:Document a owl:Class .
+:DocumentType a owl:Class .
+:EvidenceClaim a owl:Class .
+:EvidenceSet a owl:Class .
+:DocumentLinkedClaim a owl:Class ;
+    rdfs:comment "Klasifikasi eksistensial. Validasi bukti bernama dan status verifikasi dokumen merupakan pemeriksaan tersendiri."@id ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            :EvidenceClaim
+            [ a owl:Restriction ; owl:onProperty :claimDocument ; owl:someValuesFrom :Document ]
+        )
+    ] .
+:documentType a owl:ObjectProperty ;
+    rdfs:domain :Document ; rdfs:range :DocumentType .
+:hasSupportingDocument a owl:ObjectProperty ; rdfs:range :Document .
+:documentSubject a owl:ObjectProperty ; rdfs:domain :Document .
+:documentJurisdiction a owl:ObjectProperty ;
+    rdfs:domain :Document ; rdfs:range :Jurisdiction .
+:documentValidFrom a owl:DatatypeProperty ;
+    rdfs:domain :Document ; rdfs:range xsd:dateTime .
+:documentValidUntil a owl:DatatypeProperty ;
+    rdfs:domain :Document ; rdfs:range xsd:dateTime .
+:issuedBy a owl:ObjectProperty ;
+    rdfs:domain :Document ; rdfs:range :Issuer .
+:requiresDocumentType a owl:ObjectProperty ;
+    rdfs:domain :Requirement ; rdfs:range :DocumentType .
+:containsClaim a owl:ObjectProperty ;
+    rdfs:domain :EvidenceSet ; rdfs:range :EvidenceClaim .
+:claimSubject a owl:ObjectProperty ;
+    rdfs:domain :EvidenceClaim .
+:claimDocument a owl:ObjectProperty ;
+    rdfs:domain :EvidenceClaim ; rdfs:range :Document .
+:evidenceScopeClosed a owl:DatatypeProperty ;
+    rdfs:domain :EvidenceSet ; rdfs:range xsd:boolean ;
+    rdfs:comment "Pernyataan tentang cakupan evidence set untuk validasi kasus."@id .
+
+:AssessmentContext a owl:Class ;
+    rdfs:subClassOf
+        [ a owl:Restriction ; owl:onProperty :assessesRevision ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :TradeCaseRevision ],
+        [ a owl:Restriction ; owl:onProperty :appliesInJurisdiction ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :Jurisdiction ],
+        [ a owl:Restriction ; owl:onProperty :usesKnowledgeRevision ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :KnowledgeRevision ] .
+:Finding a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ; owl:onProperty :findingInContext ;
+        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass :AssessmentContext
+    ] .
+:ApplicabilityAssessment a owl:Class ; rdfs:subClassOf :Finding .
+:CriterionAssessment a owl:Class ; rdfs:subClassOf :Finding .
+:OriginAssessment a owl:Class ; rdfs:subClassOf :CriterionAssessment .
+:Obligation a owl:Class ; rdfs:subClassOf :Finding .
+
+:assessesRevision a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :TradeCaseRevision .
+:assessesProduct a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :Product .
+:assessesBatch a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :ProductionBatch .
+:appliesInJurisdiction a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :Jurisdiction .
+:selectedAgreement a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :TradeAgreement .
+:selectedProcedure a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :CustomsProcedure .
+:usesEvidenceSet a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :EvidenceSet .
+:usesKnowledgeRevision a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :KnowledgeRevision .
+:transactionAt a owl:DatatypeProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range xsd:dateTime .
+:evaluationAt a owl:DatatypeProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range xsd:dateTime .
+:engineProfileId a owl:DatatypeProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range xsd:string .
+:findingInContext a owl:ObjectProperty ;
+    rdfs:domain :Finding ; rdfs:range :AssessmentContext ;
+    owl:inverseOf :hasFinding .
+:hasFinding a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :Finding .
+:evaluatesProvision a owl:ObjectProperty ;
+    rdfs:domain :ApplicabilityAssessment ; rdfs:range :Provision .
+:evaluatesRequirement a owl:ObjectProperty ;
+    rdfs:domain :CriterionAssessment ; rdfs:range :Requirement .
+:findingEvidence a owl:ObjectProperty ;
+    rdfs:domain :Finding ; rdfs:range :EvidenceClaim .
+:hasLegalOrigin a owl:ObjectProperty ;
+    rdfs:domain :OriginAssessment ; rdfs:range :Country ;
+    rdfs:comment "Asal legal pada penilaian asal yang terikat AssessmentContext."@id .
+
+# Action vocabulary
+
+:ActionTemplate a owl:Class .
+:Precondition a owl:Class .
+:Effect a owl:Class .
+:Goal a owl:Class .
+:PlanCandidate a owl:Class .
+:PreparationArtifact a owl:Class .
+:hasDraftDocumentType a owl:ObjectProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range :DocumentType .
+:hasPreparationArtifact a owl:ObjectProperty ;
+    rdfs:domain :TradeCaseRevision ; rdfs:range :PreparationArtifact .
+:reexportChecklist a owl:NamedIndividual, :PreparationArtifact .
+:hasPrecondition a owl:ObjectProperty ;
+    rdfs:domain :ActionTemplate ; rdfs:range :Precondition .
+:hasEffect a owl:ObjectProperty ;
+    rdfs:domain :ActionTemplate ; rdfs:range :Effect .
+:supportsGoal a owl:ObjectProperty ;
+    rdfs:domain :ActionTemplate ; rdfs:range :Goal .
+:preconditionRequirement a owl:ObjectProperty ;
+    rdfs:domain :Precondition ; rdfs:range :Requirement .
+:planGoal a owl:ObjectProperty ;
+    rdfs:domain :PlanCandidate ; rdfs:range :Goal .
+:planContext a owl:ObjectProperty ;
+    rdfs:domain :PlanCandidate ; rdfs:range :AssessmentContext .
+
+# Provenance and coverage
+
+:SourceDocument a owl:Class ; owl:disjointWith :SourceClause .
+:SourceClause a owl:Class .
+:KnowledgeRevision a owl:Class .
+:CoverageDeclaration a owl:Class .
+:CoverageStatus a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:oneOf ( :coverageSupported :coveragePartial :coverageOutOfCoverage )
+    ] .
+
+:hasSourceClause a owl:ObjectProperty ; rdfs:range :SourceClause .
+:clauseInDocument a owl:ObjectProperty ;
+    rdfs:domain :SourceClause ; rdfs:range :SourceDocument .
+:clauseLocator a owl:DatatypeProperty ;
+    rdfs:domain :SourceClause ; rdfs:range xsd:string .
+:sourceKey a owl:DatatypeProperty ;
+    rdfs:domain :SourceDocument ; rdfs:range xsd:string .
+:sourceRecordId a owl:DatatypeProperty ;
+    rdfs:domain :SourceDocument ; rdfs:range xsd:string .
+:knowledgeVersion a owl:DatatypeProperty ;
+    rdfs:domain :KnowledgeRevision ; rdfs:range xsd:string .
+:snapshotSha256 a owl:DatatypeProperty ;
+    rdfs:domain :KnowledgeRevision ; rdfs:range xsd:string ;
+    rdfs:comment "Hash byte snapshot yang dihitung saat artefak dibaca."@id .
+:declaresCoverage a owl:ObjectProperty ;
+    rdfs:domain :KnowledgeRevision ; rdfs:range :CoverageDeclaration .
+:hasCoverageStatus a owl:ObjectProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range :CoverageStatus .
+:coverageDispatchCountry a owl:ObjectProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range :Country .
+:coverageJurisdiction a owl:ObjectProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range :Jurisdiction .
+:coverageAgreement a owl:ObjectProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range :TradeAgreement .
+:coverageProcedure a owl:ObjectProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range :CustomsProcedure .
+:coverageUse a owl:ObjectProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range :IntendedUse .
+:coverageCode a owl:ObjectProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range :HSCode .
+:coverageAnchorLocalDate a owl:DatatypeProperty ;
+    rdfs:domain :CoverageDeclaration ; rdfs:range xsd:string .
+
+# Source versions in sources/manifest.json
+
+:source-atiga-text a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "ASEAN Trade in Goods Agreement, Cha-am, 26 February 2009" ;
+    rdfs:seeAlso <https://image.mfa.go.th/mfa/0/6p4M7ae5k9/ATIGA%28ASEAN_Trade_in_Goods_Agreement%29.pdf> ;
+    :sourceKey "ATIGA-TEXT" ;
+    :sourceRecordId "source-b12db37d655fea764df514c9804c1bb739d2ca943fef0f0622d55687d6bc024d" .
+
+:source-atiga-psr22 a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "ATIGA Annex 3: Product Specific Rules (HS 2022), 36th AFTA Council" ;
+    rdfs:seeAlso <https://storageftaportal.moc.gov.kh/68_product_specific_rules.pdf> ;
+    :sourceKey "ATIGA-PSR22" ;
+    :sourceRecordId "source-0c6a52c13c745b6e3a0e7baf75b0e59d313d9b66646c3b7de4966b252fe1c068" .
+
+:source-id-tarif-atiga a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "PMK 43/PMK.010/2022, tarif ATIGA dan lampiran pos tarif" ;
+    rdfs:seeAlso <https://jdih.kemenkeu.go.id/api/download/2067f4b6-8151-4b82-a641-7aea6b289eba/43~PMK.010~2022Per.pdf> ;
+    :sourceKey "ID-TARIF-ATIGA" ;
+    :sourceRecordId "source-889632f119c203ed3fd31ca5748e230703dfedbf2cf2e390bb3d2ee0988eefc8" .
+
+:source-id-asal-atiga a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "PMK 131/PMK.04/2020, tata cara tarif preferensi ATIGA" ;
+    rdfs:seeAlso <https://jdih.kemenkeu.go.id/api/download/b4649a17-cf79-4cdb-ad6a-7efa4b40ca3d/131~PMK.04~2020Per.pdf> ;
+    :sourceKey "ID-ASAL-ATIGA" ;
+    :sourceRecordId "source-0bdfe3958e7aa24c97e11e5c13bcc393911578eabdb237c624e23c9d83a06f5f" .
+
+:source-id-asal-atiga-amend a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "PMK 81/PMK.04/2022, perubahan PMK 131/PMK.04/2020" ;
+    rdfs:seeAlso <https://jdih.kemenkeu.go.id/api/download/d17b2d7d-8804-4a5e-8358-c8eeb088cf65/81~PMK.04~2022Per.pdf> ;
+    :sourceKey "ID-ASAL-ATIGA-AMEND" ;
+    :sourceRecordId "source-50d887b50b97c08ab2cc9a0d674e51e5663b523d028061025b44d85e1941eeb5" .
+
+:source-id-ska-dab a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "PMK 35 Tahun 2023, penyerahan SKA dan DAB" ;
+    rdfs:seeAlso <https://jdih.kemenkeu.go.id/api/download/b5462fd0-fd59-4244-b752-fa4ce471370e/2023pmkeuangan035.pdf> ;
+    :sourceKey "ID-SKA-DAB" ;
+    :sourceRecordId "source-3404660f1cfeef0055fadf694756fc880eaa3d78b32ab6651bc82ac1bb519eb2" .
+
+:source-id-impor-general a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "Permendag 16 Tahun 2025, kebijakan dan pengaturan impor" ;
+    rdfs:seeAlso <https://peraturan.go.id/files/permendag-no-16-tahun-2025.pdf> ;
+    :sourceKey "ID-IMPOR-GENERAL" ;
+    :sourceRecordId "source-d01b6a1d305caa7d627ca19c313fd00512016c8c70021f31bec778e8221c7411" .
+
+:source-id-impor-sementara a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "PMK 178/PMK.04/2017, impor sementara" ;
+    rdfs:seeAlso <https://jdih.kemenkeu.go.id/download/fab62b1c-a095-4547-ba42-45df9cbe2816/178~PMK.04~2017Per.pdf> ;
+    :sourceKey "ID-IMPOR-SEMENTARA" ;
+    :sourceRecordId "source-e0cb283537e446f30685cb025827d5897ec478793d62d0aede16e2d3852ee4a2" .
+
+:source-id-impor-sementara-amend a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "PMK 106/PMK.04/2019, perubahan PMK 178/PMK.04/2017" ;
+    rdfs:seeAlso <https://jdih.kemenkeu.go.id/api/download/fulltext/2019/106~PMK.04~2019Per.pdf> ;
+    :sourceKey "ID-IMPOR-SEMENTARA-AMEND" ;
+    :sourceRecordId "source-ebf36909b42678ec3db5cd27a4afebd9952c840a018113e9e7e912f5030a3e6d" .
+
+:source-id-ekspor a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "PMK 155/PMK.04/2022, ketentuan kepabeanan di bidang ekspor" ;
+    rdfs:seeAlso <https://jdih.kemenkeu.go.id/api/download/ee16c00e-e189-41e3-ab54-3a432ebe7f4c/155~PMK.04~2022.pdf> ;
+    :sourceKey "ID-EKSPOR" ;
+    :sourceRecordId "source-32dca463f6a1259880c08b9169f0ce3554e73a65adf230e124c6baf882662a8b" .
+
+:source-sg-customs-permit a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "Obtain a Customs Import Permit" ;
+    rdfs:seeAlso <https://www.customs.gov.sg/businesses/importing-goods/import-procedures/apply-customs-import-permit/> ;
+    :sourceKey "SG-CUSTOMS-PERMIT" ;
+    :sourceRecordId "source-a19f02812b2b7026eb342a0cc4dd31257bba94d58426d5cf87f66133fb2422ab" .
+
+:source-sg-sfa-processed a owl:NamedIndividual, :SourceDocument ;
+    rdfs:label "Import Requirements for Food & Food Products" ;
+    rdfs:seeAlso <https://www.sfa.gov.sg/food-import-export/commercial-imports/import-requirements-for-food-food-products> ;
+    :sourceKey "SG-SFA-PROCESSED" ;
+    :sourceRecordId "source-dc37e12282be4db7578c7d568e3bae94a153faf982f575e76619490522817225" .
+
+# Clause locators
+
+:atiga-parties a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-atiga-text ;
+    :clauseLocator "Pembukaan (para pihak)" .
+:atiga-article-32 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-atiga-text ;
+    :clauseLocator "Article 32 (Direct Consignment)" .
+:psr-row-2042 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-atiga-psr22 ;
+    :clauseLocator "Annex 3 HS 2022, baris 2042 (8413.70)" .
+:tariff-row-7571 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-tarif-atiga ;
+    :clauseLocator "Lampiran, baris 7571 (8413.70.11)" .
+:tariff-row-7590 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-tarif-atiga ;
+    :clauseLocator "Lampiran, baris 7590 (8413.91.30)" .
+:tariff-row-883 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-tarif-atiga ;
+    :clauseLocator "Lampiran, baris 883 (0901.21.11)" .
+:pmk131-article-5 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-asal-atiga ;
+    :clauseLocator "Pasal 5 (Kriteria Pengiriman)" .
+:pmk81-origin-evidence a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-asal-atiga-amend ;
+    :clauseLocator "Pasal I, perubahan Pasal 1 dan Lampiran A" .
+:pmk35-submission a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-ska-dab ;
+    :clauseLocator "Pasal 2–7 (Penyerahan SKA dan DAB)" .
+:permendag16-import a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-general ;
+    :clauseLocator "Pasal 3–7 (API dan kebijakan impor)" .
+:permendag16-article-47 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-general ;
+    :clauseLocator "Pasal 47 (Impor sementara dan penyelesaiannya)" .
+:pmk178-article-2 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-sementara ;
+    :clauseLocator "Pasal 2 (Persyaratan barang impor sementara)" .
+:pmk178-article-17 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-sementara ;
+    :clauseLocator "Pasal 17 (Diekspor kembali)" .
+:pmk106-exhibition a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-sementara-amend ;
+    :clauseLocator "Pasal I, penambahan Pasal 5A (Pameran)" .
+:pmk106-permit a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-sementara-amend ;
+    :clauseLocator "Pasal I, perubahan Pasal 6 (Izin Impor Sementara)" .
+:pmk155-export a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-ekspor ;
+    :clauseLocator "Pasal 2–5 (Pemberitahuan Pabean Ekspor)" .
+:sg-customs-import-permit a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-sg-customs-permit ;
+    :clauseLocator "Obtain a Customs Import Permit" .
+:sg-sfa-processed-food a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-sg-sfa-processed ;
+    :clauseLocator "Processed Food & Food Appliances" .
+
+# Countries, jurisdictions, roles and procedure references
+
+:indonesia a owl:NamedIndividual, :Country ;
+    rdfs:label "Indonesia"@id ;
+    :countryCode "ID" ;
+    :hasSourceClause :atiga-parties .
+[] a owl:Axiom ;
+    owl:annotatedSource :indonesia ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :Country ;
+    :axiomId "ref-indonesia" ;
+    :axiomSource :atiga-parties ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:thailand a owl:NamedIndividual, :Country ;
+    rdfs:label "Thailand"@id ;
+    :countryCode "TH" ;
+    :hasSourceClause :atiga-parties .
+[] a owl:Axiom ;
+    owl:annotatedSource :thailand ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :Country ;
+    :axiomId "ref-thailand" ;
+    :axiomSource :atiga-parties ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:singapore a owl:NamedIndividual, :Country ;
+    rdfs:label "Singapura"@id ;
+    :countryCode "SG" ;
+    :hasSourceClause :atiga-parties .
+[] a owl:Axiom ;
+    owl:annotatedSource :singapore ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :Country ;
+    :axiomId "ref-singapore" ;
+    :axiomSource :atiga-parties ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( :indonesia :thailand :singapore ) .
+
+:jurisdictionIndonesiaCustoms a owl:NamedIndividual, :Jurisdiction ;
+    rdfs:label "Daerah Pabean Indonesia"@id ;
+    :jurisdictionInCountry :indonesia .
+
+:jurisdictionSingapore a owl:NamedIndividual, :Jurisdiction ;
+    rdfs:label "Yurisdiksi Singapura"@id ;
+    :jurisdictionInCountry :singapore .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( :jurisdictionIndonesiaCustoms :jurisdictionSingapore ) .
+
+:roleProducer a owl:NamedIndividual, :ActorRole ;
+    rdfs:label "Produsen"@id .
+
+:roleImporter a owl:NamedIndividual, :ActorRole ;
+    rdfs:label "Importir"@id ;
+    :hasSourceClause :permendag16-import .
+[] a owl:Axiom ;
+    owl:annotatedSource :roleImporter ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :ActorRole ;
+    :axiomId "ref-roleImporter" ;
+    :axiomSource :permendag16-import ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:roleExporter a owl:NamedIndividual, :ActorRole ;
+    rdfs:label "Eksportir"@id ;
+    :hasSourceClause :pmk155-export .
+[] a owl:Axiom ;
+    owl:annotatedSource :roleExporter ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :ActorRole ;
+    :axiomId "ref-roleExporter" ;
+    :axiomSource :pmk155-export ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:roleIssuer a owl:NamedIndividual, :ActorRole ;
+    rdfs:label "Penerbit dokumen"@id .
+
+:roleCarrier a owl:NamedIndividual, :ActorRole ;
+    rdfs:label "Pengangkut"@id .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( :roleProducer :roleImporter :roleExporter :roleIssuer :roleCarrier ) .
+
+:atiga a owl:NamedIndividual, :TradeAgreement ;
+    rdfs:label "ASEAN Trade in Goods Agreement"@id ;
+    :agreementProvision :atigaDirectConsignment ;
+    :hasSourceClause :atiga-parties .
+[] a owl:Axiom ;
+    owl:annotatedSource :atiga ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :TradeAgreement ;
+    :axiomId "ref-atiga" ;
+    :axiomSource :atiga-parties ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:atigaDirectConsignment a owl:NamedIndividual, :Provision ;
+    rdfs:label "Kriteria pengiriman langsung ATIGA"@id ;
+    :hasSourceClause :atiga-article-32 .
+[] a owl:Axiom ;
+    owl:annotatedSource :atigaDirectConsignment ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :Provision ;
+    :axiomId "ref-atigaDirectConsignment" ;
+    :axiomSource :atiga-article-32 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+[] a owl:Axiom ;
+    owl:annotatedSource :atiga ;
+    owl:annotatedProperty :agreementProvision ;
+    owl:annotatedTarget :atigaDirectConsignment ;
+    :axiomId "ref-atiga-direct-consignment" ;
+    :axiomSource :atiga-article-32 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:importForUse a owl:NamedIndividual, :CustomsProcedure ;
+    rdfs:label "Impor untuk dipakai"@id ;
+    :hasSourceClause :permendag16-import .
+[] a owl:Axiom ;
+    owl:annotatedSource :importForUse ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :CustomsProcedure ;
+    :axiomId "ref-importForUse" ;
+    :axiomSource :permendag16-import ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:temporaryImport a owl:NamedIndividual, :CustomsProcedure ;
+    rdfs:label "Impor sementara"@id ;
+    :hasSourceClause :pmk178-article-2, :permendag16-article-47 .
+[] a owl:Axiom ;
+    owl:annotatedSource :temporaryImport ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :CustomsProcedure ;
+    :axiomId "ref-temporaryImport" ;
+    :axiomSource :pmk178-article-2, :permendag16-article-47 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:reExportTemporaryImport a owl:NamedIndividual, :CustomsProcedure ;
+    rdfs:label "Ekspor kembali barang impor sementara"@id ;
+    :hasSourceClause :pmk178-article-17 .
+[] a owl:Axiom ;
+    owl:annotatedSource :reExportTemporaryImport ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :CustomsProcedure ;
+    :axiomId "ref-reExportTemporaryImport" ;
+    :axiomSource :pmk178-article-17 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:commercialExport a owl:NamedIndividual, :CustomsProcedure ;
+    rdfs:label "Ekspor komersial"@id ;
+    :hasSourceClause :pmk155-export .
+[] a owl:Axiom ;
+    owl:annotatedSource :commercialExport ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :CustomsProcedure ;
+    :axiomId "ref-commercialExport" ;
+    :axiomSource :pmk155-export ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:exhibitionUse a owl:NamedIndividual, :IntendedUse ;
+    rdfs:label "Penggunaan untuk pameran"@id ;
+    :hasSourceClause :pmk106-exhibition .
+[] a owl:Axiom ;
+    owl:annotatedSource :exhibitionUse ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :IntendedUse ;
+    :axiomId "ref-exhibitionUse" ;
+    :axiomSource :pmk106-exhibition ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:commercialSaleUse a owl:NamedIndividual, :IntendedUse ;
+    rdfs:label "Penjualan komersial"@id .
+
+# Document type references
+
+:formD a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Surat Keterangan Asal Form D"@id ;
+    :hasSourceClause :pmk81-origin-evidence, :pmk35-submission .
+[] a owl:Axiom ;
+    owl:annotatedSource :formD ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :DocumentType ;
+    :axiomId "ref-formD" ;
+    :axiomSource :pmk81-origin-evidence, :pmk35-submission ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:electronicFormD a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Surat Keterangan Asal elektronik Form D"@id ;
+    :hasSourceClause :pmk81-origin-evidence, :pmk35-submission .
+[] a owl:Axiom ;
+    owl:annotatedSource :electronicFormD ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :DocumentType ;
+    :axiomId "ref-electronicFormD" ;
+    :axiomSource :pmk81-origin-evidence, :pmk35-submission ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:originDeclaration a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Deklarasi Asal Barang"@id ;
+    :hasSourceClause :pmk81-origin-evidence, :pmk35-submission .
+[] a owl:Axiom ;
+    owl:annotatedSource :originDeclaration ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :DocumentType ;
+    :axiomId "ref-originDeclaration" ;
+    :axiomSource :pmk81-origin-evidence, :pmk35-submission ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:temporaryImportPermit a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Izin Impor Sementara"@id ;
+    :hasSourceClause :pmk106-permit .
+[] a owl:Axiom ;
+    owl:annotatedSource :temporaryImportPermit ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :DocumentType ;
+    :axiomId "ref-temporaryImportPermit" ;
+    :axiomSource :pmk106-permit ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:idExportDeclaration a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Pemberitahuan Pabean Ekspor Indonesia"@id ;
+    :hasSourceClause :pmk155-export .
+[] a owl:Axiom ;
+    owl:annotatedSource :idExportDeclaration ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :DocumentType ;
+    :axiomId "ref-idExportDeclaration" ;
+    :axiomSource :pmk155-export ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:sgCustomsImportPermit a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Singapore Customs Import Permit"@id ;
+    :hasSourceClause :sg-customs-import-permit, :sg-sfa-processed-food .
+[] a owl:Axiom ;
+    owl:annotatedSource :sgCustomsImportPermit ;
+    owl:annotatedProperty rdf:type ;
+    owl:annotatedTarget :DocumentType ;
+    :axiomId "ref-sgCustomsImportPermit" ;
+    :axiomSource :sg-customs-import-permit, :sg-sfa-processed-food ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+# Tariff reference entries and categories
+
+:hs-84137011 a owl:NamedIndividual, :HSCode ;
+    rdfs:label "8413.70.11 Pompa air sentrifugal satu tahap dalam kelompok inlet hingga 200 mm"@id ;
+    :codeValue "8413.70.11" ;
+    :nomenclature "AHTN 2022" ;
+    :hasSourceClause :tariff-row-7571 .
+
+[] a owl:Axiom ;
+    owl:annotatedSource :hs-84137011 ;
+    owl:annotatedProperty :codeValue ;
+    owl:annotatedTarget "8413.70.11" ;
+    :axiomId "ref-hs-84137011" ;
+    :axiomSource :tariff-row-7571 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:centrifugalWaterPump a owl:NamedIndividual, :CommodityCategory ;
+    rdfs:label "Pompa air sentrifugal satu tahap dalam kelompok inlet hingga 200 mm"@id ;
+    :referenceCode :hs-84137011 ;
+    :hasSourceClause :tariff-row-7571 .
+
+[] a owl:Axiom ;
+    owl:annotatedSource :centrifugalWaterPump ;
+    owl:annotatedProperty :referenceCode ;
+    owl:annotatedTarget :hs-84137011 ;
+    :axiomId "ref-category-hs-84137011" ;
+    :axiomSource :tariff-row-7571 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:hs-84139130 a owl:NamedIndividual, :HSCode ;
+    rdfs:label "8413.91.30 Bagian pompa pada pos 8413.70.11 dan 8413.70.19"@id ;
+    :codeValue "8413.91.30" ;
+    :nomenclature "AHTN 2022" ;
+    :hasSourceClause :tariff-row-7590 .
+
+[] a owl:Axiom ;
+    owl:annotatedSource :hs-84139130 ;
+    owl:annotatedProperty :codeValue ;
+    owl:annotatedTarget "8413.91.30" ;
+    :axiomId "ref-hs-84139130" ;
+    :axiomSource :tariff-row-7590 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:centrifugalPumpPart a owl:NamedIndividual, :CommodityCategory ;
+    rdfs:label "Bagian pompa pada pos 8413.70.11 dan 8413.70.19"@id ;
+    :referenceCode :hs-84139130 ;
+    :hasSourceClause :tariff-row-7590 .
+
+[] a owl:Axiom ;
+    owl:annotatedSource :centrifugalPumpPart ;
+    owl:annotatedProperty :referenceCode ;
+    owl:annotatedTarget :hs-84139130 ;
+    :axiomId "ref-category-hs-84139130" ;
+    :axiomSource :tariff-row-7590 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:hs-09012111 a owl:NamedIndividual, :HSCode ;
+    rdfs:label "0901.21.11 Kopi Arabika sangrai, tidak didekafeinasi, belum digiling"@id ;
+    :codeValue "0901.21.11" ;
+    :nomenclature "AHTN 2022" ;
+    :hasSourceClause :tariff-row-883 .
+
+[] a owl:Axiom ;
+    owl:annotatedSource :hs-09012111 ;
+    owl:annotatedProperty :codeValue ;
+    owl:annotatedTarget "0901.21.11" ;
+    :axiomId "ref-hs-09012111" ;
+    :axiomSource :tariff-row-883 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+:roastedArabicaCoffee a owl:NamedIndividual, :CommodityCategory ;
+    rdfs:label "Kopi Arabika sangrai, tidak didekafeinasi, belum digiling"@id ;
+    :referenceCode :hs-09012111 ;
+    :hasSourceClause :tariff-row-883 .
+
+[] a owl:Axiom ;
+    owl:annotatedSource :roastedArabicaCoffee ;
+    owl:annotatedProperty :referenceCode ;
+    owl:annotatedTarget :hs-09012111 ;
+    :axiomId "ref-category-hs-09012111" ;
+    :axiomSource :tariff-row-883 ;
+    :axiomReviewStatus "SOURCE_REVIEWED" .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( :hs-84137011 :hs-84139130 :hs-09012111 ) .
+
+# Coverage of the initial knowledge revision
+
+:coverageSupported a owl:NamedIndividual ; rdfs:label "SUPPORTED" .
+:coveragePartial a owl:NamedIndividual ; rdfs:label "PARTIAL" .
+:coverageOutOfCoverage a owl:NamedIndividual ; rdfs:label "OUT_OF_COVERAGE" .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( :coverageSupported :coveragePartial :coverageOutOfCoverage ) .
+
+:revision-0.5.0 a owl:NamedIndividual, :KnowledgeRevision ;
+    :knowledgeVersion "0.5.0" ;
+    :declaresCoverage :scope-pump-import, :scope-pump-exhibition, :scope-coffee-export .
+
+:scope-pump-import a owl:NamedIndividual, :CoverageDeclaration ;
+    rdfs:label "Impor pompa Thailand ke Indonesia dengan konteks ATIGA"@id ;
+    :hasCoverageStatus :coveragePartial ;
+    :coverageDispatchCountry :thailand ;
+    :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
+    :coverageAgreement :atiga ;
+    :coverageProcedure :importForUse ;
+    :coverageCode :hs-84137011 ;
+    :coverageAnchorLocalDate "2025-09-15" ;
+    :hasSourceClause :tariff-row-7571, :psr-row-2042, :pmk131-article-5, :pmk35-submission,
+        :permendag16-import .
+
+:scope-pump-exhibition a owl:NamedIndividual, :CoverageDeclaration ;
+    rdfs:label "Impor sementara pompa Thailand untuk pameran di Indonesia"@id ;
+    :hasCoverageStatus :coveragePartial ;
+    :coverageDispatchCountry :thailand ;
+    :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
+    :coverageProcedure :temporaryImport, :reExportTemporaryImport ;
+    :coverageUse :exhibitionUse ;
+    :coverageCode :hs-84137011 ;
+    :coverageAnchorLocalDate "2025-09-15" ;
+    :hasSourceClause :pmk106-exhibition, :pmk106-permit, :pmk178-article-17, :permendag16-article-47 .
+
+:scope-coffee-export a owl:NamedIndividual, :CoverageDeclaration ;
+    rdfs:label "Ekspor kopi Arabika sangrai Indonesia ke Singapura"@id ;
+    :hasCoverageStatus :coveragePartial ;
+    :coverageDispatchCountry :indonesia ;
+    :coverageJurisdiction :jurisdictionSingapore ;
+    :coverageProcedure :commercialExport ;
+    :coverageCode :hs-09012111 ;
+    :coverageAnchorLocalDate "2026-11-15" ;
+    :hasSourceClause :tariff-row-883, :pmk155-export, :sg-customs-import-permit, :sg-sfa-processed-food .
+
+# Catalog declarations support editing the canonical document in OWL-aware tools.
+# The loader selects definition instances and their nested structures for the catalog graph.
+
+catalog:FieldDefinition a owl:Class .
+catalog:QueryDefinition a owl:Class .
+catalog:ActionDefinition a owl:Class .
+catalog:GoalDefinition a owl:Class .
+catalog:ObjectiveDefinition a owl:Class .
+catalog:EvidenceDefinition a owl:Class .
+catalog:CalculationDefinition a owl:Class .
+catalog:id a owl:AnnotationProperty .
+catalog:property a owl:AnnotationProperty .
+catalog:valueType a owl:AnnotationProperty .
+catalog:parameters a owl:AnnotationProperty .
+catalog:sparql a owl:AnnotationProperty .
+catalog:preconditions a owl:AnnotationProperty .
+catalog:effects a owl:AnnotationProperty .
+catalog:requiresDocumentType a owl:AnnotationProperty .
+catalog:producesDraftOf a owl:AnnotationProperty .
+catalog:goals a owl:AnnotationProperty .
+catalog:dependencies a owl:AnnotationProperty .
+catalog:operation a owl:AnnotationProperty .
+catalog:groundingSparql a owl:AnnotationProperty .
+catalog:applicabilitySparql a owl:AnnotationProperty .
+catalog:metric a owl:AnnotationProperty .
+catalog:unit a owl:AnnotationProperty .
+catalog:amount a owl:AnnotationProperty .
+catalog:cost a owl:AnnotationProperty .
+catalog:duration a owl:AnnotationProperty .
+catalog:shape a owl:AnnotationProperty .
+catalog:typedParameters a owl:AnnotationProperty .
+catalog:name a owl:AnnotationProperty .
+catalog:fromContext a owl:AnnotationProperty .
+catalog:scopeParameter a owl:AnnotationProperty .
+catalog:closureSparql a owl:AnnotationProperty .
+
+:field-transaction-at a owl:NamedIndividual, catalog:FieldDefinition ;
+    catalog:id "transactionAt" ;
+    rdfs:label "Waktu transaksi"@id ;
+    catalog:property :transactionAt ;
+    catalog:valueType xsd:dateTime .
+
+:field-assessed-product a owl:NamedIndividual, catalog:FieldDefinition ;
+    catalog:id "assessedProduct" ;
+    rdfs:label "Barang yang dinilai"@id ;
+    catalog:property :assessesProduct ;
+    catalog:valueType :Product .
+
+:query-cq01 a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "CQ01" ;
+    rdfs:label "Material dan pemasok produk"@id ;
+    catalog:parameters ( "product" ) ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+SELECT DISTINCT ?material ?supplier WHERE {
+    ?product tg:dependsOnMaterial ?material .
+    OPTIONAL { ?material tg:suppliedBy ?supplier . }
+}""" .
+
+:action-prepare-reexport-notice a owl:NamedIndividual, :ActionTemplate, catalog:ActionDefinition ;
+    catalog:id "prepare-reexport-notice" ;
+    rdfs:label "Siapkan draf pemberitahuan ekspor kembali"@id ;
+    :hasSourceClause :pmk178-article-17 ;
+    catalog:goals ( :goal-reexport-draft :goal-reexport-preparation ) ;
+    catalog:typedParameters ( [ catalog:name "revision" ; catalog:valueType catalog:IRI ;
+        catalog:fromContext "revision" ] ) ;
+    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cd: <urn:tradegraph:case-data#>
+ASK {
+    ?context cd:assessedCoverage tg:scope-pump-exhibition .
+    ?revision tg:requestedSettlement tg:reexportSettlement .
+}""" ;
+    catalog:preconditions ( [
+        catalog:requiresDocumentType :temporaryImportPermit ;
+        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cd: <urn:tradegraph:case-data#>
+ASK {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?permit .
+    ?permit tg:documentType tg:temporaryImportPermit ; tg:documentShipment ?shipment .
+}"""
+    ] ) ;
+    catalog:effects ( [
+        catalog:producesDraftOf :idExportDeclaration ; catalog:operation "ADD" ;
+        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+CONSTRUCT { ?revision tg:hasDraftDocumentType tg:idExportDeclaration . } WHERE {}"""
+    ] ) .
+
+:action-prepare-reexport-checklist a owl:NamedIndividual, :ActionTemplate, catalog:ActionDefinition ;
+    catalog:id "prepare-reexport-checklist" ;
+    rdfs:label "Siapkan daftar periksa pengiriman dan dokumen ekspor kembali"@id ;
+    :hasSourceClause :pmk178-article-17 ;
+    catalog:goals ( :goal-reexport-preparation ) ;
+    catalog:dependencies ( "prepare-reexport-notice" ) ;
+    catalog:typedParameters ( [ catalog:name "revision" ; catalog:valueType catalog:IRI ;
+        catalog:fromContext "revision" ] ) ;
+    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cd: <urn:tradegraph:case-data#>
+ASK {
+    ?context cd:assessedCoverage tg:scope-pump-exhibition .
+    ?revision tg:requestedSettlement tg:reexportSettlement .
+}""" ;
+    catalog:preconditions ( [ catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+ASK { ?revision tg:hasDraftDocumentType tg:idExportDeclaration ; tg:revisionShipment ?shipment . }""" ] ) ;
+    catalog:effects ( [ catalog:operation "ADD" ; catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+CONSTRUCT { ?revision tg:hasPreparationArtifact tg:reexportChecklist . } WHERE {}""" ] ) .
+
+:goal-reexport-draft a owl:NamedIndividual, catalog:GoalDefinition ;
+    catalog:id "reexport-draft" ; rdfs:label "Draf pemberitahuan ekspor kembali disiapkan"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+ASK { ?revision tg:hasDraftDocumentType tg:idExportDeclaration . }""" .
+
+:goal-reexport-preparation a owl:NamedIndividual, catalog:GoalDefinition ;
+    catalog:id "reexport-preparation" ; rdfs:label "Draf dan daftar periksa ekspor kembali disiapkan"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+ASK {
+    ?revision tg:hasDraftDocumentType tg:idExportDeclaration ; tg:hasPreparationArtifact tg:reexportChecklist .
+}""" .
+
+:objective-fewest-actions a owl:NamedIndividual, catalog:ObjectiveDefinition ;
+    catalog:id "fewest-actions" ; rdfs:label "Jumlah langkah paling sedikit"@id ; catalog:metric "STEPS" .
+
+# A structural check of product evidence in the declared case scope.
+:evidence-product-document a owl:NamedIndividual, catalog:EvidenceDefinition ;
+    catalog:id "product-supporting-document" ;
+    rdfs:label "Dokumen pendukung produk"@id ;
+    catalog:shape :document-evidence-shape ;
+    catalog:admitEvidence true ;
+    catalog:parameters ( "scope" "product" "jurisdiction" "transactionAt" ) ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?focus WHERE {
+    ?scope tg:containsClaim ?focus .
+    ?focus rdf:predicate tg:hasSupportingDocument .
+}""" .
+
+:document-evidence-shape a sh:NodeShape ;
+    sh:targetClass :EvidenceClaim ;
+    sh:property [
+        sh:path <urn:tradegraph:case-data#verificationStatus> ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^VERIFIED$"
+    ], [
+        sh:path rdf:object ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ;
+        sh:equals <urn:tradegraph:case-data#sourceReference>
+    ], [
+        sh:path <urn:tradegraph:case-data#sourceReference> ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ;
+        sh:node [
+            sh:class :Document ;
+            sh:property [
+                sh:path :documentType ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI
+            ], [
+                sh:path :documentSubject ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI
+            ], [
+                sh:path :documentJurisdiction ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI
+            ], [
+                sh:path :documentValidFrom ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ;
+                sh:pattern "T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})$"
+            ], [
+                sh:path :documentValidUntil ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ;
+                sh:pattern "T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})$"
+            ]
+        ]
+    ] ;
+    sh:sparql [
+        sh:message "Subjek, yurisdiksi, atau periode dokumen tidak sesuai dengan konteks transaksi."@id ;
+        sh:select """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cd: <urn:tradegraph:case-data#>
+SELECT $this WHERE {
+    ?context tg:usesEvidenceSet/tg:containsClaim $this ;
+        tg:assessesProduct ?product ;
+        tg:appliesInJurisdiction ?jurisdiction ;
+        tg:transactionAt ?transactionAt .
+    $this tg:claimSubject ?subject ; cd:sourceReference ?document .
+    ?document tg:documentSubject ?documentSubject ;
+        tg:documentJurisdiction ?documentJurisdiction ;
+        tg:documentValidFrom ?start ; tg:documentValidUntil ?end .
+    FILTER (
+        ?subject != ?product || ?documentSubject != ?product ||
+        ?documentJurisdiction != ?jurisdiction ||
+        ?start >= ?end || ?transactionAt < ?start || ?transactionAt >= ?end
+    )
+}"""
+    ] .
+
+# Sum recorded line values in a complete component list for the assessed batch.
+:calc-total-component-value a owl:NamedIndividual, catalog:CalculationDefinition ;
+    catalog:id "total-component-value" ;
+    rdfs:label "Total nilai komponen per batch"@id ;
+    catalog:typedParameters (
+        [ catalog:name "componentList" ; catalog:valueType catalog:IRI ]
+        [ catalog:name "batch" ; catalog:valueType catalog:IRI ; catalog:fromContext "batch" ]
+    ) ;
+    catalog:scopeParameter "componentList" ;
+    catalog:closureSparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+ASK {
+    ?componentList a tg:ComponentList ;
+        tg:componentListForBatch ?batch ;
+        tg:componentListClosed ?closed .
+    FILTER (DATATYPE(?closed) = xsd:boolean && ?closed = true)
+    FILTER NOT EXISTS {
+        ?componentList tg:componentListClosed ?otherClosure .
+        FILTER (!sameTerm(?otherClosure, ?closed))
+    }
+    FILTER NOT EXISTS {
+        ?componentList tg:componentListForBatch ?otherBatch .
+        FILTER (!sameTerm(?otherBatch, ?batch))
+    }
+}""" ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (SUM(?decimal) AS ?value) (SAMPLE(?rowUnit) AS ?unit) (SAMPLE(?rowCurrency) AS ?currency)
+WHERE {
+    ?componentList tg:componentEntry ?entry .
+    OPTIONAL {
+        ?entry tg:componentAmount ?measurement .
+        OPTIONAL { ?measurement tg:amountValue ?amount . }
+        OPTIONAL { ?measurement tg:amountUnit ?rowUnit . }
+        OPTIONAL { ?measurement tg:amountCurrency ?rowCurrency . }
+    }
+    BIND(IF(DATATYPE(?amount) = xsd:decimal && isNumeric(?amount), ?amount, 1/0) AS ?decimal)
+}
+HAVING (
+    COUNT(?entry) > 0 &&
+    COUNT(?entry) = COUNT(DISTINCT ?entry) &&
+    COUNT(?entry) = COUNT(?decimal) &&
+    COUNT(?entry) = COUNT(?rowUnit) && COUNT(DISTINCT ?rowUnit) = 1 &&
+    COUNT(?entry) = COUNT(?rowCurrency) && COUNT(DISTINCT ?rowCurrency) = 1
+)""" .
+
+# Vocabulary and reference values for the reviewed assessment scopes.
+:CargoCategory a owl:Class .
+:HSSubheading a owl:Class .
+:RouteKind a owl:Class .
+:TransitStop a owl:Class .
+:TransitJustification a owl:Class .
+:CustomsReliefGroup a owl:Class .
+:SettlementChoice a owl:Class .
+:SettlementGround a owl:Class .
+:ImportCategory a owl:Class .
+:ReviewWindow a owl:Class .
+:OriginThreshold a owl:Class .
+
+:shipmentDispatchCountry a owl:ObjectProperty ; rdfs:domain :Shipment ; rdfs:range :Country .
+:shipmentDestinationCountry a owl:ObjectProperty ; rdfs:domain :Shipment ; rdfs:range :Country .
+:cargoCategory a owl:ObjectProperty ; rdfs:domain :Shipment ; rdfs:range :CargoCategory .
+:tariffSubheading a owl:ObjectProperty ; rdfs:domain :HSCode ; rdfs:range :HSSubheading .
+:routeKind a owl:ObjectProperty ; rdfs:domain :Shipment ; rdfs:range :RouteKind .
+:hasTransitStop a owl:ObjectProperty ; rdfs:domain :Shipment ; rdfs:range :TransitStop .
+:transitCountry a owl:ObjectProperty ; rdfs:domain :TransitStop ; rdfs:range :Country .
+:transitJustification a owl:ObjectProperty ; rdfs:domain :TransitStop ; rdfs:range :TransitJustification .
+:entryMaterial a owl:ObjectProperty ; rdfs:domain :ComponentEntry ; rdfs:range :Material .
+:documentShipment a owl:ObjectProperty ; rdfs:domain :Document ; rdfs:range :Shipment .
+:documentBatch a owl:ObjectProperty ; rdfs:domain :Document ; rdfs:range :ProductionBatch .
+:documentHolder a owl:ObjectProperty ; rdfs:domain :Document ; rdfs:range :Organization .
+:documentComponentList a owl:ObjectProperty ; rdfs:domain :Document ; rdfs:range :ComponentList .
+:documentIssuingCountry a owl:ObjectProperty ; rdfs:domain :Document ; rdfs:range :Country .
+:documentProposedUse a owl:ObjectProperty ; rdfs:domain :Document ; rdfs:range :IntendedUse .
+:proposedUse a owl:ObjectProperty ; rdfs:domain :TradeCaseRevision ; rdfs:range :IntendedUse .
+:customsReliefGroup a owl:ObjectProperty ; rdfs:domain :IntendedUse ; rdfs:range :CustomsReliefGroup .
+:requestedSettlement a owl:ObjectProperty ; rdfs:domain :TradeCaseRevision ; rdfs:range :SettlementChoice .
+:settlementGround a owl:ObjectProperty ; rdfs:domain :TradeCaseRevision ; rdfs:range :SettlementGround .
+:importCategory a owl:ObjectProperty ; rdfs:domain :TradeGood ; rdfs:range :ImportCategory .
+:coverageDestinationCountry a owl:ObjectProperty ; rdfs:domain :CoverageDeclaration ; rdfs:range :Country .
+:coverageWindow a owl:ObjectProperty ; rdfs:domain :CoverageDeclaration ; rdfs:range :ReviewWindow .
+:windowJurisdiction a owl:ObjectProperty ; rdfs:domain :ReviewWindow ; rdfs:range :Jurisdiction .
+
+:windowFrom a owl:DatatypeProperty ; rdfs:domain :ReviewWindow ; rdfs:range xsd:dateTime .
+:windowUntil a owl:DatatypeProperty ; rdfs:domain :ReviewWindow ; rdfs:range xsd:dateTime .
+:shipmentRouteClosed a owl:DatatypeProperty ; rdfs:domain :Shipment ; rdfs:range xsd:boolean .
+:enteredTransitCommerce a owl:DatatypeProperty ; rdfs:domain :TransitStop ; rdfs:range xsd:boolean .
+:transitPreservationOnly a owl:DatatypeProperty ; rdfs:domain :TransitStop ; rdfs:range xsd:boolean .
+:nonOriginatingInput a owl:DatatypeProperty ; rdfs:domain :ComponentEntry ; rdfs:range xsd:boolean .
+:submittedForPreference a owl:DatatypeProperty ; rdfs:domain :Document ; rdfs:range xsd:boolean .
+:recordedRvcPercent a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :Document ; rdfs:range xsd:decimal .
+:minimumRvcPercent a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :OriginThreshold ; rdfs:range xsd:decimal .
+:identifiableForReexport a owl:DatatypeProperty ; rdfs:domain :TradeGood ; rdfs:range xsd:boolean .
+:consumedInUse a owl:DatatypeProperty ; rdfs:domain :TradeGood ; rdfs:range xsd:boolean .
+:essentialChangeInUse a owl:DatatypeProperty ; rdfs:domain :TradeGood ; rdfs:range xsd:boolean .
+:temporaryUsePermitEnd a owl:DatatypeProperty ; rdfs:domain :Shipment ; rdfs:range xsd:dateTime .
+:documentEventAt a owl:DatatypeProperty ; rdfs:domain :Document ; rdfs:range xsd:dateTime .
+
+:assessmentShipment a owl:ObjectProperty ;
+    rdfs:domain :AssessmentContext ; rdfs:range :Shipment ;
+    owl:propertyChainAxiom ( :assessesRevision :revisionShipment ) .
+:classifiedSubheading a owl:ObjectProperty ;
+    rdfs:domain :TradeGood ; rdfs:range :HSSubheading ;
+    owl:propertyChainAxiom ( :hasTariffClassification :tariffSubheading ) .
+
+:DirectRouteShipment a owl:Class ; owl:disjointWith :TransitRouteShipment ;
+    owl:equivalentClass [ a owl:Restriction ; owl:onProperty :routeKind ; owl:hasValue :directRoute ] .
+:TransitRouteShipment a owl:Class ;
+    owl:equivalentClass [ a owl:Restriction ; owl:onProperty :routeKind ; owl:hasValue :transitRoute ] .
+:PumpRvcThresholdMet a owl:Class ; owl:disjointWith :PumpRvcThresholdNotMet .
+:PumpRvcThresholdNotMet a owl:Class .
+
+:directRoute a owl:NamedIndividual, :RouteKind .
+:transitRoute a owl:NamedIndividual, :RouteKind .
+[] a owl:AllDifferent ; owl:distinctMembers ( :directRoute :transitRoute ) .
+:transportRequirement a owl:NamedIndividual, :TransitJustification .
+:geographicNecessity a owl:NamedIndividual, :TransitJustification .
+:otherTransitPurpose a owl:NamedIndividual, :TransitJustification .
+[] a owl:AllDifferent ; owl:distinctMembers ( :transportRequirement :geographicNecessity :otherTransitPurpose ) .
+:regularCargo a owl:NamedIndividual, :CargoCategory .
+:unrestrictedImport a owl:NamedIndividual, :ImportCategory .
+:restrictedImport a owl:NamedIndividual, :ImportCategory .
+[] a owl:AllDifferent ; owl:distinctMembers ( :unrestrictedImport :restrictedImport ) .
+:exhibitionReliefGroup a owl:NamedIndividual, :CustomsReliefGroup .
+:reexportSettlement a owl:NamedIndividual, :SettlementChoice .
+:domesticSettlement a owl:NamedIndividual, :SettlementChoice .
+[] a owl:AllDifferent ; owl:distinctMembers ( :reexportSettlement :domesticSettlement ) .
+:governmentProject a owl:NamedIndividual, :SettlementGround .
+:centralGovernmentDonation a owl:NamedIndividual, :SettlementGround .
+:ordinaryCommercialTransfer a owl:NamedIndividual, :SettlementGround .
+[] a owl:AllDifferent ; owl:distinctMembers ( :governmentProject :centralGovernmentDonation :ordinaryCommercialTransfer ) .
+:commercialResaleUse a owl:NamedIndividual, :IntendedUse .
+:conferenceUse a owl:NamedIndividual, :IntendedUse ; :customsReliefGroup :exhibitionReliefGroup .
+:exhibitionUse :customsReliefGroup :exhibitionReliefGroup .
+[] a owl:AllDifferent ; owl:distinctMembers ( :exhibitionUse :conferenceUse :commercialResaleUse ) .
+
+:rvcWorksheet a owl:NamedIndividual, :DocumentType .
+:atigaBomStatement a owl:NamedIndividual, :DocumentType .
+:atigaFormD a owl:NamedIndividual, :DocumentType .
+:atigaElectronicFormD a owl:NamedIndividual, :DocumentType .
+:atigaOriginDeclaration a owl:NamedIndividual, :DocumentType .
+:transportRecord a owl:NamedIndividual, :DocumentType .
+:generalImporterId a owl:NamedIndividual, :DocumentType .
+:temporaryImportGuarantee a owl:NamedIndividual, :DocumentType .
+:changeOfUseApproval a owl:NamedIndividual, :DocumentType .
+:domesticSettlementDecision a owl:NamedIndividual, :DocumentType .
+:temporaryReexportNotice a owl:NamedIndividual, :DocumentType .
+:temporaryReexportRealization a owl:NamedIndividual, :DocumentType .
+:sgProcessedFoodRegistration a owl:NamedIndividual, :DocumentType .
+:sgCargoClearancePermit a owl:NamedIndividual, :DocumentType .
+:reexportPlan a owl:NamedIndividual, :DocumentType .
+
+:hs6-841370 a owl:NamedIndividual, :HSSubheading ; :hasSourceClause :psr-row-2042, :tariff-row-7571 .
+:hs6-841391 a owl:NamedIndividual, :HSSubheading ; :hasSourceClause :tariff-row-7590 .
+:hs6-090121 a owl:NamedIndividual, :HSSubheading ; :hasSourceClause :tariff-row-883 .
+[] a owl:AllDifferent ; owl:distinctMembers ( :hs6-841370 :hs6-841391 :hs6-090121 ) .
+:hs-84137011 :tariffSubheading :hs6-841370 .
+:hs-84139130 :tariffSubheading :hs6-841391 .
+:hs-09012111 :tariffSubheading :hs6-090121 .
+
+:pumpPsrThreshold a owl:NamedIndividual, :OriginThreshold ;
+    :minimumRvcPercent 40.00 ; :hasSourceClause :psr-row-2042, :atiga-article-29 .
+:atiga-article-29 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-atiga-text ; :clauseLocator "Article 29 (Calculation of Regional Value Content)" .
+:pmk178-article-16 a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-sementara ; :clauseLocator "Pasal 16 (Perubahan tujuan penggunaan)" .
+:pmk178-settlement a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-sementara ; :clauseLocator "Pasal 19–21 (Tidak diekspor kembali)" .
+:pmk106-guarantee a owl:NamedIndividual, :SourceClause ;
+    :clauseInDocument :source-id-impor-sementara-amend ; :clauseLocator "Pasal I, perubahan Pasal 8 (Jaminan)" .
+
+:scope-pump-import :coverageDestinationCountry :indonesia ; :coverageWindow :review-pump-id .
+:scope-pump-exhibition :coverageDestinationCountry :indonesia ; :coverageWindow :review-pump-id .
+:scope-coffee-export :coverageJurisdiction :jurisdictionIndonesiaCustoms ; :coverageDestinationCountry :singapore ;
+    :coverageWindow :review-coffee-id, :review-coffee-sg .
+:review-pump-id a owl:NamedIndividual, :ReviewWindow ; :windowJurisdiction :jurisdictionIndonesiaCustoms ;
+    :windowFrom "2025-09-15T00:00:00+07:00"^^xsd:dateTime ; :windowUntil "2025-09-16T00:00:00+07:00"^^xsd:dateTime .
+:review-coffee-id a owl:NamedIndividual, :ReviewWindow ; :windowJurisdiction :jurisdictionIndonesiaCustoms ;
+    :windowFrom "2026-11-15T00:00:00+07:00"^^xsd:dateTime ; :windowUntil "2026-11-16T00:00:00+07:00"^^xsd:dateTime .
+:review-coffee-sg a owl:NamedIndividual, :ReviewWindow ; :windowJurisdiction :jurisdictionSingapore ;
+    :windowFrom "2026-11-15T00:00:00+08:00"^^xsd:dateTime ; :windowUntil "2026-11-16T00:00:00+08:00"^^xsd:dateTime .
+
+catalog:PolicyDefinition a owl:Class .
+catalog:DecisionQuery a owl:Class .
+catalog:CoverageQuery a owl:Class .
+catalog:coverageScope a owl:AnnotationProperty .
+catalog:policyKind a owl:AnnotationProperty .
+catalog:satisfiedQuery a owl:AnnotationProperty .
+catalog:failedQuery a owl:AnnotationProperty .
+catalog:exceptionQuery a owl:AnnotationProperty .
+catalog:policyJurisdiction a owl:AnnotationProperty .
+catalog:responsibleRole a owl:AnnotationProperty .
+catalog:evidenceType a owl:AnnotationProperty .
+catalog:shipmentBound a owl:AnnotationProperty .
+catalog:admitEvidence a owl:AnnotationProperty .
+catalog:maximumDelay a owl:AnnotationProperty .
+catalog:exactDecimal a owl:AnnotationProperty .
+
+:ruleId a owl:AnnotationProperty .
+:ruleSourceClause a owl:AnnotationProperty .
+:ruleReviewStatus a owl:AnnotationProperty .
+:rvcDocumentVar a swrl:Variable .
+:rvcPercentVar a swrl:Variable .
+:rvcLimitVar a swrl:Variable .
+
+# Numeric classification of named RVC worksheets. The assessment also requires admitted case evidence.
+[] a swrl:Imp ; :ruleId "atiga-pump-rvc-threshold-met" ; rdfs:label "atiga-pump-rvc-threshold-met" ;
+    :ruleSourceClause :psr-row-2042, :atiga-article-29 ; :ruleReviewStatus "SOURCE_REVIEWED" ;
+    swrl:body [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :documentType ;
+            swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcWorksheet ] ;
+        rdf:rest [ a swrl:AtomList ;
+            rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :recordedRvcPercent ;
+                swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcPercentVar ] ;
+            rdf:rest [ a swrl:AtomList ;
+                rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :minimumRvcPercent ;
+                    swrl:argument1 :pumpPsrThreshold ; swrl:argument2 :rvcLimitVar ] ;
+                rdf:rest [ a swrl:AtomList ;
+                    rdf:first [ a swrl:BuiltinAtom ; swrl:builtin swrlb:greaterThanOrEqual ;
+                        swrl:arguments ( :rvcPercentVar :rvcLimitVar ) ] ;
+                    rdf:rest rdf:nil ] ] ] ] ;
+    swrl:head [ a swrl:AtomList ;
+        rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :PumpRvcThresholdMet ; swrl:argument1 :rvcDocumentVar ] ;
+        rdf:rest rdf:nil ] .
+
+[] a swrl:Imp ; :ruleId "atiga-pump-rvc-threshold-not-met" ; rdfs:label "atiga-pump-rvc-threshold-not-met" ;
+    :ruleSourceClause :psr-row-2042, :atiga-article-29 ; :ruleReviewStatus "SOURCE_REVIEWED" ;
+    swrl:body [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :documentType ;
+            swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcWorksheet ] ;
+        rdf:rest [ a swrl:AtomList ;
+            rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :recordedRvcPercent ;
+                swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcPercentVar ] ;
+            rdf:rest [ a swrl:AtomList ;
+                rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :minimumRvcPercent ;
+                    swrl:argument1 :pumpPsrThreshold ; swrl:argument2 :rvcLimitVar ] ;
+                rdf:rest [ a swrl:AtomList ;
+                    rdf:first [ a swrl:BuiltinAtom ; swrl:builtin swrlb:lessThan ;
+                        swrl:arguments ( :rvcPercentVar :rvcLimitVar ) ] ;
+                    rdf:rest rdf:nil ] ] ] ] ;
+    swrl:head [ a swrl:AtomList ;
+        rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :PumpRvcThresholdNotMet ; swrl:argument1 :rvcDocumentVar ] ;
+        rdf:rest rdf:nil ] .
+
+:subheadingCode a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :HSSubheading ; rdfs:range xsd:string .
+:hs6-841370 :subheadingCode "841370" .
+:hs6-841391 :subheadingCode "841391" .
+:hs6-090121 :subheadingCode "090121" .
+:documentSettlementGround a owl:ObjectProperty ; rdfs:domain :Document ; rdfs:range :SettlementGround .
+:settlementGroundsClosed a owl:DatatypeProperty ; rdfs:domain :TradeCaseRevision ; rdfs:range xsd:boolean .
+
+# Match only the reviewed route, tariff line, procedure, local-day window and context.
+:reviewed-scope-selector a owl:NamedIndividual, catalog:CoverageQuery ;
+    catalog:id "reviewed-case-scope" ; rdfs:label "Cakupan kasus yang telah dikurasi"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+SELECT DISTINCT ?scope WHERE {
+    ?context tg:appliesInJurisdiction ?jurisdiction ; tg:selectedProcedure ?procedure ;
+        tg:assessesProduct ?product ; tg:assessesRevision ?revision ;
+        tg:assessmentShipment ?shipment ; tg:transactionAt ?at .
+    ?shipment tg:containsGoods ?product ; tg:shipmentDispatchCountry ?dispatch ;
+        tg:shipmentDestinationCountry ?destination ; tg:cargoCategory tg:regularCargo .
+    ?product tg:hasTariffClassification ?code .
+    ?scope a tg:CoverageDeclaration ; tg:coverageJurisdiction ?jurisdiction ;
+        tg:coverageProcedure ?procedure ; tg:coverageCode ?code ;
+        tg:coverageDispatchCountry ?dispatch ; tg:coverageDestinationCountry ?destination ;
+        tg:coverageWindow ?window .
+    ?window tg:windowJurisdiction ?jurisdiction ; tg:windowFrom ?from ; tg:windowUntil ?until .
+    FILTER (?at >= ?from && ?at < ?until)
+    FILTER NOT EXISTS {
+        ?scope tg:coverageAgreement ?agreement .
+        FILTER NOT EXISTS { ?context tg:selectedAgreement ?agreement . }
+    }
+    FILTER NOT EXISTS {
+        ?scope tg:coverageUse ?intendedUse .
+        FILTER NOT EXISTS { ?revision tg:intendedUse ?intendedUse . }
+    }
+    FILTER NOT EXISTS {
+        ?context tg:assessmentShipment ?otherShipment . FILTER (?otherShipment != ?shipment)
+    }
+}""" .
+
+:q-issued-document a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "issued-document" ; rdfs:label "Bukti dokumen pihak yang bertanggung jawab"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?definition cat:responsibleRole ?role .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole ?role ; tg:roleActor ?actor .
+    OPTIONAL { ?definition cat:requiredUse ?requiredUse . }
+    FILTER (!BOUND(?requiredUse) || EXISTS { ?revision tg:intendedUse ?requiredUse . })
+    ?definition cat:evidenceType ?type ; cat:shipmentBound ?shipmentBound .
+    ?context cd:admittedDocument ?evidence .
+    ?evidence tg:documentType ?type ; tg:documentHolder ?actor .
+    FILTER (!?shipmentBound || EXISTS {
+        ?context tg:assessmentShipment ?shipment .
+        ?evidence tg:documentShipment ?shipment .
+    })
+}""" .
+
+:q-rvc-pass a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "rvc-pass" ; rdfs:label "RVC memenuhi ambang PSR"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
+    (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> AS ?supportPredicate)
+    (tg:PumpRvcThresholdMet AS ?supportObject) WHERE {
+    ?definition cat:evidenceType ?type .
+    ?context tg:assessesProduct ?product ; tg:assessesBatch ?batch ;
+        tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?shipment tg:shipmentDispatchCountry ?dispatch .
+    ?product tg:hasBatch ?batch .
+    ?batch tg:producedAt/tg:withinLocation ?dispatch .
+    ?evidence tg:documentType ?type ; tg:documentBatch ?batch ; tg:documentShipment ?shipment ;
+        tg:recordedRvcPercent ?percent ; cd:ruleDerivedType tg:PumpRvcThresholdMet .
+    FILTER (DATATYPE(?percent) = xsd:decimal && ?percent >= 0 && ?percent <= 100)
+}""" .
+
+:q-rvc-fail a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "rvc-fail" ; rdfs:label "RVC di bawah ambang PSR"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
+    (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> AS ?supportPredicate)
+    (tg:PumpRvcThresholdNotMet AS ?supportObject) WHERE {
+    ?definition cat:evidenceType ?type .
+    ?context tg:assessesProduct ?product ; tg:assessesBatch ?batch ;
+        tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?shipment tg:shipmentDispatchCountry ?dispatch .
+    ?product tg:hasBatch ?batch .
+    ?batch tg:producedAt/tg:withinLocation ?dispatch .
+    ?evidence tg:documentType ?type ; tg:documentBatch ?batch ; tg:documentShipment ?shipment ;
+        tg:recordedRvcPercent ?percent ; cd:ruleDerivedType tg:PumpRvcThresholdNotMet .
+    FILTER (DATATYPE(?percent) = xsd:decimal && ?percent >= 0 && ?percent <= 100)
+}""" .
+
+:q-ctsh-pass a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "ctsh-pass" ; rdfs:label "Semua input non-originating pada daftar lengkap berganti subpos"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessesProduct ?product ; tg:assessesBatch ?batch ;
+        tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?shipment tg:shipmentDispatchCountry ?dispatch .
+    ?product tg:hasBatch ?batch ; tg:classifiedSubheading/tg:subheadingCode ?targetCode .
+    ?batch tg:producedAt/tg:withinLocation ?dispatch .
+    ?evidence tg:documentType tg:atigaBomStatement ; tg:documentBatch ?batch ;
+        tg:documentShipment ?shipment ; tg:documentComponentList ?bom .
+    ?bom tg:componentListForBatch ?batch .
+    ?bom tg:componentListClosed true ; tg:componentEntry ?knownEntry .
+    ?knownEntry tg:nonOriginatingInput true .
+    FILTER NOT EXISTS { ?bom tg:componentListClosed false . }
+    FILTER NOT EXISTS {
+        ?bom tg:componentEntry ?entry .
+        FILTER NOT EXISTS {
+            ?entry tg:nonOriginatingInput ?originFlag .
+            FILTER (DATATYPE(?originFlag) = xsd:boolean)
+            FILTER NOT EXISTS {
+                ?entry tg:nonOriginatingInput ?otherFlag . FILTER (?originFlag != ?otherFlag)
+            }
+            FILTER (?originFlag = false || EXISTS {
+                ?entry tg:entryMaterial/tg:classifiedSubheading/tg:subheadingCode ?inputCode .
+                FILTER (?inputCode != ?targetCode)
+            })
+        }
+    }
+    FILTER NOT EXISTS {
+        ?bom tg:componentEntry ?sameEntry .
+        ?sameEntry tg:nonOriginatingInput true ; tg:entryMaterial/tg:classifiedSubheading/tg:subheadingCode ?targetCode .
+    }
+}""" .
+
+:q-ctsh-fail a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "ctsh-fail" ; rdfs:label "Input non-originating tercatat pada subpos produk"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessesProduct ?product ; tg:assessesBatch ?batch ;
+        tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?shipment tg:shipmentDispatchCountry ?dispatch .
+    ?product tg:hasBatch ?batch ; tg:classifiedSubheading/tg:subheadingCode ?targetCode .
+    ?batch tg:producedAt/tg:withinLocation ?dispatch .
+    ?evidence tg:documentType tg:atigaBomStatement ; tg:documentBatch ?batch ;
+        tg:documentShipment ?shipment ; tg:documentComponentList ?bom .
+    ?bom tg:componentListForBatch ?batch .
+    ?bom tg:componentEntry ?entry .
+    ?entry tg:nonOriginatingInput true ; tg:entryMaterial/tg:classifiedSubheading/tg:subheadingCode ?targetCode .
+    FILTER NOT EXISTS { ?entry tg:nonOriginatingInput false . }
+}""" .
+
+:q-consignment-pass a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "consignment-pass" ; rdfs:label "Jalur langsung atau transit terverifikasi"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?evidence tg:documentType tg:transportRecord ; tg:documentShipment ?shipment .
+    ?shipment tg:shipmentRouteClosed true .
+    FILTER NOT EXISTS { ?shipment tg:shipmentRouteClosed false . }
+    {
+        ?shipment a tg:DirectRouteShipment .
+        FILTER NOT EXISTS { ?shipment tg:hasTransitStop ?unexpected . }
+    } UNION {
+        ?shipment a tg:TransitRouteShipment ; tg:hasTransitStop ?knownStop .
+        FILTER NOT EXISTS {
+            ?shipment tg:hasTransitStop ?stop .
+            FILTER NOT EXISTS {
+                ?stop tg:transitCountry tg:singapore ; tg:transitJustification ?reason ;
+                    tg:enteredTransitCommerce false ; tg:transitPreservationOnly true .
+                VALUES ?reason { tg:transportRequirement tg:geographicNecessity }
+            }
+        }
+    }
+}""" .
+
+:q-consignment-fail a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "consignment-fail" ; rdfs:label "Transit dengan tindakan yang bertentangan dengan syarat"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?evidence tg:documentType tg:transportRecord ; tg:documentShipment ?shipment .
+    ?shipment a tg:TransitRouteShipment ; tg:hasTransitStop ?stop .
+    {
+        ?stop tg:enteredTransitCommerce true .
+    } UNION {
+        ?stop tg:transitPreservationOnly false .
+    } UNION {
+        ?stop tg:transitJustification tg:otherTransitPurpose .
+    }
+}""" .
+
+:q-atiga-document a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "atiga-document" ; rdfs:label "SKA atau DAB disampaikan untuk kiriman yang dinilai"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?shipment tg:shipmentDispatchCountry ?exportingCountry .
+    ?definition cat:evidenceType ?type .
+    ?evidence tg:documentType ?type ; tg:documentShipment ?shipment ;
+        tg:documentIssuingCountry ?exportingCountry ; tg:submittedForPreference true .
+}""" .
+
+:q-temporary-conditions-met a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "temporary-conditions-met" ; rdfs:label "Syarat barang dan bukti rencana ekspor kembali"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessesProduct ?product ; tg:assessesRevision ?revision ;
+        tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?revision tg:intendedUse tg:exhibitionUse .
+    ?product tg:identifiableForReexport true ; tg:consumedInUse false ; tg:essentialChangeInUse false .
+    ?evidence tg:documentType tg:reexportPlan ; tg:documentShipment ?shipment .
+}""" .
+
+:q-temporary-conditions-fail a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "temporary-conditions-fail" ; rdfs:label "Barang tidak memenuhi syarat fisik impor sementara"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?product WHERE {
+    ?context tg:assessesProduct ?product .
+    { ?product tg:identifiableForReexport false . } UNION
+    { ?product tg:consumedInUse true . } UNION
+    { ?product tg:essentialChangeInUse true . }
+}""" .
+
+:q-temporary-no-general-controls a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "temporary-no-general-controls" ; rdfs:label "Pengecualian kendali impor umum Pasal 47 ayat 1"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?product WHERE {
+    ?context tg:assessesProduct ?product .
+    ?product tg:importCategory ?category .
+    VALUES ?category { tg:unrestrictedImport tg:restrictedImport }
+}""" .
+
+:q-no-supported-outcome a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "no-supported-outcome" ; rdfs:label "Pemenuhan penilaian belum dimodelkan dalam cakupan"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?context WHERE {
+    FILTER (false)
+}""" .
+
+:q-change-use-not-applicable a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "change-use-not-applicable" ; rdfs:label "Tujuan tetap atau penyelesaian domestik"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?revision WHERE {
+    ?context tg:assessesRevision ?revision .
+    { ?revision tg:intendedUse ?sameUse ; tg:proposedUse ?sameUse . } UNION
+    { ?revision tg:requestedSettlement tg:domesticSettlement . }
+}""" .
+
+:q-change-use-approved a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "change-use-approved" ; rdfs:label "Persetujuan untuk perubahan tujuan dalam kelompok yang sama"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?definition cat:responsibleRole ?role .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole ?role ; tg:roleActor ?actor .
+    ?definition cat:evidenceType ?type ; cat:shipmentBound ?shipmentBound .
+    ?context cd:admittedDocument ?evidence .
+    ?evidence tg:documentType ?type ; tg:documentHolder ?actor .
+    FILTER (!?shipmentBound || EXISTS {
+        ?context tg:assessmentShipment ?shipment .
+        ?evidence tg:documentShipment ?shipment .
+    })
+    ?revision tg:intendedUse ?initial ; tg:proposedUse ?proposed .
+    ?initial tg:customsReliefGroup ?group .
+    ?proposed tg:customsReliefGroup ?group .
+    ?context tg:transactionAt ?start ; tg:assessmentShipment/tg:temporaryUsePermitEnd ?end .
+    ?evidence tg:documentProposedUse ?proposed ; tg:documentEventAt ?approved .
+    FILTER (?initial != ?proposed && ?approved >= ?start && ?approved < ?end)
+}""" .
+
+:q-domestic-not-selected a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "domestic-not-selected" ; rdfs:label "Opsi ekspor kembali yang dipilih secara eksplisit"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?revision WHERE {
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:requestedSettlement tg:reexportSettlement .
+}""" .
+
+:q-domestic-authorized a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "domestic-authorized" ; rdfs:label "Keputusan penyelesaian domestik untuk pertimbangan Pasal 47"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?definition cat:responsibleRole ?role .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole ?role ; tg:roleActor ?actor .
+    ?definition cat:evidenceType ?type ; cat:shipmentBound ?shipmentBound .
+    ?context cd:admittedDocument ?evidence .
+    ?evidence tg:documentType ?type ; tg:documentHolder ?actor .
+    FILTER (!?shipmentBound || EXISTS {
+        ?context tg:assessmentShipment ?shipment .
+        ?evidence tg:documentShipment ?shipment .
+    })
+    ?revision tg:requestedSettlement tg:domesticSettlement ; tg:settlementGround ?ground .
+    VALUES ?ground { tg:governmentProject tg:centralGovernmentDonation }
+    ?evidence tg:documentSettlementGround ?ground .
+}""" .
+
+:q-domestic-ordinary-sale a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "domestic-ordinary-sale" ; rdfs:label "Penjualan komersial sebagai satu-satunya dasar yang dinyatakan"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?revision WHERE {
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:requestedSettlement tg:domesticSettlement ;
+        tg:settlementGround tg:ordinaryCommercialTransfer ; tg:settlementGroundsClosed true .
+    FILTER NOT EXISTS {
+        ?revision tg:settlementGround ?other . FILTER (?other != tg:ordinaryCommercialTransfer)
+    }
+}""" .
+
+:q-reexport-settlement-excepted a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "reexport-settlement-excepted" ; rdfs:label "Penyelesaian tanpa ekspor kembali yang telah disetujui"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessesRevision ?revision ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?revision tg:requestedSettlement tg:domesticSettlement ; tg:settlementGround ?ground .
+    VALUES ?ground { tg:governmentProject tg:centralGovernmentDonation }
+    ?evidence tg:documentType tg:domesticSettlementDecision ; tg:documentShipment ?shipment ;
+        tg:documentSettlementGround ?ground ; tg:documentHolder ?actor .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole tg:roleImporter ; tg:roleActor ?actor .
+}""" .
+
+:q-notice-timely a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "notice-timely" ; rdfs:label "Pemberitahuan sebelum izin berakhir"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence ?deadline WHERE {
+    ?definition cat:responsibleRole ?role .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole ?role ; tg:roleActor ?actor .
+    ?definition cat:evidenceType ?type ; cat:shipmentBound ?shipmentBound .
+    ?context cd:admittedDocument ?evidence .
+    ?evidence tg:documentType ?type ; tg:documentHolder ?actor .
+    FILTER (!?shipmentBound || EXISTS {
+        ?context tg:assessmentShipment ?shipment .
+        ?evidence tg:documentShipment ?shipment .
+    })
+    ?revision tg:requestedSettlement tg:reexportSettlement .
+    ?context tg:assessmentShipment ?shipment .
+    ?shipment tg:temporaryUsePermitEnd ?deadline .
+    ?evidence tg:documentEventAt ?when .
+    FILTER (?when < ?deadline)
+}""" .
+
+:q-notice-late a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "notice-late" ; rdfs:label "Pemberitahuan pada atau setelah izin berakhir"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence ?deadline WHERE {
+    ?definition cat:responsibleRole ?role .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole ?role ; tg:roleActor ?actor .
+    ?definition cat:evidenceType ?type ; cat:shipmentBound ?shipmentBound .
+    ?context cd:admittedDocument ?evidence .
+    ?evidence tg:documentType ?type ; tg:documentHolder ?actor .
+    FILTER (!?shipmentBound || EXISTS {
+        ?context tg:assessmentShipment ?shipment .
+        ?evidence tg:documentShipment ?shipment .
+    })
+    ?revision tg:requestedSettlement tg:reexportSettlement .
+    ?context tg:assessmentShipment ?shipment .
+    ?shipment tg:temporaryUsePermitEnd ?deadline .
+    ?evidence tg:documentEventAt ?when .
+    FILTER (?when >= ?deadline)
+}""" .
+
+:q-realization-timely a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "realization-timely" ; rdfs:label "Realisasi dalam batas waktu setelah izin"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence ?deadline WHERE {
+    ?definition cat:responsibleRole ?role .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole ?role ; tg:roleActor ?actor .
+    ?definition cat:evidenceType ?type ; cat:shipmentBound ?shipmentBound .
+    ?context cd:admittedDocument ?evidence .
+    ?evidence tg:documentType ?type ; tg:documentHolder ?actor .
+    FILTER (!?shipmentBound || EXISTS {
+        ?context tg:assessmentShipment ?shipment .
+        ?evidence tg:documentShipment ?shipment .
+    })
+    ?revision tg:requestedSettlement tg:reexportSettlement .
+    ?context tg:assessmentShipment/tg:temporaryUsePermitEnd ?permitEnd .
+    ?definition cat:maximumDelay ?delay .
+    ?evidence tg:documentEventAt ?when .
+    BIND (?permitEnd + STRDT(STR(?delay), xsd:dayTimeDuration) AS ?deadline)
+    FILTER (?when <= ?deadline)
+}""" .
+
+:q-realization-late a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "realization-late" ; rdfs:label "Realisasi lewat batas setelah izin"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence ?deadline WHERE {
+    ?definition cat:responsibleRole ?role .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:revisionRoleAssignment ?assignment .
+    ?assignment tg:hasActorRole ?role ; tg:roleActor ?actor .
+    ?definition cat:evidenceType ?type ; cat:shipmentBound ?shipmentBound .
+    ?context cd:admittedDocument ?evidence .
+    ?evidence tg:documentType ?type ; tg:documentHolder ?actor .
+    FILTER (!?shipmentBound || EXISTS {
+        ?context tg:assessmentShipment ?shipment .
+        ?evidence tg:documentShipment ?shipment .
+    })
+    ?revision tg:requestedSettlement tg:reexportSettlement .
+    ?context tg:assessmentShipment/tg:temporaryUsePermitEnd ?permitEnd .
+    ?definition cat:maximumDelay ?delay .
+    ?evidence tg:documentEventAt ?when .
+    BIND (?permitEnd + STRDT(STR(?delay), xsd:dayTimeDuration) AS ?deadline)
+    FILTER (?when > ?deadline)
+}""" .
+
+# Source-backed assessment policies
+:policy-atiga-rvc a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "atiga-rvc" ;
+    rdfs:label "Nilai regional pada lembar penghitungan ATIGA"@id ;
+    catalog:coverageScope :scope-pump-import ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :psr-row-2042, :atiga-article-29 ;
+    catalog:satisfiedQuery :q-rvc-pass ;
+    catalog:failedQuery :q-rvc-fail ;
+    catalog:evidenceType :rvcWorksheet ;
+    catalog:shipmentBound true .
+
+:policy-atiga-ctsh a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "atiga-ctsh" ;
+    rdfs:label "Perubahan subpos dasar bahan non-originating"@id ;
+    catalog:coverageScope :scope-pump-import ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :psr-row-2042 ;
+    catalog:satisfiedQuery :q-ctsh-pass ;
+    catalog:failedQuery :q-ctsh-fail .
+
+:policy-atiga-consignment a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "atiga-consignment" ;
+    rdfs:label "Kriteria pengiriman ATIGA"@id ;
+    catalog:coverageScope :scope-pump-import ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :atiga-article-32, :pmk131-article-5 ;
+    catalog:satisfiedQuery :q-consignment-pass ;
+    catalog:failedQuery :q-consignment-fail .
+
+:policy-atiga-origin-evidence a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "atiga-origin-evidence" ;
+    rdfs:label "Bukti asal yang disampaikan untuk kiriman"@id ;
+    catalog:coverageScope :scope-pump-import ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk35-submission, :pmk81-origin-evidence ;
+    catalog:satisfiedQuery :q-atiga-document ;
+    catalog:evidenceType :atigaFormD, :atigaElectronicFormD, :atigaOriginDeclaration ;
+    catalog:shipmentBound true .
+
+:policy-importer-api-u a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "importer-api-u" ;
+    rdfs:label "Identitas API-U untuk impor untuk diperdagangkan"@id ;
+    catalog:coverageScope :scope-pump-import ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :permendag16-import ;
+    catalog:satisfiedQuery :q-issued-document ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:evidenceType :generalImporterId ;
+    catalog:shipmentBound false .
+
+:policy-temporary-goods-conditions a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-goods-conditions" ;
+    rdfs:label "Syarat barang yang digunakan sementara"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk178-article-2 ;
+    catalog:satisfiedQuery :q-temporary-conditions-met ;
+    catalog:failedQuery :q-temporary-conditions-fail .
+
+:policy-temporary-import-permit a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-import-permit" ;
+    rdfs:label "Izin impor sementara untuk kiriman pameran"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :pmk106-permit, :pmk106-exhibition ;
+    catalog:satisfiedQuery :q-issued-document ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:evidenceType :temporaryImportPermit ;
+    catalog:shipmentBound true .
+
+:policy-temporary-import-guarantee a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-import-guarantee" ;
+    rdfs:label "Bukti penyerahan jaminan impor sementara"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :pmk106-guarantee ;
+    catalog:satisfiedQuery :q-issued-document ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:evidenceType :temporaryImportGuarantee ;
+    catalog:shipmentBound true .
+
+:policy-temporary-general-import-controls a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-general-import-controls" ;
+    rdfs:label "Ketentuan impor umum pada tahap impor sementara"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :permendag16-article-47 ;
+    catalog:satisfiedQuery :q-no-supported-outcome ;
+    catalog:exceptionQuery :q-temporary-no-general-controls .
+
+:policy-temporary-change-use-approval a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-change-use-approval" ;
+    rdfs:label "Persetujuan perubahan tujuan dalam kelompok impor sementara"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :pmk178-article-16 ;
+    catalog:satisfiedQuery :q-change-use-approved ;
+    catalog:exceptionQuery :q-change-use-not-applicable ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:evidenceType :changeOfUseApproval ;
+    catalog:shipmentBound true .
+
+:policy-temporary-domestic-settlement a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-domestic-settlement" ;
+    rdfs:label "Dasar dan keputusan penyelesaian tanpa ekspor kembali"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk178-settlement, :permendag16-article-47 ;
+    catalog:satisfiedQuery :q-domestic-authorized ;
+    catalog:failedQuery :q-domestic-ordinary-sale ;
+    catalog:exceptionQuery :q-domestic-not-selected ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:evidenceType :domesticSettlementDecision ;
+    catalog:shipmentBound true .
+
+:policy-temporary-reexport-notice a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-reexport-notice" ;
+    rdfs:label "Pemberitahuan ekspor kembali sebelum izin berakhir"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :pmk178-article-17 ;
+    catalog:satisfiedQuery :q-notice-timely ;
+    catalog:failedQuery :q-notice-late ;
+    catalog:exceptionQuery :q-reexport-settlement-excepted ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:evidenceType :temporaryReexportNotice ;
+    catalog:shipmentBound true .
+
+:policy-temporary-reexport-realization a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-reexport-realization" ;
+    rdfs:label "Realisasi ekspor kembali dalam jangka penyelesaian"@id ;
+    catalog:coverageScope :scope-pump-exhibition ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :pmk178-article-17 ;
+    catalog:satisfiedQuery :q-realization-timely ;
+    catalog:failedQuery :q-realization-late ;
+    catalog:exceptionQuery :q-reexport-settlement-excepted ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:evidenceType :temporaryReexportRealization ;
+    catalog:shipmentBound true ;
+    catalog:maximumDelay "P30D" .
+
+:policy-sg-food-import-registration a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "sg-food-import-registration" ;
+    rdfs:label "Registrasi importir pangan olahan Singapura"@id ;
+    catalog:coverageScope :scope-coffee-export ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :sg-sfa-processed-food ;
+    catalog:satisfiedQuery :q-issued-document ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:policyJurisdiction :jurisdictionSingapore ;
+    catalog:evidenceType :sgProcessedFoodRegistration ;
+    catalog:shipmentBound false .
+
+:policy-sg-coffee-consignment-permit a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "sg-coffee-consignment-permit" ;
+    rdfs:label "Cargo Clearance Permit untuk kiriman kopi Singapura"@id ;
+    catalog:coverageScope :scope-coffee-export ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :sg-customs-import-permit, :sg-sfa-processed-food ;
+    catalog:satisfiedQuery :q-issued-document ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:policyJurisdiction :jurisdictionSingapore ;
+    catalog:evidenceType :sgCargoClearancePermit ;
+    catalog:shipmentBound true .
+
+:policy-id-coffee-export-notice a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "id-coffee-export-notice" ;
+    rdfs:label "Pemberitahuan pabean ekspor komersial Indonesia"@id ;
+    catalog:coverageScope :scope-coffee-export ;
+    catalog:policyKind "OBLIGATION" ;
+    :hasSourceClause :pmk155-export ;
+    catalog:satisfiedQuery :q-issued-document ;
+    catalog:responsibleRole :roleExporter ;
+    catalog:policyJurisdiction :jurisdictionIndonesiaCustoms ;
+    catalog:evidenceType :idExportDeclaration ;
+    catalog:shipmentBound true .
+
+:productionInputUse a owl:NamedIndividual, :IntendedUse .
+
+[] a owl:AllDifferent ; owl:distinctMembers ( :productionInputUse :commercialResaleUse ) .
+
+:producerImporterId a owl:NamedIndividual, :DocumentType .
+
+:deMinimisValueStatement a owl:NamedIndividual, :DocumentType .
+
+:exhibitionStorageRecord a owl:NamedIndividual, :DocumentType .
+
+:percentUnit a owl:NamedIndividual, :Unit .
+
+:atiga-article-33 a owl:NamedIndividual, :SourceClause ;
+
+    :clauseInDocument :source-atiga-text ; :clauseLocator "Article 33 (De Minimis)" .
+
+:maximumDeMinimisPercent a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:range xsd:decimal .
+
+:pumpPsrThreshold :maximumDeMinimisPercent 10.00 .
+
+:fobValue a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :Document ; rdfs:range xsd:decimal .
+
+:nonOriginatingMaterialValue a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :Document ; rdfs:range xsd:decimal .
+
+:failedCtcMaterialValue a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :Document ; rdfs:range xsd:decimal .
+
+:valuationCurrency a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain :Document ; rdfs:range :Currency .
+
+:valuationScopeClosed a owl:DatatypeProperty ; rdfs:domain :Document ; rdfs:range xsd:boolean .
+
+:temporaryUsePermitStart a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :Shipment ; rdfs:range xsd:dateTime .
+
+:permitExtended a owl:DatatypeProperty ; rdfs:domain :Shipment ; rdfs:range xsd:boolean .
+
+:exhibitionCount a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :Shipment ; rdfs:range xsd:integer .
+
+:customsSupervisedStorage a owl:DatatypeProperty ; rdfs:domain :Document ; rdfs:range xsd:boolean .
+
+catalog:requiredUse a owl:AnnotationProperty .
+
+catalog:alternativeUse a owl:AnnotationProperty .
+
+
+
+:policy-importer-api-u catalog:requiredUse :commercialResaleUse ; catalog:alternativeUse :productionInputUse ;
+    catalog:exceptionQuery :q-alternative-import-use .
+
+:policy-importer-api-p a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "importer-api-p" ; rdfs:label "Identitas API-P untuk penggunaan produksi sendiri"@id ;
+    catalog:coverageScope :scope-pump-import ; catalog:policyKind "OBLIGATION" ; :hasSourceClause :permendag16-import ;
+    catalog:responsibleRole :roleImporter ; catalog:evidenceType :producerImporterId ; catalog:shipmentBound false ;
+    catalog:requiredUse :productionInputUse ; catalog:alternativeUse :commercialResaleUse ;
+    catalog:satisfiedQuery :q-issued-document ; catalog:exceptionQuery :q-alternative-import-use .
+
+:q-alternative-import-use a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "alternative-import-use" ; rdfs:label "Penggunaan tercatat untuk jalur API lainnya"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?revision WHERE {
+    ?definition cat:alternativeUse ?other ; cat:requiredUse ?required .
+    ?context tg:assessesRevision ?revision .
+    ?revision tg:intendedUse ?other .
+    FILTER NOT EXISTS { ?revision tg:intendedUse ?required . }
+}""" .
+
+
+
+:policy-atiga-de-minimis-value a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "atiga-de-minimis-value" ; rdfs:label "Batas nilai de minimis untuk input yang gagal CTC"@id ;
+    catalog:coverageScope :scope-pump-import ; catalog:policyKind "CRITERION" ; :hasSourceClause :atiga-article-33 ;
+    catalog:satisfiedQuery :q-de-minimis-met ; catalog:failedQuery :q-de-minimis-exceeded .
+
+:q-de-minimis-met a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "de-minimis-met" ; rdfs:label "Nilai input gagal CTC dalam batas proporsi"@id ;
+    catalog:exactDecimal true ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?evidence tg:documentType tg:deMinimisValueStatement ; tg:documentBatch ?batch ; tg:documentShipment ?shipment ;
+        tg:documentComponentList ?bom ; tg:valuationScopeClosed true ; tg:valuationCurrency ?currency ;
+        tg:fobValue ?fob ; tg:failedCtcMaterialValue ?failedValue .
+    ?bom tg:componentListForBatch ?batch ; tg:componentListClosed true .
+    tg:pumpPsrThreshold tg:maximumDeMinimisPercent ?maximum .
+    FILTER NOT EXISTS { ?evidence tg:valuationScopeClosed false . }
+    FILTER NOT EXISTS { ?bom tg:componentListClosed false . }
+    FILTER (isIRI(?currency) && DATATYPE(?fob) = xsd:decimal && DATATYPE(?failedValue) = xsd:decimal
+        && ?fob > 0 && ?failedValue >= 0 && ?failedValue <= ?fob)
+    FILTER (?failedValue * 100 <= ?fob * ?maximum)
+}""" .
+
+:q-de-minimis-exceeded a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "de-minimis-exceeded" ; rdfs:label "Nilai input gagal CTC melebihi batas proporsi"@id ;
+    catalog:exactDecimal true ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?evidence tg:documentType tg:deMinimisValueStatement ; tg:documentBatch ?batch ; tg:documentShipment ?shipment ;
+        tg:documentComponentList ?bom ; tg:valuationScopeClosed true ; tg:valuationCurrency ?currency ;
+        tg:fobValue ?fob ; tg:failedCtcMaterialValue ?failedValue .
+    ?bom tg:componentListForBatch ?batch ; tg:componentListClosed true .
+    tg:pumpPsrThreshold tg:maximumDeMinimisPercent ?maximum .
+    FILTER NOT EXISTS { ?evidence tg:valuationScopeClosed false . }
+    FILTER NOT EXISTS { ?bom tg:componentListClosed false . }
+    FILTER (isIRI(?currency) && DATATYPE(?fob) = xsd:decimal && DATATYPE(?failedValue) = xsd:decimal
+        && ?fob > 0 && ?failedValue >= 0 && ?failedValue <= ?fob)
+    FILTER (?failedValue * 100 > ?fob * ?maximum)
+}""" .
+
+
+
+:policy-temporary-exhibition-term a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-exhibition-term" ; rdfs:label "Jangka waktu dan perpanjangan izin pameran pompa"@id ;
+    catalog:coverageScope :scope-pump-exhibition ; catalog:policyKind "CRITERION" ; :hasSourceClause :pmk106-exhibition ;
+    catalog:maximumDelay "P1Y" ;
+    catalog:satisfiedQuery :q-exhibition-term-valid ; catalog:failedQuery :q-exhibition-term-invalid .
+
+:q-exhibition-term-valid a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "exhibition-term-valid" ; rdfs:label "Jangka izin tidak diperpanjang dan dalam batas"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence ?deadline WHERE {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?evidence tg:documentType tg:temporaryImportPermit ; tg:documentShipment ?shipment .
+    ?shipment tg:temporaryUsePermitStart ?start ; tg:temporaryUsePermitEnd ?end ; tg:permitExtended ?extended .
+    ?definition cat:maximumDelay ?maximum .
+    BIND (?start + STRDT(STR(?maximum), xsd:yearMonthDuration) AS ?deadline)
+    FILTER (BOUND(?deadline) && ?end > ?start && (?end <= ?deadline && ?extended = false))
+}""" .
+
+:q-exhibition-term-invalid a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "exhibition-term-invalid" ; rdfs:label "Jangka izin melebihi batas atau ada perpanjangan"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence ?deadline WHERE {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?evidence tg:documentType tg:temporaryImportPermit ; tg:documentShipment ?shipment .
+    ?shipment tg:temporaryUsePermitStart ?start ; tg:temporaryUsePermitEnd ?end ; tg:permitExtended ?extended .
+    ?definition cat:maximumDelay ?maximum .
+    BIND (?start + STRDT(STR(?maximum), xsd:yearMonthDuration) AS ?deadline)
+    FILTER (BOUND(?deadline) && ?end > ?start && (?end > ?deadline || ?extended = true))
+}""" .
+
+
+
+:policy-temporary-interval-storage a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "temporary-interval-storage" ; rdfs:label "Tempat khusus dan pengawasan antar pameran"@id ;
+    catalog:coverageScope :scope-pump-exhibition ; catalog:policyKind "OBLIGATION" ; :hasSourceClause :pmk106-exhibition ;
+    catalog:responsibleRole :roleImporter ;
+    catalog:satisfiedQuery :q-exhibition-storage-met ; catalog:failedQuery :q-exhibition-storage-failed ;
+    catalog:exceptionQuery :q-one-exhibition .
+
+:q-exhibition-storage-met a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "exhibition-storage-met" ; rdfs:label "Bukti penyimpanan khusus dengan pengawasan"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?shipment tg:exhibitionCount ?count .
+    ?evidence tg:documentType tg:exhibitionStorageRecord ; tg:documentShipment ?shipment ;
+       tg:customsSupervisedStorage true .
+    FILTER (?count > 1)
+}""" .
+
+:q-exhibition-storage-failed a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "exhibition-storage-failed" ; rdfs:label "Bukti penyimpanan yang tidak memenuhi kondisi"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?evidence WHERE {
+    ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
+    ?shipment tg:exhibitionCount ?count .
+    ?evidence tg:documentType tg:exhibitionStorageRecord ; tg:documentShipment ?shipment ;
+       tg:customsSupervisedStorage false .
+    FILTER (?count > 1)
+}""" .
+
+:q-one-exhibition a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "one-exhibition" ; rdfs:label "Satu pameran tanpa jeda antar pameran"@id ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX cat: <urn:tradegraph:catalog#>
+PREFIX cd: <urn:tradegraph:case-data#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?shipment WHERE {
+    ?context tg:assessmentShipment ?shipment .
+    ?shipment tg:exhibitionCount 1 .
+}""" .
+
+
+
+:calc-atiga-rvc-indirect a owl:NamedIndividual, catalog:CalculationDefinition ;
+    catalog:id "atiga-rvc-indirect" ; rdfs:label "Kandungan nilai regional dengan metode tidak langsung"@id ;
+    :hasSourceClause :atiga-article-29 ;
+    catalog:typedParameters (
+        [ catalog:name "worksheet" ; catalog:valueType catalog:IRI ]
+        [ catalog:name "batch" ; catalog:valueType catalog:IRI ; catalog:fromContext "batch" ]
+    ) ;
+    catalog:scopeParameter "worksheet" ;
+    catalog:closureSparql """PREFIX tg: <urn:tradegraph:kb#>
+ASK {
+    ?worksheet a tg:Document ; tg:documentBatch ?batch ; tg:valuationScopeClosed true .
+    FILTER NOT EXISTS { ?worksheet tg:valuationScopeClosed false . }
+    FILTER NOT EXISTS { ?worksheet tg:documentBatch ?other . FILTER (?other != ?batch) }
+}""" ;
+    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (((?fob - ?vnm) * 100 / ?fob) AS ?value) (tg:percentUnit AS ?unit) WHERE {
+    ?worksheet tg:fobValue ?fob ; tg:nonOriginatingMaterialValue ?vnm ; tg:valuationCurrency ?inputCurrency .
+    FILTER (isIRI(?inputCurrency) && DATATYPE(?fob) = xsd:decimal && DATATYPE(?vnm) = xsd:decimal
+        && ?fob > 0 && ?vnm >= 0 && ?vnm <= ?fob)
+}""" .
+
+
