@@ -1,6 +1,6 @@
-@prefix fx: <urn:tradegraph:test:feedback#> .
-@prefix tg: <urn:tradegraph:kb#> .
-@prefix catalog: <urn:tradegraph:catalog#> .
+@prefix fx: <http://www.semanticweb.org/tradegraph/test/feedback#> .
+@prefix tg: <http://www.semanticweb.org/tradegraph/kb#> .
+@prefix catalog: <http://www.semanticweb.org/tradegraph/catalog#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -90,6 +90,6 @@ fx:query a owl:NamedIndividual, catalog:QueryDefinition ;
     catalog:parameters ( "product" ) ;
     catalog:sparql """
         SELECT ?product WHERE {
-            ?product a <urn:tradegraph:test:feedback#derived_after_rule_feedback>
+            ?product a <http://www.semanticweb.org/tradegraph/test/feedback#derived_after_rule_feedback>
         }
     """ .

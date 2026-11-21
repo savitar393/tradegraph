@@ -29,7 +29,7 @@ from tradegraph.optimization import MultiFtaOptimizer
 
 ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_KB = ROOT / "knowledge" / "tradegraph.ttl"
-EX = Namespace("urn:example:fuseki-e2e#")
+EX = Namespace("http://example.org/fuseki-e2e#")
 
 
 @contextmanager
@@ -168,7 +168,7 @@ def test_fuseki_http_publish_auth_atomic_idempotency_conflict_and_kb_sync(tmp_pa
         )
         claim = EvidenceClaim(str(EX.claim), str(EX.product), str(EX.origin), str(EX.source), value=EX.country)
         root = repo.create_case(
-            "@prefix ex: <urn:example:fuseki-e2e#> . ex:product ex:pack [ ex:count 1 ] .",
+            "@prefix ex: <http://example.org/fuseki-e2e#> . ex:product ex:pack [ ex:count 1 ] .",
             ctx, evidence_claims=(claim,), evidence_scope_closed=True,
         )
 

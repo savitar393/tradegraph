@@ -120,6 +120,11 @@ def test_back_to_back_co_transshipment_hub_and_third_party_invoicing(advisor):
     assert by_agr["rcep"].third_party_invoicing_allowed is True
     assert "Box 14" in (by_agr["rcep"].third_party_invoice_instruction or "")
     assert "Box 13" in (by_agr["rcep"].third_party_invoice_instruction or "")
+    # Unified semantic export evaluation emits real SWRL_RULE provenance witnesses for RVC
+    rcep_exp = {e.policy_id: e for e in by_agr["rcep"].explanations}
+    assert "rcep-psr-rvc" in rcep_exp
+    assert "SWRL_RULE" in rcep_exp["rcep-psr-rvc"].node_kinds
+    assert rcep_exp["rcep-psr-rvc"].reaches_asserted_facts is True
 
     assert [s.category for s in res.checklist] == [
         "LARTAS", "LARTAS", "LARTAS", "CUSTOMS_PEB", "ORIGIN_PROOF", "TRANSSHIPMENT", "INVOICING",
@@ -189,6 +194,24 @@ def test_regional_cumulation_sourcing_optimizer_before_and_after(advisor):
     assert after_by_agr["ikcepa"].origin_status == "SATISFIED"
     assert after.recommended_agreement == "ikcepa"
     assert after.cumulation_opportunities == ()
+
+    # Export CTC heading exclusion (7209.26.10 excludes 7208 hot-rolled coil under ATIGA & RCEP):
+    # Non-party US 7208.54.10 coil with RVC 30% MUST fail both ATIGA & RCEP via unified HermiT/SWRL/KB policies!
+    steel_fail = advisor.evaluate(ExportSpec(
+        hs_code="7209.26.10",
+        destination_country="TH",
+        as_of_date="2025-09-15",
+        materials=(MaterialInput(hs_code="7208.54.10", non_originating=True, origin_country="US", origin_proof_verified=False),),
+        rvc_percent=Decimal("30.00"),
+        include_explain=True,
+    ))
+    steel_by_agr = {s.agreement: s for s in steel_fail.schemes}
+    assert steel_by_agr["atiga"].origin_status == "NOT_SATISFIED"
+    assert steel_by_agr["rcep"].origin_status == "NOT_SATISFIED"
+    assert steel_fail.recommended_agreement == "NON_PREFERENTIAL"
+    assert any(s.failing_material_hs == "7208.54.10" for s in steel_fail.cumulation_opportunities)
+    rcep_rvc_exp = {e.policy_id: e for e in steel_by_agr["rcep"].explanations}["rcep-psr-rvc"]
+    assert "SWRL_RULE" in rcep_rvc_exp.node_kinds
 
 
 def test_cli_export_command_end_to_end(tmp_path, capsys):

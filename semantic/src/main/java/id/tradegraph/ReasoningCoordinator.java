@@ -33,7 +33,7 @@ import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import org.semanticweb.owlapi.reasoner.TimeOutException;
 
 public final class ReasoningCoordinator {
-    private static final IRI RULE_ID = IRI.create("urn:tradegraph:kb#ruleId");
+    private static final IRI RULE_ID = IRI.create("http://www.semanticweb.org/tradegraph/kb#ruleId");
 
     public InferenceResult reason(ReasoningJob job) {
         long started = System.nanoTime();

@@ -33,7 +33,7 @@ class CaseGraphs:
 def _revision_iri(case_iri: URIRef, revision: int) -> URIRef:
     if type(revision) is not int or revision < 1:
         raise ValueError("Expected a positive integer case revision")
-    return URIRef(f"{case_iri}:revision:{revision}")
+    return URIRef(f"{case_iri}/revision/{revision}")
 
 
 def _utc_literal(timestamp: datetime) -> Literal:
@@ -45,16 +45,16 @@ def _utc_literal(timestamp: datetime) -> Literal:
 
 def project_case_graphs(snapshot: CaseSnapshot) -> CaseGraphs:
     """Project one pinned snapshot without treating evidence claims as asserted facts."""
-    case_iri = URIRef(f"urn:tradegraph:case:{UUID(snapshot.case_id)}")
+    case_iri = URIRef(f"http://www.semanticweb.org/tradegraph/case/{UUID(snapshot.case_id)}")
     revision = _revision_iri(case_iri, snapshot.revision)
-    facts = Graph(identifier=URIRef(f"{revision}:facts"))
+    facts = Graph(identifier=URIRef(f"{revision}/facts"))
     for triple in parse_persisted_facts(snapshot.facts_turtle, snapshot.case_id):
         facts.add(triple)
-    context = Graph(identifier=URIRef(f"{revision}:context"))
-    evidence = Graph(identifier=URIRef(f"{revision}:evidence"))
+    context = Graph(identifier=URIRef(f"{revision}/context"))
+    evidence = Graph(identifier=URIRef(f"{revision}/evidence"))
     assessment = context.identifier
     source = snapshot.context
-    knowledge = require_iri(f"urn:tradegraph:kb-snapshot:{source.kb_sha256}")
+    knowledge = require_iri(f"http://www.semanticweb.org/tradegraph/kb-snapshot/{source.kb_sha256}")
 
     for triple in (
         (case_iri, RDF.type, TG.TradeCase),
@@ -86,7 +86,7 @@ def project_case_graphs(snapshot: CaseSnapshot) -> CaseGraphs:
 
     scope = None
     if source.evidence_scope_id is not None:
-        scope = URIRef(f"{revision}:evidence-scope")
+        scope = URIRef(f"{revision}/evidence-scope")
         context.add((assessment, TG.usesEvidenceSet, scope))
         evidence.add((scope, RDF.type, TG.EvidenceSet))
         evidence.add((scope, CASE_DATA.scopeId, Literal(source.evidence_scope_id)))
@@ -159,7 +159,7 @@ class FusekiGraphStore:
     def publish_kb(self, compiled: CompiledKB) -> dict[str, object]:
         """Idempotently publish the canonical KB OWL projection into a snapshot-pinned named graph."""
         snap = compiled.snapshot
-        graph_iri = require_iri(f"urn:tradegraph:kb-snapshot:{snap.sha256}")
+        graph_iri = require_iri(f"http://www.semanticweb.org/tradegraph/kb-snapshot/{snap.sha256}")
         ask_q = f"ASK {{ GRAPH {graph_iri.n3()} {{ ?s ?p ?o }} }}"
         ask_res = json.loads(self._request(
             "query", query={"query": ask_q}, accept="application/sparql-results+json",
@@ -192,7 +192,7 @@ class FusekiGraphStore:
     def list_case_revisions(self, *, limit: int = 50) -> list[dict[str, object]]:
         """Query Fuseki across named graphs for published TradeCaseRevision summaries."""
         query = f"""
-        PREFIX tg: <urn:tradegraph:kb#>
+        PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
         SELECT DISTINCT ?graph ?case ?revision ?revNum ?kbVersion ?kbSha ?agreement ?procedure ?product ?txAt
         WHERE {{
             GRAPH ?graph {{
@@ -223,7 +223,7 @@ class FusekiGraphStore:
 
             case_iri = _val("case") or ""
             items.append({
-                "case_id": case_iri.removeprefix("urn:tradegraph:case:"),
+                "case_id": case_iri.removeprefix("http://www.semanticweb.org/tradegraph/case/"),
                 "revision": int(_val("revNum") or "1"),
                 "context_graph": _val("graph"),
                 "kb_version": _val("kbVersion"),
@@ -245,7 +245,7 @@ class FusekiGraphStore:
         ]
         body = "\n".join(blocks)
         digest = sha256(body.encode("utf-8")).hexdigest()
-        publication = URIRef(f"{graphs.context.identifier}:publication").n3()
+        publication = URIRef(f"{graphs.context.identifier}/publication").n3()
         digest_property = CASE_DATA.snapshotDigest.n3()
         marker = f"{publication} {digest_property}"
         update = f"""

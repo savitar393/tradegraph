@@ -16,7 +16,7 @@ from tradegraph.scenarios.service import ScenarioService
 
 
 ROOT = Path(__file__).resolve().parents[2]
-EX = Namespace("urn:tradegraph:test:scenario#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/test/scenario#")
 
 
 @pytest.fixture(scope="module")
@@ -31,7 +31,7 @@ def base(tmp_path_factory):
         product_iri=str(EX.pump), batch_iri=str(EX.batch), evidence_scope_id="permit",
     )
     case = repo.create_case("", context)
-    revision = URIRef(f"urn:tradegraph:case:{case.case_id}:revision:2")
+    revision = URIRef(f"http://www.semanticweb.org/tradegraph/case/{case.case_id}/revision/2")
     facts = f"""
 @prefix ex: <{EX}> .
 @prefix tg: <{TG}> .
@@ -51,7 +51,7 @@ ex:permit a tg:Document ; tg:documentType tg:temporaryImportPermit ; tg:document
     claim = EvidenceClaim(str(EX.claim), str(EX.pump), str(TG.hasSupportingDocument), str(EX.permit),
                           EX.permit, verification_status="VERIFIED")
     case = repo.revise_case(case.case_id, case.revision, FactPatch(
-        "Record exhibition import and permit", tuple(parse_turtle(facts.encode(), "urn:tradegraph:scenario:")),
+        "Record exhibition import and permit", tuple(parse_turtle(facts.encode(), "http://www.semanticweb.org/tradegraph/scenario/")),
         evidence_claims=(claim,),
     ))
     assessment = AssessmentService(repo, ReasoningClient(kb, classpath))

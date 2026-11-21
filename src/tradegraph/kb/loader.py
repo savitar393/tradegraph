@@ -35,8 +35,8 @@ from tradegraph.kb.queries import UnsupportedQuery, prepare_local_query
 from tradegraph.kb.rdf import parse_turtle
 
 
-TG = Namespace("urn:tradegraph:kb#")
-CATALOG = Namespace("urn:tradegraph:catalog#")
+TG = Namespace("http://www.semanticweb.org/tradegraph/kb#")
+CATALOG = Namespace("http://www.semanticweb.org/tradegraph/catalog#")
 SWRL = Namespace("http://www.w3.org/2003/11/swrl#")
 SWRLA = Namespace("http://swrl.stanford.edu/ontologies/3.3/swrla.owl#")
 ENGINE_PROFILE_ID = "tradegraph-jdk21-owl2dl-swrl-comparisons-v1"
@@ -433,7 +433,7 @@ def compile_kb(path: Path, profile_id: str) -> CompiledKB:
         ("owl", core), ("rules", rule_content), ("shapes", shapes),
         ("definitions", definitions), ("reference", source),
     ):
-        named_graph = dataset.graph(URIRef(f"urn:tradegraph:projection:{digest}:{label}"))
+        named_graph = dataset.graph(URIRef(f"http://www.semanticweb.org/tradegraph/projection/{digest}/{label}"))
         for triple in triples:
             named_graph.add(triple)
         graph_refs.append(named_graph.identifier)

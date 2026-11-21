@@ -267,7 +267,7 @@ class CompatibilityTest {
     }
 
     private static IRI iri(String localName) {
-        return IRI.create("urn:tradegraph:fixture#" + localName);
+        return IRI.create("http://www.semanticweb.org/tradegraph/fixture#" + localName);
     }
 
     private static OWLNamedIndividual individual(String name) {

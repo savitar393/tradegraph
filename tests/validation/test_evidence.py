@@ -8,10 +8,10 @@ from tradegraph.contracts import EvidenceClaim
 from tradegraph.kb.loader import TG
 from tradegraph.validation.service import validate_evidence
 
-EX = Namespace("urn:tradegraph:test:validation#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/test/validation#")
 PREFIXES = """
-@prefix ex: <urn:tradegraph:test:validation#> .
-@prefix tg: <urn:tradegraph:kb#> .
+@prefix ex: <http://www.semanticweb.org/tradegraph/test/validation#> .
+@prefix tg: <http://www.semanticweb.org/tradegraph/kb#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 """
 CLAIM = EvidenceClaim(
@@ -76,7 +76,7 @@ def test_cannot_supply_verification_status_through_fact_projection(kb, case_fact
     case = case_factory(DOCUMENT, claims=(replace(CLAIM, verification_status="UNVERIFIED"),))
     with pytest.raises(ValueError):
         validate_evidence(kb, case, PREFIXES + """
-            ex:claim <urn:tradegraph:case-data#verificationStatus> "VERIFIED" .
+            ex:claim <http://www.semanticweb.org/tradegraph/case-data#verificationStatus> "VERIFIED" .
         """)
 
 

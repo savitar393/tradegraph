@@ -22,7 +22,7 @@ from tradegraph.reasoning.slicing import slice_owl_for_case
 ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_KB = ROOT / "knowledge" / "tradegraph.ttl"
 STAGE1_TTL = ROOT / "sources" / "staging" / "stage1.ttl"
-EX = Namespace("urn:tradegraph:psr-test#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/psr-test#")
 PREFIXES = f"""
 @prefix ex: <{EX}> .
 @prefix tg: <{TG}> .
@@ -62,7 +62,7 @@ def merged_stage1_kb(tmp_path_factory):
     graph = parse_turtle(CANONICAL_KB.read_bytes(), CANONICAL_KB.resolve().as_uri())
     # Add 8-digit test HS codes for subheadings tested across all PSR archetypes
     extra = parse_turtle(b"""
-@prefix : <urn:tradegraph:kb#> .
+@prefix : <http://www.semanticweb.org/tradegraph/kb#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 :hs-01012100 a owl:NamedIndividual, :HSCode ; :codeValue "0101.21.00" ; :tariffSubheading :hs6-010121 .
 :hs-58013600 a owl:NamedIndividual, :HSCode ; :codeValue "5801.36.00" ; :tariffSubheading :hs6-580136 .
@@ -72,7 +72,7 @@ def merged_stage1_kb(tmp_path_factory):
 :hs-84229010 a owl:NamedIndividual, :HSCode ; :codeValue "8422.90.10" ; :tariffSubheading :hs6-842290 .
 :hs-61012000 a owl:NamedIndividual, :HSCode ; :codeValue "6101.20.00" ; :tariffSubheading :hs6-610120 .
 :hs-15011000 a owl:NamedIndividual, :HSCode ; :codeValue "1501.10.00" ; :tariffSubheading :hs6-150110 .
-""", "urn:tradegraph:psr-test:extra")
+""", "http://www.semanticweb.org/tradegraph/psr-test/extra")
     for triple in extra:
         graph.add(triple)
     out = tmp_path_factory.mktemp("stage1-kb") / "merged.ttl"
@@ -108,7 +108,7 @@ def _assess_generic_case(
         batch_iri=str(EX.batch),
     )
     base = repo.create_case("", context)
-    rev = f"<urn:tradegraph:case:{base.case_id}:revision:2>"
+    rev = f"<http://www.semanticweb.org/tradegraph/case/{base.case_id}/revision/2>"
     facts = [f"""
 ex:product tg:hasTariffClassification tg:{product_hs} ; tg:hasBatch ex:batch .
 ex:batch tg:producedAt ex:facility ; tg:producedBy ex:producer .

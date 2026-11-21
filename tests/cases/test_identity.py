@@ -12,13 +12,13 @@ from tradegraph.contracts import AssessmentContext, EvidenceClaim, FactPatch
 from tradegraph.graph.store import FusekiGraphStore, GraphRevisionConflict, TG, project_case_graphs
 
 
-EX = Namespace("urn:example:identity#")
+EX = Namespace("http://example.org/identity#")
 CONTEXT = AssessmentContext(kb_sha256="c" * 64, engine_profile_id="tradegraph-jdk21-owl2dl-swrl-comparisons-v1")
 
 
 def test_distinct_iris_remain_open_until_identity_is_asserted(tmp_path):
     repository = CaseRepository(tmp_path / "cases.db")
-    facts = "@prefix ex: <urn:example:identity#> . @prefix tg: <urn:tradegraph:kb#> . "
+    facts = "@prefix ex: <http://example.org/identity#> . @prefix tg: <http://www.semanticweb.org/tradegraph/kb#> . "
     first = repository.create_case(facts + "ex:batch tg:usesMaterial ex:material, ex:alias, ex:other .", CONTEXT)
     same = (EX.material, OWL.sameAs, EX.alias)
     different = (EX.material, OWL.differentFrom, EX.other)
@@ -61,7 +61,7 @@ def test_fuseki_tdb2_publish_is_atomic_idempotent_and_revision_scoped(tmp_path, 
     claim = EvidenceClaim(str(EX.claim), str(EX.product), str(EX.origin), str(EX.source), value=EX.country)
     context = replace(CONTEXT, jurisdiction_iri=str(EX.originJurisdiction), evidence_scope_id="scope")
     root = repository.create_case(
-        "@prefix ex: <urn:example:identity#> . ex:product ex:pack [ ex:count 1 ] .",
+        "@prefix ex: <http://example.org/identity#> . ex:product ex:pack [ ex:count 1 ] .",
         context, evidence_claims=(claim,), evidence_scope_closed=True,
     )
 

@@ -23,7 +23,7 @@ import uk.ac.manchester.cs.owlapi.modularity.SyntacticLocalityModuleExtractor;
 
 /** Find one bounded, independently replayed witness for a selected inference. */
 public final class JustificationAdapter {
-    private static final String KB = "urn:tradegraph:kb#";
+    private static final String KB = "http://www.semanticweb.org/tradegraph/kb#";
 
     record Request(ReasoningJob job, Fact target, int maxOwlChecks) {}
     record AxiomWitness(List<String> axiomIds, List<String> sourceClauses, String rendering, Fact fact) {}

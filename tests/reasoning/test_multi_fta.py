@@ -22,7 +22,7 @@ from tradegraph.scenarios.service import ScenarioService
 
 ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_KB = ROOT / "knowledge" / "tradegraph.ttl"
-EX = Namespace("urn:tradegraph:multi-fta-test#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/multi-fta-test#")
 PREFIXES = f"""
 @prefix ex: <{EX}> .
 @prefix tg: <{TG}> .
@@ -92,7 +92,7 @@ def _assess_fta_case(
         batch_iri=str(EX.batch),
     )
     base = repo.create_case("", context)
-    rev = f"<urn:tradegraph:case:{base.case_id}:revision:2>"
+    rev = f"<http://www.semanticweb.org/tradegraph/case/{base.case_id}/revision/2>"
     facts = [f"""
 ex:product tg:hasTariffClassification tg:{product_hs} ; tg:hasBatch ex:batch .
 ex:batch tg:producedAt ex:facility ; tg:producedBy ex:producer .

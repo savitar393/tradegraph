@@ -13,13 +13,13 @@ from tradegraph.reasoning.client import ReasoningClient
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FX = Namespace("urn:tradegraph:test:provenance#")
+FX = Namespace("http://www.semanticweb.org/tradegraph/test/provenance#")
 DIRECT_LINK = (FX.item, FX.directLink, FX.shipment)
 DERIVED_LINK = (FX.item, FX.derivedLink, FX.shipment)
 RULE_RESULT = (FX.item, RDF.type, FX.Reviewed)
 FACTS = """
-@prefix fx: <urn:tradegraph:test:provenance#> .
-@prefix tg: <urn:tradegraph:kb#> .
+@prefix fx: <http://www.semanticweb.org/tradegraph/test/provenance#> .
+@prefix tg: <http://www.semanticweb.org/tradegraph/kb#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 fx:item fx:directLink fx:shipment ; fx:amount 0.10 .
 fx:other fx:amount 9.00 .

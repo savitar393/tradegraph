@@ -18,7 +18,7 @@ import org.semanticweb.owlapi.reasoner.InferenceType;
 
 /** Check the RDF projections or replay an OWLAPI Turtle save for round-trip verification. */
 public final class KbOwlValidator {
-    private static final IRI RULE_ID = IRI.create("urn:tradegraph:kb#ruleId");
+    private static final IRI RULE_ID = IRI.create("http://www.semanticweb.org/tradegraph/kb#ruleId");
 
     public static void main(String[] args) throws Exception {
         var core = load(args[0]);

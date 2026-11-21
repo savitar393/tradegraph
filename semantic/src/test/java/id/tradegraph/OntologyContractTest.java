@@ -34,7 +34,7 @@ import org.semanticweb.owlapi.util.DLExpressivityChecker;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 class OntologyContractTest {
-    private static final String KB_IRI = "urn:tradegraph:kb";
+    private static final String KB_IRI = "http://www.semanticweb.org/tradegraph/kb";
     private static final String SHACL = "http://www.w3.org/ns/shacl#";
     private static final OWLDataFactory OWL = OWLManager.getOWLDataFactory();
     private OWLOntologyManager manager;
@@ -165,7 +165,7 @@ class OntologyContractTest {
     void derivesTypesFromAllDomainsAndRange() {
         var batch = example("untyped-batch");
         var material = example("untyped-material");
-        var audited = OWL.getOWLClass(IRI.create("urn:tradegraph:test#AuditedRecord"));
+        var audited = OWL.getOWLClass(IRI.create("http://www.semanticweb.org/tradegraph/test#AuditedRecord"));
         manager.addAxioms(ontology, Set.of(
                 OWL.getOWLDeclarationAxiom(audited),
                 OWL.getOWLObjectPropertyDomainAxiom(property("usesMaterial"), audited),
@@ -341,7 +341,7 @@ class OntologyContractTest {
     }
 
     private static OWLNamedIndividual example(String localName) {
-        return OWL.getOWLNamedIndividual(IRI.create("urn:tradegraph:test#" + localName));
+        return OWL.getOWLNamedIndividual(IRI.create("http://www.semanticweb.org/tradegraph/test#" + localName));
     }
 
     private static OWLObjectProperty property(String localName) {

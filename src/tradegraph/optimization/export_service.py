@@ -5,14 +5,18 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from decimal import Decimal, ROUND_HALF_UP
+from pathlib import Path
 import re
+from tempfile import TemporaryDirectory
 
 from rdflib import Literal as RDFLiteral, RDF, RDFS, URIRef
 
+from tradegraph.cases.repository import CaseRepository
 from tradegraph.contracts import CompiledKB
 from tradegraph.kb.loader import TG
 from tradegraph.kb.queries import prepare_local_query
 from tradegraph.optimization.service import (
+    FindingExplanationSummary,
     MaterialInput,
     MultiFtaOptimizer,
     ProvenanceCitation,
@@ -176,6 +180,7 @@ class ExportSchemeOption:
     cumulation_suggestions: tuple[CumulationSuggestion, ...]
     source_clauses: tuple[str, ...]
     citations: tuple[ProvenanceCitation, ...] = ()
+    explanations: tuple[FindingExplanationSummary, ...] = ()
     diagnostics: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
@@ -196,6 +201,7 @@ class ExportSchemeOption:
             "cumulation_suggestions": [s.to_dict() for s in self.cumulation_suggestions],
             "source_clauses": list(self.source_clauses),
             "citations": [c.to_dict() for c in self.citations],
+            "explanations": [e.to_dict() for e in self.explanations],
             "diagnostics": list(self.diagnostics),
         }
 
@@ -596,7 +602,19 @@ class ExportComplianceAdvisor:
             diagnostics=tuple(diagnostics),
         )
 
-    def _evaluate_psr_and_cumulation(
+    @staticmethod
+    def _has_roo_inputs(spec: ExportSpec) -> bool:
+        return bool(
+            spec.materials
+            or spec.rvc_percent is not None
+            or spec.wo_confirmed is not None
+            or (spec.process_kind is not None and spec.process_satisfied is not None)
+            or spec.de_minimis_fob is not None
+            or spec.de_minimis_weight is not None
+            or spec.performed_operations is not None
+        )
+
+    def _suggest_cumulation(
         self,
         agr_iri: URIRef,
         agr_slug: str,
@@ -604,153 +622,68 @@ class ExportComplianceAdvisor:
         target_digits: str,
         origin_iri: URIRef,
         spec: ExportSpec,
-    ) -> tuple[str, tuple[CumulationSuggestion, ...], tuple[str, ...]]:
-        """Evaluate outbound PSR eligibility & suggest partner cumulation directly from KB axioms."""
-        diagnostics: list[str] = []
-        suggestions: list[CumulationSuggestion] = []
+    ) -> tuple[CumulationSuggestion, ...]:
+        """Emit counterfactual partner-sourcing recommendations when CTC materials fail under this FTA."""
+        if psr_iri is None or not spec.materials:
+            return ()
         parties = {p for p in self._owl.objects(agr_iri, TG.agreementParty) if isinstance(p, URIRef)}
         partner_slugs = tuple(sorted(str(p).split("#")[-1] for p in parties if p != origin_iri))
+        if not partner_slugs:
+            return ()
 
-        # 1. Minimal Operations check from KB
-        if spec.performed_operations:
-            disq = {str(op).split("#")[-1] for op in self._owl.objects(agr_iri, TG.disqualifyingOperation)}
-            if all(op in disq for op in spec.performed_operations):
-                diagnostics.append(
-                    f"Seluruh proses produksi ({', '.join(spec.performed_operations)}) termasuk proses minimal yang tidak memenuhi kualifikasi asal ({agr_slug.upper()})."
-                )
-                return "NOT_SATISFIED", (), tuple(diagnostics)
-
-        if psr_iri is None:
-            return "UNDETERMINED", (), ("PSR skema ini belum terpetakan di KB.",)
-
-        # 2. Check De Minimis bands from KB (for CTC fallback)
-        target_chap = int(target_digits[:2])
-        dm_pass = False
-        for band in self._owl.objects(agr_iri, TG.hasDeMinimisBand):
-            ch_min = int(str(self._owl.value(band, TG.deMinimisChapterMin) or "1"))
-            ch_max = int(str(self._owl.value(band, TG.deMinimisChapterMax) or "97"))
-            if not (ch_min <= target_chap <= ch_max):
-                continue
-            max_pct = _to_decimal(self._owl.value(band, TG.deMinimisMaxPercent))
-            basis = self._owl.value(band, TG.deMinimisBasis)
-            if max_pct is None:
-                continue
-            if basis == TG.basisFobValue and spec.de_minimis_fob is not None:
-                fob_tot, failed_val = spec.de_minimis_fob
-                if fob_tot and fob_tot > 0 and (failed_val / fob_tot) * Decimal("100") <= max_pct:
-                    dm_pass = True
-            elif basis == TG.basisProductWeight and spec.de_minimis_weight is not None:
-                wt_tot, failed_wt = spec.de_minimis_weight
-                if wt_tot and wt_tot > 0 and (failed_wt / wt_tot) * Decimal("100") <= max_pct:
-                    dm_pass = True
-
-        # 3. Evaluate every PSR alternative from KB
-        alts = list(self._owl.objects(psr_iri, TG.hasPsrAlternative))
-        if not alts:
-            return "UNDETERMINED", (), ()
-
-        alt_results: list[str] = []
+        suggestions: list[CumulationSuggestion] = []
         seen_sugg: set[tuple[str, str]] = set()
-
-        for alt in alts:
-            kinds = list(self._owl.objects(alt, TG.requiresCriterionKind))
-            if not kinds:
-                continue
-            token_results: list[str] = []
-            for kind in kinds:
-                if kind == TG.criterionWO:
-                    if spec.wo_confirmed is True:
-                        token_results.append("SATISFIED")
-                    elif spec.wo_confirmed is False:
-                        token_results.append("NOT_SATISFIED")
-                    else:
-                        token_results.append("UNDETERMINED")
-
-                elif kind == TG.criterionRVC:
-                    thr = self._owl.value(alt, TG.alternativeRvcThreshold)
-                    min_rvc = _to_decimal(self._owl.value(thr, TG.minimumRvcPercent)) if thr is not None else None
-                    if spec.rvc_percent is None or min_rvc is None:
-                        token_results.append("UNDETERMINED")
-                    elif spec.rvc_percent >= min_rvc:
-                        token_results.append("SATISFIED")
-                    else:
-                        token_results.append("NOT_SATISFIED")
-
-                elif kind in (TG.criterionCC, TG.criterionCTH, TG.criterionCTSH):
-                    if not spec.materials:
-                        token_results.append("UNDETERMINED")
+        for alt in self._owl.objects(psr_iri, TG.hasPsrAlternative):
+            excl_ch = {
+                str(self._owl.value(node, TG.chapterCode) or "").zfill(2)
+                for node in self._owl.objects(alt, TG.excludesChapter)
+            }
+            excl_hd = {
+                str(self._owl.value(node, TG.headingCode) or "").replace(".", "")
+                for node in self._owl.objects(alt, TG.excludesHeading)
+            }
+            excl_sh = {
+                str(self._owl.value(node, TG.subheadingCode) or "").replace(".", "")
+                for node in self._owl.objects(alt, TG.excludesSubheading)
+            }
+            for kind in self._owl.objects(alt, TG.requiresCriterionKind):
+                if kind not in (TG.criterionCC, TG.criterionCTH, TG.criterionCTSH):
+                    continue
+                for mat in spec.materials:
+                    if not mat.non_originating:
                         continue
-                    excl_ch = {str(v) for v in self._owl.objects(alt, TG.ctcExcludedChapter)}
-                    excl_hd = {str(v).replace(".", "") for v in self._owl.objects(alt, TG.ctcExcludedHeading)}
-                    excl_sh = {str(v).replace(".", "") for v in self._owl.objects(alt, TG.ctcExcludedSubheading)}
-                    failed_mats: list[MaterialInput] = []
-                    for mat in spec.materials:
-                        if not mat.non_originating:
-                            continue
-                        # Regional cumulation check against agreementParty
-                        if mat.origin_country and mat.origin_proof_verified is True:
-                            try:
-                                mat_c_iri = self._opt.resolve_country_iri(mat.origin_country)
-                                if mat_c_iri in parties:
-                                    continue
-                            except ValueError:
-                                pass
-                        m_digits = re.sub(r"\D+", "", mat.hs_code)
-                        if len(m_digits) < 6:
-                            failed_mats.append(mat)
-                            continue
-                        m_ch, m_hd, m_sh = m_digits[:2], m_digits[:4], m_digits[:6]
-                        changed = (
-                            (kind == TG.criterionCC and m_ch != target_digits[:2])
-                            or (kind == TG.criterionCTH and m_hd != target_digits[:4])
-                            or (kind == TG.criterionCTSH and m_sh != target_digits[:6])
-                        )
-                        excluded = (m_ch in excl_ch) or (m_hd in excl_hd) or (m_sh in excl_sh)
-                        if not changed or excluded:
-                            failed_mats.append(mat)
-                    if not failed_mats or dm_pass:
-                        token_results.append("SATISFIED")
-                    else:
-                        token_results.append("NOT_SATISFIED")
-                        for fm in failed_mats:
-                            key = (agr_slug, fm.hs_code)
-                            if key not in seen_sugg and partner_slugs:
-                                seen_sugg.add(key)
-                                suggestions.append(CumulationSuggestion(
-                                    agreement=agr_slug,
-                                    failing_material_hs=fm.hs_code,
-                                    current_origin=fm.origin_country,
-                                    recommended_partner_countries=partner_slugs,
-                                    reason=(
-                                        f"Bahan {fm.hs_code} gagal kriteria {str(kind).split('#')[-1]} untuk {agr_slug.upper()}; "
-                                        f"pengadaan dari negara mitra ({', '.join(partner_slugs[:5])}{'...' if len(partner_slugs) > 5 else ''}) "
-                                        f"dengan bukti asal terverifikasi mengaktifkan akumulasi regional."
-                                    ),
-                                ))
-
-                else:
-                    # Specific process rule (chemical reaction, textile, refining, cut-and-sewn)
-                    req_local = str(kind).split("#")[-1]
-                    if spec.process_kind == req_local and spec.process_satisfied is True:
-                        token_results.append("SATISFIED")
-                    elif spec.process_satisfied is False or (spec.process_kind and spec.process_kind != req_local):
-                        token_results.append("NOT_SATISFIED")
-                    else:
-                        token_results.append("UNDETERMINED")
-
-            if all(r == "SATISFIED" for r in token_results):
-                alt_results.append("SATISFIED")
-            elif any(r == "NOT_SATISFIED" for r in token_results):
-                alt_results.append("NOT_SATISFIED")
-            else:
-                alt_results.append("UNDETERMINED")
-
-        if "SATISFIED" in alt_results:
-            return "SATISFIED", (), tuple(diagnostics)
-        if alt_results and all(r == "NOT_SATISFIED" for r in alt_results):
-            diagnostics.append(f"Belum memenuhi kriteria asal PSR {agr_slug.upper()} berdasarkan BOM/RVC saat ini.")
-            return "NOT_SATISFIED", tuple(suggestions), tuple(diagnostics)
-        return "UNDETERMINED", tuple(suggestions), tuple(diagnostics)
+                    if mat.origin_country and mat.origin_proof_verified is True:
+                        try:
+                            if self._opt.resolve_country_iri(mat.origin_country) in parties:
+                                continue
+                        except ValueError:
+                            pass
+                    m_digits = re.sub(r"\D+", "", mat.hs_code)
+                    if len(m_digits) < 6:
+                        continue
+                    m_ch, m_hd, m_sh = m_digits[:2], m_digits[:4], m_digits[:6]
+                    changed = (
+                        (kind == TG.criterionCC and m_ch != target_digits[:2])
+                        or (kind == TG.criterionCTH and m_hd != target_digits[:4])
+                        or (kind == TG.criterionCTSH and m_sh != target_digits[:6])
+                    )
+                    excluded = (m_ch in excl_ch) or (m_hd in excl_hd) or (m_sh in excl_sh)
+                    if not changed or excluded:
+                        key = (agr_slug, mat.hs_code)
+                        if key not in seen_sugg:
+                            seen_sugg.add(key)
+                            suggestions.append(CumulationSuggestion(
+                                agreement=agr_slug,
+                                failing_material_hs=mat.hs_code,
+                                current_origin=mat.origin_country,
+                                recommended_partner_countries=partner_slugs,
+                                reason=(
+                                    f"Bahan {mat.hs_code} gagal kriteria {str(kind).split('#')[-1]} untuk {agr_slug.upper()}; "
+                                    f"pengadaan dari negara mitra ({', '.join(partner_slugs[:5])}{'...' if len(partner_slugs) > 5 else ''}) "
+                                    f"dengan bukti asal terverifikasi mengaktifkan akumulasi regional."
+                                ),
+                            ))
+        return tuple(suggestions)
 
     def evaluate(self, spec: ExportSpec) -> ExportEvaluationResult:
         hs_iri = self._opt.resolve_hs_iri(spec.hs_code)
@@ -784,94 +717,123 @@ class ExportComplianceAdvisor:
         schemes: list[ExportSchemeOption] = []
         all_cumul: list[CumulationSuggestion] = []
         seen_agr: set[str] = set()
+        run_semantic_roo = (not export_lartas.prohibited) and self._has_roo_inputs(spec)
 
-        for row in rows:
-            d = row.asdict()
-            agr_iri = d["agreement"]
-            agr_slug = str(agr_iri).split("#")[-1]
-            if agr_slug in seen_agr:
-                continue
-            seen_agr.add(agr_slug)
+        with TemporaryDirectory(prefix="tradegraph-export-") as tmp:
+            repo = CaseRepository(Path(tmp) / "export.sqlite3") if run_semantic_roo else None
+            for row in rows:
+                d = row.asdict()
+                agr_iri = d["agreement"]
+                agr_slug = str(agr_iri).split("#")[-1]
+                if agr_slug in seen_agr:
+                    continue
+                seen_agr.add(agr_slug)
 
-            psr_iri = d.get("psr") if isinstance(d.get("psr"), URIRef) else None
-            b2b_allowed = str(d.get("backToBackAllowed")).lower() == "true"
-            tpi_allowed = str(d.get("thirdPartyAllowed")).lower() == "true"
-            tpi_req = str(d["thirdPartyReq"]) if d.get("thirdPartyReq") else None
+                psr_iri = d.get("psr") if isinstance(d.get("psr"), URIRef) else None
+                b2b_allowed = str(d.get("backToBackAllowed")).lower() == "true"
+                tpi_allowed = str(d.get("thirdPartyAllowed")).lower() == "true"
+                tpi_req = str(d["thirdPartyReq"]) if d.get("thirdPartyReq") else None
 
-            clause_ids: set[str] = set()
-            for c in self._owl.objects(agr_iri, TG.hasSourceClause):
-                clause_ids.add(str(c).split("#")[-1])
-            if psr_iri is not None:
-                for c in self._owl.objects(psr_iri, TG.hasSourceClause):
+                clause_ids: set[str] = set()
+                for c in self._owl.objects(agr_iri, TG.hasSourceClause):
                     clause_ids.add(str(c).split("#")[-1])
-            if d.get("backToBackClause"):
-                clause_ids.add(str(d["backToBackClause"]).split("#")[-1])
-            if d.get("thirdPartyClause"):
-                clause_ids.add(str(d["thirdPartyClause"]).split("#")[-1])
+                if psr_iri is not None:
+                    for c in self._owl.objects(psr_iri, TG.hasSourceClause):
+                        clause_ids.add(str(c).split("#")[-1])
+                if d.get("backToBackClause"):
+                    clause_ids.add(str(d["backToBackClause"]).split("#")[-1])
+                if d.get("thirdPartyClause"):
+                    clause_ids.add(str(d["thirdPartyClause"]).split("#")[-1])
 
-            origin_status, suggs, ro_diags = self._evaluate_psr_and_cumulation(
-                agr_iri, agr_slug, psr_iri, target_digits, origin_iri, spec,
-            )
-            diags = list(ro_diags)
-            all_cumul.extend(suggs)
+                diags: list[str] = []
+                explanations: tuple[FindingExplanationSummary, ...] = ()
+                origin_status = "UNDETERMINED"
+                suggs: tuple[CumulationSuggestion, ...] = ()
 
-            # Back-to-Back CO & transshipment hub validation
-            b2b_status = "NOT_REQUESTED"
-            if spec.requires_back_to_back:
-                if not b2b_allowed:
-                    b2b_status = "DISALLOWED_BILATERAL"
-                    diags.append(
-                        f"SKA Back-to-Back tidak berlaku pada skema bilateral {agr_slug.upper()}; gunakan pengiriman langsung/transit atau skema multilateral."
+                if psr_iri is None:
+                    diags.append("PSR skema ini belum terpetakan di KB.")
+                elif run_semantic_roo and repo is not None:
+                    report, service = self._opt._build_and_assess(
+                        repo, spec, agr_slug, hs_iri, origin_iri, dest_iri,
+                        TG.jurisdictionIndonesiaCustoms,
+                        procedure_iri=TG.commercialExport,
                     )
-                elif hub_iri is not None:
-                    parties = set(self._owl.objects(agr_iri, TG.agreementParty))
-                    if hub_iri not in parties:
-                        b2b_status = "HUB_NOT_A_PARTY"
+                    statuses = {f.policy_id: f.status for f in report.domain_findings}
+                    for f in report.domain_findings:
+                        for c in f.source_clauses:
+                            clause_ids.add(str(c).split("#")[-1])
+                    origin_status = statuses.get(f"{agr_slug}-psr-overall", "UNDETERMINED")
+                    if statuses.get(f"{agr_slug}-psr-minimal-ops") == "NOT_SATISFIED":
+                        ops_txt = ", ".join(spec.performed_operations or ())
                         diags.append(
-                            f"Hub transshipment ({hub_slug}) bukan Negara Anggota {agr_slug.upper()}, sehingga tidak dapat menerbitkan Back-to-Back CO."
+                            f"Seluruh proses produksi ({ops_txt}) termasuk proses minimal yang tidak memenuhi kualifikasi asal ({agr_slug.upper()})."
                         )
+                    elif origin_status == "NOT_SATISFIED":
+                        diags.append(f"Belum memenuhi kriteria asal PSR {agr_slug.upper()} berdasarkan BOM/RVC saat ini.")
+                    if spec.include_explain and report.execution_status == "CONVERGED":
+                        explanations = self._opt._explain_key_findings(service, report, agr_slug)
+                    if origin_status != "SATISFIED" and statuses.get(f"{agr_slug}-psr-minimal-ops") != "NOT_SATISFIED":
+                        suggs = self._suggest_cumulation(agr_iri, agr_slug, psr_iri, target_digits, origin_iri, spec)
+                        all_cumul.extend(suggs)
+
+                # Back-to-Back CO & transshipment hub validation
+                b2b_status = "NOT_REQUESTED"
+                if spec.requires_back_to_back:
+                    if not b2b_allowed:
+                        b2b_status = "DISALLOWED_BILATERAL"
+                        diags.append(
+                            f"SKA Back-to-Back tidak berlaku pada skema bilateral {agr_slug.upper()}; gunakan pengiriman langsung/transit atau skema multilateral."
+                        )
+                    elif hub_iri is not None:
+                        parties = set(self._owl.objects(agr_iri, TG.agreementParty))
+                        if hub_iri not in parties:
+                            b2b_status = "HUB_NOT_A_PARTY"
+                            diags.append(
+                                f"Hub transshipment ({hub_slug}) bukan Negara Anggota {agr_slug.upper()}, sehingga tidak dapat menerbitkan Back-to-Back CO."
+                            )
+                        else:
+                            b2b_status = "ALLOWED"
+                            diags.append(
+                                f"Hub transshipment ({hub_slug}) adalah Negara Anggota {agr_slug.upper()} dan berwenang menerbitkan Back-to-Back CO."
+                            )
                     else:
                         b2b_status = "ALLOWED"
-                        diags.append(
-                            f"Hub transshipment ({hub_slug}) adalah Negara Anggota {agr_slug.upper()} dan berwenang menerbitkan Back-to-Back CO."
-                        )
+
+                if tpi_country and tpi_allowed and tpi_req:
+                    diags.append(f"Third-Party Invoicing ({tpi_country}): {tpi_req}")
+
+                if export_lartas.prohibited:
+                    elig = "PROHIBITED_EXPORT"
+                elif b2b_status == "DISALLOWED_BILATERAL":
+                    elig = "BLOCKED_NO_BACK_TO_BACK"
+                elif b2b_status == "HUB_NOT_A_PARTY":
+                    elig = "BLOCKED_NON_PARTY_HUB"
+                elif origin_status == "NOT_SATISFIED":
+                    elig = "INELIGIBLE_ROO"
                 else:
-                    b2b_status = "ALLOWED"
+                    elig = "ELIGIBLE"
 
-            if tpi_country and tpi_allowed and tpi_req:
-                diags.append(f"Third-Party Invoicing ({tpi_country}): {tpi_req}")
-
-            if export_lartas.prohibited:
-                elig = "PROHIBITED_EXPORT"
-            elif b2b_status == "DISALLOWED_BILATERAL":
-                elig = "BLOCKED_NO_BACK_TO_BACK"
-            elif b2b_status == "HUB_NOT_A_PARTY":
-                elig = "BLOCKED_NON_PARTY_HUB"
-            elif origin_status == "NOT_SATISFIED":
-                elig = "INELIGIBLE_ROO"
-            else:
-                elig = "ELIGIBLE"
-
-            sorted_clauses = tuple(sorted(clause_ids))
-            schemes.append(ExportSchemeOption(
-                agreement=agr_slug,
-                agreement_label=str(d["agreementLabel"]) if d.get("agreementLabel") else agr_slug.upper(),
-                facility_code=str(d["facilityCode"]) if d.get("facilityCode") else None,
-                origin_proof_doc=str(d["primaryOriginDoc"]).split("#")[-1] if d.get("primaryOriginDoc") else None,
-                origin_proof_label=str(d["primaryOriginDocLabel"]) if d.get("primaryOriginDocLabel") else None,
-                psr_level=str(d["psrLevel"]) if d.get("psrLevel") else "NONE",
-                concise_rule=str(d["conciseRule"]) if d.get("conciseRule") else None,
-                eligibility=elig,
-                origin_status=origin_status,
-                back_to_back_allowed=b2b_allowed,
-                back_to_back_status=b2b_status,
-                third_party_invoicing_allowed=tpi_allowed,
-                third_party_invoice_instruction=tpi_req if tpi_country else None,
-                cumulation_suggestions=suggs,
-                source_clauses=sorted_clauses,
-                citations=self._opt.resolve_citations(sorted_clauses) if spec.include_explain else (),
-                diagnostics=tuple(diags),
-            ))
+                sorted_clauses = tuple(sorted(clause_ids))
+                schemes.append(ExportSchemeOption(
+                    agreement=agr_slug,
+                    agreement_label=str(d["agreementLabel"]) if d.get("agreementLabel") else agr_slug.upper(),
+                    facility_code=str(d["facilityCode"]) if d.get("facilityCode") else None,
+                    origin_proof_doc=str(d["primaryOriginDoc"]).split("#")[-1] if d.get("primaryOriginDoc") else None,
+                    origin_proof_label=str(d["primaryOriginDocLabel"]) if d.get("primaryOriginDocLabel") else None,
+                    psr_level=str(d["psrLevel"]) if d.get("psrLevel") else "NONE",
+                    concise_rule=str(d["conciseRule"]) if d.get("conciseRule") else None,
+                    eligibility=elig,
+                    origin_status=origin_status,
+                    back_to_back_allowed=b2b_allowed,
+                    back_to_back_status=b2b_status,
+                    third_party_invoicing_allowed=tpi_allowed,
+                    third_party_invoice_instruction=tpi_req if tpi_country else None,
+                    cumulation_suggestions=suggs,
+                    source_clauses=sorted_clauses,
+                    citations=self._opt.resolve_citations(sorted_clauses) if spec.include_explain else (),
+                    explanations=explanations,
+                    diagnostics=tuple(diags),
+                ))
 
         # Rank: ELIGIBLE + SATISFIED first, then ELIGIBLE + UNDETERMINED, then bilateral/specific over broad fallback
         def rank_key(opt: ExportSchemeOption):

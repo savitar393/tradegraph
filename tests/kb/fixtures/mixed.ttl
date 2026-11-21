@@ -1,6 +1,6 @@
-@prefix : <urn:tradegraph:test:mixed#> .
-@prefix tg: <urn:tradegraph:kb#> .
-@prefix catalog: <urn:tradegraph:catalog#> .
+@prefix : <http://www.semanticweb.org/tradegraph/test/mixed#> .
+@prefix tg: <http://www.semanticweb.org/tradegraph/kb#> .
+@prefix catalog: <http://www.semanticweb.org/tradegraph/catalog#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -8,8 +8,8 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<urn:tradegraph:test:mixed> a owl:Ontology ;
-    owl:versionIRI <urn:tradegraph:test:mixed:1> ;
+<http://www.semanticweb.org/tradegraph/test/mixed> a owl:Ontology ;
+    owl:versionIRI <http://www.semanticweb.org/tradegraph/test/mixed/1> ;
     owl:versionInfo "1" ;
     tg:compatibleEngineProfile "tradegraph-jdk21-owl2dl-swrl-comparisons-v1" ;
     tg:currentRevision :revision .
@@ -59,7 +59,7 @@ _:choices rdf:first :alice ; rdf:rest [ rdf:first :bob ; rdf:rest rdf:nil ] .
 :relatedQuery a catalog:QueryDefinition ;
     catalog:id "CQ01" ; rdfs:label "Related people" ;
     catalog:parameters ( "subject" ) ;
-    catalog:sparql "SELECT ?other WHERE { ?subject <urn:tradegraph:test:mixed#relatedTo> ?other }" .
+    catalog:sparql "SELECT ?other WHERE { ?subject <http://www.semanticweb.org/tradegraph/test/mixed#relatedTo> ?other }" .
 :recordAction a catalog:ActionDefinition ;
     catalog:id "record-related" ; rdfs:label "Record a relationship" ;
     catalog:preconditions ( [ catalog:mentions :Person ] ) ;

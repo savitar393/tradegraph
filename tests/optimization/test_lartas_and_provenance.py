@@ -143,6 +143,31 @@ def test_four_step_combined_fta_dv20_lartas_pib_plan_and_audit_provenance(optimi
     assert by_policy["rcep-psr-ctc"].reaches_asserted_facts is True
     assert "VALIDATION_REPORT" in by_policy["rcep-psr-ctc"].node_kinds
     assert by_policy["rcep-psr-consignment"].reaches_asserted_facts is True
+    # Generic Multi-FTA SWRL rule witness for RVC failure (30% < 40%)
+    assert "rcep-psr-rvc" in by_policy
+    assert "SWRL_RULE" in by_policy["rcep-psr-rvc"].node_kinds
+    assert by_policy["rcep-psr-rvc"].reaches_asserted_facts is True
+
+    # RCEP DV20 SWRL rule witness (25% >= 20% -> SATISFIED via rcep-dv20-threshold-met)
+    dv20_res = optimizer.optimize(
+        ShipmentSpec(
+            hs_code="7209.26.10",
+            dispatch_country="TH",
+            destination_country="ID",
+            as_of_date="2025-09-15",
+            cif_value=Decimal("100000"),
+            materials=(MaterialInput("7208.54.10", non_originating=True, origin_country="JP", origin_proof_verified=True),),
+            rvc_percent=Decimal("45.00"),
+            dv20_percent=Decimal("25.00"),
+            include_explain=True,
+        ),
+        agreements=("rcep",),
+    )
+    dv20_exp = {e.policy_id: e for e in dv20_res.schemes[0].explanations}
+    assert dv20_res.schemes[0].dv20_status == "SATISFIED"
+    assert "SWRL_RULE" in dv20_exp["rcep-tariff-differential-dv20"].node_kinds
+    assert dv20_exp["rcep-tariff-differential-dv20"].reaches_asserted_facts is True
+    assert "SWRL_RULE" in dv20_exp["rcep-psr-rvc"].node_kinds
 
 
 def test_cli_explain_flag_on_optimize_and_assess(tmp_path, capsys):

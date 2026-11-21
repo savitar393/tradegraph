@@ -11,15 +11,15 @@ from tradegraph.kb.validation import validate_owl
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = Path(__file__).with_name("fixtures") / "mixed.ttl"
 PROFILE = "tradegraph-jdk21-owl2dl-swrl-comparisons-v1"
-MIXED = Namespace("urn:tradegraph:test:mixed#")
+MIXED = Namespace("http://www.semanticweb.org/tradegraph/test/mixed#")
 SWRL = Namespace("http://www.w3.org/2003/11/swrl#")
-CATALOG = Namespace("urn:tradegraph:catalog#")
+CATALOG = Namespace("http://www.semanticweb.org/tradegraph/catalog#")
 
 
 def test_compiles_snapshot_and_keeps_shared_list_in_owl_and_shacl():
     compiled = compile_kb(FIXTURE, PROFILE)
     assert compiled.snapshot.sha256 == sha256(FIXTURE.read_bytes()).hexdigest()
-    assert compiled.snapshot.kb_id == "urn:tradegraph:test:mixed"
+    assert compiled.snapshot.kb_id == "http://www.semanticweb.org/tradegraph/test/mixed"
     assert compiled.snapshot.version == "1"
     assert compiled.source_bytes == FIXTURE.read_bytes()
 
@@ -90,7 +90,7 @@ def test_canonical_kb_has_cq01_fields_actions_and_partial_coverage():
 @pytest.mark.parametrize(
     ("addition", "message"),
     [
-        ('<urn:tradegraph:test:mixed> owl:imports <https://example.invalid/ontology> .', "owl:imports"),
+        ('<http://www.semanticweb.org/tradegraph/test/mixed> owl:imports <https://example.invalid/ontology> .', "owl:imports"),
         (
             ':another a catalog:QueryDefinition ; catalog:id "CQ01" ; '
             'rdfs:label "Duplicate" ; catalog:sparql "SELECT * WHERE {}" .',

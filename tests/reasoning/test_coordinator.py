@@ -15,10 +15,10 @@ from tradegraph.reasoning.client import ReasoningClient
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FX = Namespace("urn:tradegraph:test:feedback#")
+FX = Namespace("http://www.semanticweb.org/tradegraph/test/feedback#")
 PREFIXES = """
-@prefix fx: <urn:tradegraph:test:feedback#> .
-@prefix tg: <urn:tradegraph:kb#> .
+@prefix fx: <http://www.semanticweb.org/tradegraph/test/feedback#> .
+@prefix tg: <http://www.semanticweb.org/tradegraph/kb#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 """
 FACTS = """
@@ -84,7 +84,7 @@ def test_reasoning_cycles_and_pins_context(scenario):
     assert report.context.kb_sha256 == kb.snapshot.sha256
     assert report.context.case_revision == case.revision == 1
     assert report.context.engine_profile_id == ENGINE_PROFILE_ID
-    assert report.context.assessment_context_iri.endswith(":revision:1:context")
+    assert report.context.assessment_context_iri.endswith("/revision/1/context")
     assert report.validation_report.evidence_findings[0].status == "UNDETERMINED"
     assert report.query_results["feedback"] == ({"product": FX["product"]},)
     triples = {finding.triple: finding.support for finding in report.findings}

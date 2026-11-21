@@ -17,7 +17,7 @@ from tradegraph.optimization.export_service import ExportEvaluationResult, Expor
 from tradegraph.optimization.service import OptimizationResult, ShipmentSpec
 
 
-AUDIT = Namespace("urn:tradegraph:audit#")
+AUDIT = Namespace("http://www.semanticweb.org/tradegraph/audit#")
 
 
 def _iso_to_utc_datetime(iso_date: str) -> datetime:

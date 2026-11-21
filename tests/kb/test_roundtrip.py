@@ -9,9 +9,9 @@ from tradegraph.kb.validation import replay_owlapi_save
 
 
 FIXTURE = Path(__file__).with_name("fixtures") / "mixed.ttl"
-MIXED = Namespace("urn:tradegraph:test:mixed#")
+MIXED = Namespace("http://www.semanticweb.org/tradegraph/test/mixed#")
 SWRL = Namespace("http://www.w3.org/2003/11/swrl#")
-CATALOG = Namespace("urn:tradegraph:catalog#")
+CATALOG = Namespace("http://www.semanticweb.org/tradegraph/catalog#")
 
 
 def test_roundtrip_accepts_different_blank_node_ids_and_triple_order(tmp_path):
@@ -39,8 +39,8 @@ def test_roundtrip_rejects_a_changed_literal_lexical_form(tmp_path):
     prefix = '@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n'
     before = tmp_path / "before.ttl"
     after = tmp_path / "after.ttl"
-    before.write_text(prefix + '<urn:a> <urn:p> "01"^^xsd:integer .', encoding="utf-8")
-    after.write_text(prefix + '<urn:a> <urn:p> "1"^^xsd:integer .', encoding="utf-8")
+    before.write_text(prefix + '<http://example.org/a> <http://example.org/p> "01"^^xsd:integer .', encoding="utf-8")
+    after.write_text(prefix + '<http://example.org/a> <http://example.org/p> "1"^^xsd:integer .', encoding="utf-8")
     assert verify_roundtrip(before, after).conforms is False
 
 
@@ -62,7 +62,7 @@ def test_refuses_to_discard_an_observable_owl_edit(tmp_path):
     restored = tmp_path / "restored.ttl"
     replay_owlapi_save(FIXTURE, saved)
     with saved.open("ab") as output:
-        output.write(b'\n<urn:tradegraph:test:mixed#bob> a <urn:tradegraph:test:mixed#Checked> .\n')
+        output.write(b'\n<http://www.semanticweb.org/tradegraph/test/mixed#bob> a <http://www.semanticweb.org/tradegraph/test/mixed#Checked> .\n')
 
     report = restore_roundtrip(FIXTURE, saved, restored)
 

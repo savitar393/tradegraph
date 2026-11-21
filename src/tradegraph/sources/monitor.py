@@ -1526,7 +1526,7 @@ class RegulatoryMonitor:
                 verify=True,
                 review_status=None,
             )
-            staging_graph = parse_turtle(raw_turtle.encode("utf-8"), "urn:tradegraph:staging-diff")
+            staging_graph = parse_turtle(raw_turtle.encode("utf-8"), "http://www.semanticweb.org/tradegraph/staging-diff")
             staging_triples = len(staging_graph)
 
             delta_graph = Graph()

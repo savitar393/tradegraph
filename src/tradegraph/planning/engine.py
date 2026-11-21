@@ -76,7 +76,7 @@ class PlanningEngine:
                 _remaining(deadline)
                 state = queue.popleft()
                 extra_coverage = tuple(
-                    (URIRef(f"{revision_ref(state.case.case_id, state.case.revision)}:context"),
+                    (URIRef(f"{revision_ref(state.case.case_id, state.case.revision)}/context"),
                      CASE_DATA.assessedCoverage, URIRef(entry.iri))
                     for entry in state.report.coverage if entry.status in {"SUPPORTED", "PARTIAL"}
                 )

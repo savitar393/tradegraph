@@ -11,7 +11,7 @@ from tradegraph.contracts import AssessmentContext, EvidenceClaim, FactPatch
 from tradegraph.graph.store import CASE_DATA, TG, project_case_graphs
 
 
-EX = Namespace("urn:example:case#")
+EX = Namespace("http://example.org/case#")
 FACT = (EX.product, TG.hasBatch, EX.firstBatch)
 
 
@@ -25,8 +25,8 @@ def context():
 
 def test_branch_preserves_base_and_main_head(tmp_path, context):
     repository = CaseRepository(tmp_path / "cases.db")
-    original = repository.create_case("<urn:example:case#product> <urn:tradegraph:kb#hasBatch> "
-                                      "<urn:example:case#firstBatch> .", context)
+    original = repository.create_case("<http://example.org/case#product> <http://www.semanticweb.org/tradegraph/kb#hasBatch> "
+                                      "<http://example.org/case#firstBatch> .", context)
     replacement = (EX.product, TG.hasBatch, EX.alternateBatch)
     revised = repository.revise_case(
         original.case_id, original.revision,
@@ -151,7 +151,7 @@ def test_aware_time_is_projected_as_utc_without_assuming_an_offset(tmp_path, con
 def test_can_patch_an_anonymous_node_from_the_persisted_graph(tmp_path, context):
     repository = CaseRepository(tmp_path / "cases.db")
     original = repository.create_case(
-        '@prefix ex: <urn:example:case#> . ex:product ex:packing [ ex:count +01 ] .', context,
+        '@prefix ex: <http://example.org/case#> . ex:product ex:packing [ ex:count +01 ] .', context,
     )
     graph = project_case_graphs(original).facts
     node = graph.value(EX.product, EX.packing)
@@ -169,7 +169,7 @@ def test_can_patch_an_anonymous_node_from_the_persisted_graph(tmp_path, context)
 def test_patch_accepts_a_plain_rdf_string_for_a_persisted_string(tmp_path, context):
     repository = CaseRepository(tmp_path / "cases.db")
     original = repository.create_case(
-        '@prefix ex: <urn:example:case#> . ex:product ex:reference "001" .', context,
+        '@prefix ex: <http://example.org/case#> . ex:product ex:reference "001" .', context,
     )
     revised = repository.revise_case(original.case_id, 1, FactPatch(
         reason="Remove unconfirmed reference",
@@ -186,7 +186,7 @@ def test_rejects_a_missing_retraction_and_schema_axioms_without_committing(tmp_p
         repository.revise_case(first.case_id, 1, FactPatch(reason="Missing input", remove_triples=(FACT,)))
     with pytest.raises(ValueError, match="assertions"):
         repository.create_case(
-            "<urn:a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <urn:b> .", context,
+            "<http://example.org/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://example.org/b> .", context,
         )
     second = repository.revise_case(first.case_id, 1, FactPatch(reason="Valid change", add_triples=(FACT,)))
     assert second.revision == 2

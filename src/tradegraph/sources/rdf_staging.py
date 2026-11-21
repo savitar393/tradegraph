@@ -18,8 +18,8 @@ from tradegraph.kb.validation import validate_owl
 from tradegraph.sources.parsers import verify_records
 
 
-TG = Namespace("urn:tradegraph:kb#")
-CATALOG = Namespace("urn:tradegraph:catalog#")
+TG = Namespace("http://www.semanticweb.org/tradegraph/kb#")
+CATALOG = Namespace("http://www.semanticweb.org/tradegraph/catalog#")
 SWRL = Namespace("http://www.w3.org/2003/11/swrl#")
 SWRLB = Namespace("http://www.w3.org/2003/11/swrlb#")
 SH = Namespace("http://www.w3.org/ns/shacl#")

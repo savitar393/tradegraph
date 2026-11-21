@@ -31,7 +31,7 @@ from tradegraph.planning.engine import PlanningEngine
 from tradegraph.reasoning.client import ReasoningClient
 
 
-OPT_EX = Namespace("urn:tradegraph:optimize#")
+OPT_EX = Namespace("http://www.semanticweb.org/tradegraph/optimize#")
 CENT = Decimal("0.01")
 HUNDRED = Decimal("100")
 
@@ -421,7 +421,7 @@ class MultiFtaOptimizer:
 
     def resolve_hs_iri(self, raw_code: str) -> URIRef:
         text = raw_code.strip()
-        if text.startswith("urn:"):
+        if text.startswith(("http://", "https://", "urn:")):
             return URIRef(text)
         if text.startswith("hs-"):
             cand = TG[text]
@@ -439,7 +439,7 @@ class MultiFtaOptimizer:
 
     def resolve_country_iri(self, raw_country: str) -> URIRef:
         text = raw_country.strip()
-        if text.startswith("urn:"):
+        if text.startswith(("http://", "https://", "urn:")):
             return URIRef(text)
         direct = TG[text]
         if (direct, RDF.type, TG.Country) in self._owl:
@@ -458,7 +458,7 @@ class MultiFtaOptimizer:
 
     def resolve_citation(self, clause_ref: URIRef | str) -> ProvenanceCitation:
         clause_iri = clause_ref if isinstance(clause_ref, URIRef) else (
-            URIRef(clause_ref) if str(clause_ref).startswith("urn:") else TG[str(clause_ref)]
+            URIRef(clause_ref) if str(clause_ref).startswith(("http://", "https://", "urn:")) else TG[str(clause_ref)]
         )
         clause_id = str(clause_iri).split("#")[-1]
         locator = self._owl.value(clause_iri, TG.clauseLocator)
@@ -700,12 +700,14 @@ class MultiFtaOptimizer:
     def _build_and_assess(
         self,
         repo: CaseRepository,
-        spec: ShipmentSpec,
+        spec: object,
         agreement_slug: str,
         hs_iri: URIRef,
         dispatch_iri: URIRef,
         dest_iri: URIRef,
         jurisdiction_iri: URIRef,
+        *,
+        procedure_iri: URIRef = TG.importForUse,
     ) -> tuple[AssessmentReport, AssessmentService]:
         tx_at = datetime.fromisoformat(f"{spec.as_of_date}T13:00:00+07:00")
         eval_at = datetime.fromisoformat(f"{spec.as_of_date}T14:00:00+07:00")
@@ -713,7 +715,7 @@ class MultiFtaOptimizer:
             self.kb.snapshot.sha256,
             ENGINE_PROFILE_ID,
             jurisdiction_iri=str(jurisdiction_iri),
-            procedure_iri=str(TG.importForUse),
+            procedure_iri=str(procedure_iri),
             agreement_iri=str(TG[agreement_slug]),
             transaction_at=tx_at,
             evaluation_at=eval_at,
@@ -722,11 +724,16 @@ class MultiFtaOptimizer:
             batch_iri=str(OPT_EX.batch),
         )
         base = repo.create_case("", context)
-        rev = f"<urn:tradegraph:case:{base.case_id}:revision:2>"
+        rev = f"<http://www.semanticweb.org/tradegraph/case/{base.case_id}/revision/2>"
         hs_local = str(hs_iri).split("#")[-1]
         disp_local = str(dispatch_iri).split("#")[-1]
         dest_local = str(dest_iri).split("#")[-1]
         jur_local = str(jurisdiction_iri).split("#")[-1]
+        role_stmt = (
+            f"ex:exporterAssignment tg:roleActor ex:exporter ; tg:hasActorRole tg:roleExporter ; tg:assignedInRevision {rev} ."
+            if procedure_iri == TG.commercialExport
+            else f"ex:importerAssignment tg:roleActor ex:importer ; tg:hasActorRole tg:roleImporter ; tg:assignedInRevision {rev} ."
+        )
 
         prefixes = f"@prefix ex: <{OPT_EX}> .\n@prefix tg: <{TG}> .\n@prefix xsd: <{XSD}> .\n"
         facts = [f"""
@@ -738,7 +745,7 @@ ex:shipment tg:containsGoods ex:product ; tg:shipmentDispatchCountry tg:{disp_lo
     tg:shipmentDestinationCountry tg:{dest_local} ; tg:cargoCategory tg:regularCargo ;
     tg:routeKind tg:directRoute ; tg:shipmentRouteClosed true .
 {rev} tg:revisionShipment ex:shipment .
-ex:importerAssignment tg:roleActor ex:importer ; tg:hasActorRole tg:roleImporter ; tg:assignedInRevision {rev} .
+{role_stmt}
 """]
         claims: list[EvidenceClaim] = []
 
@@ -764,14 +771,14 @@ ex:{name} a tg:Document ; tg:documentType tg:{doc_type} ;
 
         add_doc("transport", "transportRecord")
 
-        for idx, doc_type in enumerate(spec.provided_origin_docs, 1):
+        for idx, doc_type in enumerate(getattr(spec, "provided_origin_docs", ()), 1):
             add_doc(
                 f"originDoc{idx}",
                 doc_type,
                 f"; tg:documentIssuingCountry tg:{disp_local} ; tg:submittedForPreference true",
             )
 
-        for idx, doc_type in enumerate(spec.provided_lartas_docs, 1):
+        for idx, doc_type in enumerate(getattr(spec, "provided_lartas_docs", ()), 1):
             add_doc(f"lartasDoc{idx}", doc_type)
 
         if spec.materials:
@@ -780,8 +787,12 @@ ex:{name} a tg:Document ; tg:documentType tg:{doc_type} ;
                 mat_hs_local = str(self.resolve_hs_iri(mat.hs_code)).split("#")[-1]
                 cumul = ""
                 if mat.origin_country:
-                    c_local = str(self.resolve_country_iri(mat.origin_country)).split("#")[-1]
-                    cumul += f" ; tg:materialOriginCountry tg:{c_local}"
+                    try:
+                        c_local = str(self.resolve_country_iri(mat.origin_country)).split("#")[-1]
+                        cumul += f" ; tg:materialOriginCountry tg:{c_local}"
+                    except ValueError:
+                        # Non-KB third country cannot be an FTA agreementParty (no cumulation).
+                        pass
                 if mat.origin_proof_verified is not None:
                     cumul += f" ; tg:materialOriginProofVerified {'true' if mat.origin_proof_verified else 'false'}"
                 facts.append(f"""
@@ -831,10 +842,12 @@ ex:entry{idx} tg:entryMaterial ex:material{idx} ; tg:nonOriginatingInput {'true'
             ops_csv = ", ".join(f"tg:{op}" for op in spec.performed_operations)
             add_doc("procOpsDoc", "productionProcessStatement", f"; tg:processScopeClosed true ; tg:performedOperation {ops_csv}")
 
-        if spec.dv20_percent is not None:
-            extra = f"; tg:recordedDomesticValueAdditionPercent {_q2(spec.dv20_percent)}"
-            if spec.highest_contributor_country:
-                hc_local = str(self.resolve_country_iri(spec.highest_contributor_country)).split("#")[-1]
+        dv20_percent = getattr(spec, "dv20_percent", None)
+        if dv20_percent is not None:
+            extra = f"; tg:recordedDomesticValueAdditionPercent {_q2(dv20_percent)}"
+            highest_contrib = getattr(spec, "highest_contributor_country", None)
+            if highest_contrib:
+                hc_local = str(self.resolve_country_iri(highest_contrib)).split("#")[-1]
                 extra += f" ; tg:highestOriginatingContributorCountry tg:{hc_local}"
             add_doc("dv20Doc", "dv20Statement", extra)
 

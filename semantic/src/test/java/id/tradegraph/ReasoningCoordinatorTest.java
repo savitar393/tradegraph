@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class ReasoningCoordinatorTest {
-    private static final String NS = "urn:tradegraph:fixture#";
+    private static final String NS = "http://www.semanticweb.org/tradegraph/fixture#";
 
     @TempDir
     Path directory;
@@ -77,7 +77,7 @@ class ReasoningCoordinatorTest {
                 :ClassifiedAfterRules a owl:Class .
                 """ + extraCore);
         var rulesFile = Files.writeString(directory.resolve("rules.ttl"), rules
-                .replace(":ruleId", "<urn:tradegraph:kb#ruleId>")
+                .replace(":ruleId", "<http://www.semanticweb.org/tradegraph/kb#ruleId>")
                 .replace("swrlb:greaterThanOrEqual", "swrlb:" + builtin));
         return new ReasoningJob(new ReasoningJob.Context("fixture", "fixture", "fixture", 1, NS + "context"),
                 coreFile.toString(), rulesFile.toString(), Map.of(NS + "materialRule", List.of(3, 1)),

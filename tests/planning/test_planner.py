@@ -16,8 +16,8 @@ from tradegraph.planning.engine import PlanningEngine
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FX = Namespace("urn:tradegraph:test:planning#")
-DATA = Namespace("urn:tradegraph:test:instance#")
+FX = Namespace("http://www.semanticweb.org/tradegraph/test/planning#")
+DATA = Namespace("http://www.semanticweb.org/tradegraph/test/instance#")
 
 
 class RecordingAssessment:

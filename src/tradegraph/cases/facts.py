@@ -10,8 +10,8 @@ from tradegraph.contracts import FactPatch, RDFTriple
 from tradegraph.kb.rdf import parse_turtle
 
 
-TG = Namespace("urn:tradegraph:kb#")
-CASE_DATA = Namespace("urn:tradegraph:case-data#")
+TG = Namespace("http://www.semanticweb.org/tradegraph/kb#")
+CASE_DATA = Namespace("http://www.semanticweb.org/tradegraph/case-data#")
 SWRL = "http://www.w3.org/2003/11/swrl#"
 CASE_ASSERTION_TYPES = {
     OWL.NamedIndividual, OWL.AllDifferent, OWL.NegativePropertyAssertion, OWL.Thing, OWL.Nothing,
@@ -72,13 +72,15 @@ def apply_fact_patch(graph: Graph, patch: FactPatch) -> None:
 
 
 def revision_ref(case_id: str, revision: int) -> URIRef:
-    return URIRef(f"urn:tradegraph:case:{case_id}:revision:{revision}")
+    return URIRef(f"http://www.semanticweb.org/tradegraph/case/{case_id}/revision/{revision}")
 
 
 def rebase_triple(triple: RDFTriple, source: URIRef, target: URIRef) -> RDFTriple:
     """Move identifiers in the owned revision namespace while preserving RDF term types."""
     def rebase(term):
-        if isinstance(term, URIRef) and (term == source or term.startswith(f"{source}:")):
+        if isinstance(term, URIRef) and (
+            term == source or term.startswith((f"{source}/", f"{source}:", f"{source}#"))
+        ):
             return URIRef(f"{target}{term[len(source):]}")
         return term
 

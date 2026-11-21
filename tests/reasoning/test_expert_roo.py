@@ -19,7 +19,7 @@ from tradegraph.reasoning.client import ReasoningClient
 
 ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_KB = ROOT / "knowledge" / "tradegraph.ttl"
-EX = Namespace("urn:tradegraph:expert-roo-test#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/expert-roo-test#")
 PREFIXES = f"""
 @prefix ex: <{EX}> .
 @prefix tg: <{TG}> .
@@ -90,7 +90,7 @@ def _assess_expert_case(
         batch_iri=str(EX.batch),
     )
     base = repo.create_case("", context)
-    rev = f"<urn:tradegraph:case:{base.case_id}:revision:2>"
+    rev = f"<http://www.semanticweb.org/tradegraph/case/{base.case_id}/revision/2>"
 
     cumul_triples = ""
     if material_origin_country is not None:

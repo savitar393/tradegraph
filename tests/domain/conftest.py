@@ -15,7 +15,7 @@ from tradegraph.reasoning.client import ReasoningClient
 
 ROOT = Path(__file__).resolve().parents[2]
 KB = ROOT / "knowledge/tradegraph.ttl"
-EX = Namespace("urn:tradegraph:domain-test#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/domain-test#")
 CASES = tuple(json.loads(line) for line in (ROOT / "eval/cases.jsonl").read_text(encoding="utf-8").splitlines())
 PREFIXES = f"""
 @prefix ex: <{EX}> .
@@ -62,7 +62,7 @@ def run_case(tmp_path, compiled, classpath):
         dispatch, destination = ("indonesia", "singapore") if coffee else ("thailand", "indonesia")
         hs = "hs-09012111" if coffee else "hs-84137011"
         base = repository.create_case("", context)
-        revision = f"<urn:tradegraph:case:{base.case_id}:revision:2>"
+        revision = f"<http://www.semanticweb.org/tradegraph/case/{base.case_id}/revision/2>"
         facts = [f"""
 ex:product tg:hasTariffClassification tg:{hs} ; tg:hasBatch ex:batch .
 ex:batch tg:usesMaterial ex:material ; tg:producedAt ex:facility ; tg:producedBy ex:producer .
@@ -176,7 +176,7 @@ ex:shipment tg:temporaryUsePermitStart "2025-09-15T00:00:00+07:00"^^xsd:dateTime
             if variant != "sg-missing":
                 document("ccp", "sgCargoClearancePermit", extra="; tg:documentHolder ex:importer")
 
-        graph = parse_turtle((PREFIXES + "\n".join(facts)).encode(), "urn:tradegraph:domain-test:")
+        graph = parse_turtle((PREFIXES + "\n".join(facts)).encode(), "http://www.semanticweb.org/tradegraph/domain-test/")
         case = repository.revise_case(
             base.case_id, base.revision, FactPatch(
                 "Add pinned shipment, actors and evidence", add_triples=tuple(graph), evidence_claims=tuple(claims),

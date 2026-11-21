@@ -6,7 +6,7 @@ from rdflib import Namespace, RDF, SH, URIRef
 from tradegraph.kb.loader import CATALOG, TG
 from tradegraph.validation.service import ValidationService
 
-EX = Namespace("urn:tradegraph:test:validation#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/test/validation#")
 QUERY = "total-component-value"
 AMOUNTS = """
 ex:bom a tg:ComponentList ; tg:componentListForBatch ex:batch ;

@@ -10,10 +10,10 @@ from tradegraph.kb.loader import ENGINE_PROFILE_ID, compile_kb
 
 
 KB = Path(__file__).resolve().parents[2] / "knowledge" / "tradegraph.ttl"
-EX = Namespace("urn:tradegraph:test:validation#")
+EX = Namespace("http://www.semanticweb.org/tradegraph/test/validation#")
 PREFIXES = """
-@prefix ex: <urn:tradegraph:test:validation#> .
-@prefix tg: <urn:tradegraph:kb#> .
+@prefix ex: <http://www.semanticweb.org/tradegraph/test/validation#> .
+@prefix tg: <http://www.semanticweb.org/tradegraph/kb#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 """

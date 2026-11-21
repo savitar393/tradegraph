@@ -1,5 +1,5 @@
-@prefix : <urn:tradegraph:kb#> .
-@prefix catalog: <urn:tradegraph:catalog#> .
+@prefix : <http://www.semanticweb.org/tradegraph/kb#> .
+@prefix catalog: <http://www.semanticweb.org/tradegraph/catalog#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -8,8 +8,8 @@
 @prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<urn:tradegraph:kb> a owl:Ontology ;
-    owl:versionIRI <urn:tradegraph:kb:version:0.15.0> ;
+<http://www.semanticweb.org/tradegraph/kb> a owl:Ontology ;
+    owl:versionIRI <http://www.semanticweb.org/tradegraph/kb/version/0.15.0> ;
     owl:versionInfo "0.15.0" ;
     rdfs:label "TradeGraph" ;
     rdfs:comment "Inti ontologi perdagangan lintas negara dan referensi awal dari register pengetahuan."@id ;
@@ -1028,7 +1028,7 @@ catalog:closureSparql a owl:AnnotationProperty .
     catalog:id "CQ01" ;
     rdfs:label "Material dan pemasok produk"@id ;
     catalog:parameters ( "product" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?material ?supplier WHERE {
     ?product tg:dependsOnMaterial ?material .
     OPTIONAL { ?material tg:suppliedBy ?supplier . }
@@ -1041,16 +1041,16 @@ SELECT DISTINCT ?material ?supplier WHERE {
     catalog:goals ( :goal-reexport-draft :goal-reexport-preparation ) ;
     catalog:typedParameters ( [ catalog:name "revision" ; catalog:valueType catalog:IRI ;
         catalog:fromContext "revision" ] ) ;
-    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?context cd:assessedCoverage tg:scope-pump-exhibition .
     ?revision tg:requestedSettlement tg:reexportSettlement .
 }""" ;
     catalog:preconditions ( [
         catalog:requiresDocumentType :temporaryImportPermit ;
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?permit .
     ?permit tg:documentType tg:temporaryImportPermit ; tg:documentShipment ?shipment .
@@ -1058,7 +1058,7 @@ ASK {
     ] ) ;
     catalog:effects ( [
         catalog:producesDraftOf :idExportDeclaration ; catalog:operation "ADD" ;
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 CONSTRUCT { ?revision tg:hasDraftDocumentType tg:idExportDeclaration . } WHERE {}"""
     ] ) .
 
@@ -1070,25 +1070,25 @@ CONSTRUCT { ?revision tg:hasDraftDocumentType tg:idExportDeclaration . } WHERE {
     catalog:dependencies ( "prepare-reexport-notice" ) ;
     catalog:typedParameters ( [ catalog:name "revision" ; catalog:valueType catalog:IRI ;
         catalog:fromContext "revision" ] ) ;
-    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?context cd:assessedCoverage tg:scope-pump-exhibition .
     ?revision tg:requestedSettlement tg:reexportSettlement .
 }""" ;
-    catalog:preconditions ( [ catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:preconditions ( [ catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK { ?revision tg:hasDraftDocumentType tg:idExportDeclaration ; tg:revisionShipment ?shipment . }""" ] ) ;
-    catalog:effects ( [ catalog:operation "ADD" ; catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:effects ( [ catalog:operation "ADD" ; catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 CONSTRUCT { ?revision tg:hasPreparationArtifact tg:reexportChecklist . } WHERE {}""" ] ) .
 
 :goal-reexport-draft a owl:NamedIndividual, catalog:GoalDefinition ;
     catalog:id "reexport-draft" ; rdfs:label "Draf pemberitahuan ekspor kembali disiapkan"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK { ?revision tg:hasDraftDocumentType tg:idExportDeclaration . }""" .
 
 :goal-reexport-preparation a owl:NamedIndividual, catalog:GoalDefinition ;
     catalog:id "reexport-preparation" ; rdfs:label "Draf dan daftar periksa ekspor kembali disiapkan"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK {
     ?revision tg:hasDraftDocumentType tg:idExportDeclaration ; tg:hasPreparationArtifact tg:reexportChecklist .
 }""" .
@@ -1103,7 +1103,7 @@ ASK {
     catalog:shape :document-evidence-shape ;
     catalog:admitEvidence true ;
     catalog:parameters ( "scope" "product" "jurisdiction" "transactionAt" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?focus WHERE {
     ?scope tg:containsClaim ?focus .
@@ -1113,14 +1113,14 @@ SELECT DISTINCT ?focus WHERE {
 :document-evidence-shape a sh:NodeShape ;
     sh:targetClass :EvidenceClaim ;
     sh:property [
-        sh:path <urn:tradegraph:case-data#verificationStatus> ;
+        sh:path <http://www.semanticweb.org/tradegraph/case-data#verificationStatus> ;
         sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^VERIFIED$"
     ], [
         sh:path rdf:object ;
         sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ;
-        sh:equals <urn:tradegraph:case-data#sourceReference>
+        sh:equals <http://www.semanticweb.org/tradegraph/case-data#sourceReference>
     ], [
-        sh:path <urn:tradegraph:case-data#sourceReference> ;
+        sh:path <http://www.semanticweb.org/tradegraph/case-data#sourceReference> ;
         sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ;
         sh:node [
             sh:class :Document ;
@@ -1141,8 +1141,8 @@ SELECT DISTINCT ?focus WHERE {
     ] ;
     sh:sparql [
         sh:message "Subjek, yurisdiksi, atau periode dokumen tidak sesuai dengan konteks transaksi."@id ;
-        sh:select """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+        sh:select """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT $this WHERE {
     ?context tg:usesEvidenceSet/tg:containsClaim $this ;
         tg:assessesProduct ?product ;
@@ -1169,7 +1169,7 @@ SELECT $this WHERE {
         [ catalog:name "batch" ; catalog:valueType catalog:IRI ; catalog:fromContext "batch" ]
     ) ;
     catalog:scopeParameter "componentList" ;
-    catalog:closureSparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:closureSparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 ASK {
     ?componentList a tg:ComponentList ;
@@ -1185,7 +1185,7 @@ ASK {
         FILTER (!sameTerm(?otherBatch, ?batch))
     }
 }""" ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (SUM(?decimal) AS ?value) (SAMPLE(?rowUnit) AS ?unit) (SAMPLE(?rowCurrency) AS ?currency)
 WHERE {
@@ -1404,6 +1404,121 @@ catalog:exactDecimal a owl:AnnotationProperty .
         rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :PumpRvcThresholdNotMet ; swrl:argument1 :rvcDocumentVar ] ;
         rdf:rest rdf:nil ] .
 
+# Generic Multi-FTA RVC and RCEP DV20 threshold properties & SWRL rules (comparison-only decidable profile).
+:meetsRvcThreshold a owl:ObjectProperty ;
+    rdfs:label "meets RVC threshold" ;
+    rdfs:domain :Document ;
+    rdfs:range :OriginThreshold .
+:failsRvcThreshold a owl:ObjectProperty ;
+    rdfs:label "fails RVC threshold" ;
+    rdfs:domain :Document ;
+    rdfs:range :OriginThreshold .
+:meetsDv20Threshold a owl:ObjectProperty ;
+    rdfs:label "meets DV20 threshold" ;
+    rdfs:domain :Document ;
+    rdfs:range :OriginThreshold .
+:failsDv20Threshold a owl:ObjectProperty ;
+    rdfs:label "fails DV20 threshold" ;
+    rdfs:domain :Document ;
+    rdfs:range :OriginThreshold .
+
+:thresholdVar a swrl:Variable .
+:dv20DocVar a swrl:Variable .
+:dv20PercentVar a swrl:Variable .
+:dv20LimitVar a swrl:Variable .
+
+[] a swrl:Imp ; :ruleId "generic-psr-rvc-threshold-met" ; rdfs:label "generic-psr-rvc-threshold-met" ;
+    :ruleReviewStatus "SOURCE_REVIEWED" ;
+    swrl:body [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :documentType ;
+            swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcWorksheet ] ;
+        rdf:rest [ a swrl:AtomList ;
+            rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :recordedRvcPercent ;
+                swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcPercentVar ] ;
+            rdf:rest [ a swrl:AtomList ;
+                rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :OriginThreshold ;
+                    swrl:argument1 :thresholdVar ] ;
+                rdf:rest [ a swrl:AtomList ;
+                    rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :minimumRvcPercent ;
+                        swrl:argument1 :thresholdVar ; swrl:argument2 :rvcLimitVar ] ;
+                    rdf:rest [ a swrl:AtomList ;
+                        rdf:first [ a swrl:BuiltinAtom ; swrl:builtin swrlb:greaterThanOrEqual ;
+                            swrl:arguments ( :rvcPercentVar :rvcLimitVar ) ] ;
+                        rdf:rest rdf:nil ] ] ] ] ] ;
+    swrl:head [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :meetsRvcThreshold ;
+            swrl:argument1 :rvcDocumentVar ; swrl:argument2 :thresholdVar ] ;
+        rdf:rest rdf:nil ] .
+
+[] a swrl:Imp ; :ruleId "generic-psr-rvc-threshold-not-met" ; rdfs:label "generic-psr-rvc-threshold-not-met" ;
+    :ruleReviewStatus "SOURCE_REVIEWED" ;
+    swrl:body [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :documentType ;
+            swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcWorksheet ] ;
+        rdf:rest [ a swrl:AtomList ;
+            rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :recordedRvcPercent ;
+                swrl:argument1 :rvcDocumentVar ; swrl:argument2 :rvcPercentVar ] ;
+            rdf:rest [ a swrl:AtomList ;
+                rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :OriginThreshold ;
+                    swrl:argument1 :thresholdVar ] ;
+                rdf:rest [ a swrl:AtomList ;
+                    rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :minimumRvcPercent ;
+                        swrl:argument1 :thresholdVar ; swrl:argument2 :rvcLimitVar ] ;
+                    rdf:rest [ a swrl:AtomList ;
+                        rdf:first [ a swrl:BuiltinAtom ; swrl:builtin swrlb:lessThan ;
+                            swrl:arguments ( :rvcPercentVar :rvcLimitVar ) ] ;
+                        rdf:rest rdf:nil ] ] ] ] ] ;
+    swrl:head [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :failsRvcThreshold ;
+            swrl:argument1 :rvcDocumentVar ; swrl:argument2 :thresholdVar ] ;
+        rdf:rest rdf:nil ] .
+
+[] a swrl:Imp ; :ruleId "rcep-dv20-threshold-met" ; rdfs:label "rcep-dv20-threshold-met" ;
+    :ruleReviewStatus "SOURCE_REVIEWED" ;
+    swrl:body [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :documentType ;
+            swrl:argument1 :dv20DocVar ; swrl:argument2 :dv20Statement ] ;
+        rdf:rest [ a swrl:AtomList ;
+            rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :recordedDomesticValueAdditionPercent ;
+                swrl:argument1 :dv20DocVar ; swrl:argument2 :dv20PercentVar ] ;
+            rdf:rest [ a swrl:AtomList ;
+                rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :OriginThreshold ;
+                    swrl:argument1 :thresholdVar ] ;
+                rdf:rest [ a swrl:AtomList ;
+                    rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :minimumDvPercent ;
+                        swrl:argument1 :thresholdVar ; swrl:argument2 :dv20LimitVar ] ;
+                    rdf:rest [ a swrl:AtomList ;
+                        rdf:first [ a swrl:BuiltinAtom ; swrl:builtin swrlb:greaterThanOrEqual ;
+                            swrl:arguments ( :dv20PercentVar :dv20LimitVar ) ] ;
+                        rdf:rest rdf:nil ] ] ] ] ] ;
+    swrl:head [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :meetsDv20Threshold ;
+            swrl:argument1 :dv20DocVar ; swrl:argument2 :thresholdVar ] ;
+        rdf:rest rdf:nil ] .
+
+[] a swrl:Imp ; :ruleId "rcep-dv20-threshold-not-met" ; rdfs:label "rcep-dv20-threshold-not-met" ;
+    :ruleReviewStatus "SOURCE_REVIEWED" ;
+    swrl:body [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :documentType ;
+            swrl:argument1 :dv20DocVar ; swrl:argument2 :dv20Statement ] ;
+        rdf:rest [ a swrl:AtomList ;
+            rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :recordedDomesticValueAdditionPercent ;
+                swrl:argument1 :dv20DocVar ; swrl:argument2 :dv20PercentVar ] ;
+            rdf:rest [ a swrl:AtomList ;
+                rdf:first [ a swrl:ClassAtom ; swrl:classPredicate :OriginThreshold ;
+                    swrl:argument1 :thresholdVar ] ;
+                rdf:rest [ a swrl:AtomList ;
+                    rdf:first [ a swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :minimumDvPercent ;
+                        swrl:argument1 :thresholdVar ; swrl:argument2 :dv20LimitVar ] ;
+                    rdf:rest [ a swrl:AtomList ;
+                        rdf:first [ a swrl:BuiltinAtom ; swrl:builtin swrlb:lessThan ;
+                            swrl:arguments ( :dv20PercentVar :dv20LimitVar ) ] ;
+                        rdf:rest rdf:nil ] ] ] ] ] ;
+    swrl:head [ a swrl:AtomList ;
+        rdf:first [ a swrl:IndividualPropertyAtom ; swrl:propertyPredicate :failsDv20Threshold ;
+            swrl:argument1 :dv20DocVar ; swrl:argument2 :thresholdVar ] ;
+        rdf:rest rdf:nil ] .
+
 :subheadingCode a owl:DatatypeProperty, owl:FunctionalProperty ; rdfs:domain :HSSubheading ; rdfs:range xsd:string .
 :hs6-841370 :subheadingCode "841370" .
 :hs6-841391 :subheadingCode "841391" .
@@ -1414,7 +1529,7 @@ catalog:exactDecimal a owl:AnnotationProperty .
 # Match only the reviewed route, tariff line, procedure, local-day window and context.
 :reviewed-scope-selector a owl:NamedIndividual, catalog:CoverageQuery ;
     catalog:id "reviewed-case-scope" ; rdfs:label "Cakupan kasus yang telah dikurasi"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?scope WHERE {
     ?context tg:appliesInJurisdiction ?jurisdiction ; tg:selectedProcedure ?procedure ;
         tg:assessesProduct ?product ; tg:assessesRevision ?revision ;
@@ -1447,7 +1562,11 @@ SELECT DISTINCT ?scope WHERE {
             tg:classifiedHeading ?heading ; tg:classifiedChapter ?chapter .
         ?scope a tg:GenericPsrCoverageDeclaration ; tg:coverageJurisdiction ?uJuris ;
             tg:coverageProcedure ?uProc ; tg:coverageAgreement ?agreement ;
-            tg:coverageDestinationCountry ?uDest ; tg:coverageWindow ?window .
+            tg:coverageWindow ?window .
+        FILTER (
+            (?uProc = tg:importForUse && EXISTS { ?scope tg:coverageDestinationCountry ?uDest . }) ||
+            (?uProc = tg:commercialExport && EXISTS { ?scope tg:coverageDispatchCountry ?uDisp . })
+        )
         OPTIONAL { ?subPsr tg:psrForSubheading ?subheading ; tg:psrAgreement ?agreement . }
         OPTIONAL { ?headPsr tg:psrForHeading ?heading ; tg:psrAgreement ?agreement . }
         OPTIONAL { ?chapPsr tg:psrForChapter ?chapter ; tg:psrAgreement ?agreement . }
@@ -1476,9 +1595,9 @@ SELECT DISTINCT ?scope WHERE {
 
 :q-issued-document a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "issued-document" ; rdfs:label "Bukti dokumen pihak yang bertanggung jawab"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?definition cat:responsibleRole ?role .
@@ -1498,9 +1617,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-rvc-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "rvc-pass" ; rdfs:label "RVC memenuhi ambang PSR"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
     (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> AS ?supportPredicate)
@@ -1518,9 +1637,9 @@ SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
 
 :q-rvc-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "rvc-fail" ; rdfs:label "RVC di bawah ambang PSR"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
     (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> AS ?supportPredicate)
@@ -1538,9 +1657,9 @@ SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
 
 :q-ctsh-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "ctsh-pass" ; rdfs:label "Semua input non-originating pada daftar lengkap berganti subpos"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessesProduct ?product ; tg:assessesBatch ?batch ;
@@ -1576,9 +1695,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-ctsh-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "ctsh-fail" ; rdfs:label "Input non-originating tercatat pada subpos produk"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessesProduct ?product ; tg:assessesBatch ?batch ;
@@ -1596,9 +1715,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-consignment-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "consignment-pass" ; rdfs:label "Jalur langsung atau transit terverifikasi"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -1623,9 +1742,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-consignment-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "consignment-fail" ; rdfs:label "Transit dengan tindakan yang bertentangan dengan syarat"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -1642,9 +1761,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-atiga-document a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "atiga-document" ; rdfs:label "SKA atau DAB disampaikan untuk kiriman yang dinilai"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -1656,9 +1775,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-temporary-conditions-met a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "temporary-conditions-met" ; rdfs:label "Syarat barang dan bukti rencana ekspor kembali"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessesProduct ?product ; tg:assessesRevision ?revision ;
@@ -1670,9 +1789,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-temporary-conditions-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "temporary-conditions-fail" ; rdfs:label "Barang tidak memenuhi syarat fisik impor sementara"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?product WHERE {
     ?context tg:assessesProduct ?product .
@@ -1683,9 +1802,9 @@ SELECT DISTINCT ?product WHERE {
 
 :q-temporary-no-general-controls a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "temporary-no-general-controls" ; rdfs:label "Pengecualian kendali impor umum Pasal 47 ayat 1"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?product WHERE {
     ?context tg:assessesProduct ?product .
@@ -1695,9 +1814,9 @@ SELECT DISTINCT ?product WHERE {
 
 :q-no-supported-outcome a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "no-supported-outcome" ; rdfs:label "Pemenuhan penilaian belum dimodelkan dalam cakupan"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?context WHERE {
     FILTER (false)
@@ -1705,9 +1824,9 @@ SELECT DISTINCT ?context WHERE {
 
 :q-change-use-not-applicable a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "change-use-not-applicable" ; rdfs:label "Tujuan tetap atau penyelesaian domestik"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?revision WHERE {
     ?context tg:assessesRevision ?revision .
@@ -1717,9 +1836,9 @@ SELECT DISTINCT ?revision WHERE {
 
 :q-change-use-approved a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "change-use-approved" ; rdfs:label "Persetujuan untuk perubahan tujuan dalam kelompok yang sama"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?definition cat:responsibleRole ?role .
@@ -1743,9 +1862,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-domestic-not-selected a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "domestic-not-selected" ; rdfs:label "Opsi ekspor kembali yang dipilih secara eksplisit"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?revision WHERE {
     ?context tg:assessesRevision ?revision .
@@ -1754,9 +1873,9 @@ SELECT DISTINCT ?revision WHERE {
 
 :q-domestic-authorized a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "domestic-authorized" ; rdfs:label "Keputusan penyelesaian domestik untuk pertimbangan Pasal 47"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?definition cat:responsibleRole ?role .
@@ -1777,9 +1896,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-domestic-ordinary-sale a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "domestic-ordinary-sale" ; rdfs:label "Penjualan komersial sebagai satu-satunya dasar yang dinyatakan"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?revision WHERE {
     ?context tg:assessesRevision ?revision .
@@ -1792,9 +1911,9 @@ SELECT DISTINCT ?revision WHERE {
 
 :q-reexport-settlement-excepted a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "reexport-settlement-excepted" ; rdfs:label "Penyelesaian tanpa ekspor kembali yang telah disetujui"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessesRevision ?revision ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -1808,9 +1927,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-notice-timely a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "notice-timely" ; rdfs:label "Pemberitahuan sebelum izin berakhir"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence ?deadline WHERE {
     ?definition cat:responsibleRole ?role .
@@ -1833,9 +1952,9 @@ SELECT DISTINCT ?evidence ?deadline WHERE {
 
 :q-notice-late a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "notice-late" ; rdfs:label "Pemberitahuan pada atau setelah izin berakhir"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence ?deadline WHERE {
     ?definition cat:responsibleRole ?role .
@@ -1858,9 +1977,9 @@ SELECT DISTINCT ?evidence ?deadline WHERE {
 
 :q-realization-timely a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "realization-timely" ; rdfs:label "Realisasi dalam batas waktu setelah izin"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence ?deadline WHERE {
     ?definition cat:responsibleRole ?role .
@@ -1884,9 +2003,9 @@ SELECT DISTINCT ?evidence ?deadline WHERE {
 
 :q-realization-late a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "realization-late" ; rdfs:label "Realisasi lewat batas setelah izin"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence ?deadline WHERE {
     ?definition cat:responsibleRole ?role .
@@ -2143,9 +2262,9 @@ catalog:alternativeUse a owl:AnnotationProperty .
 
 :q-alternative-import-use a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "alternative-import-use" ; rdfs:label "Penggunaan tercatat untuk jalur API lainnya"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?revision WHERE {
     ?definition cat:alternativeUse ?other ; cat:requiredUse ?required .
@@ -2164,9 +2283,9 @@ SELECT DISTINCT ?revision WHERE {
 :q-de-minimis-met a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "de-minimis-met" ; rdfs:label "Nilai input gagal CTC dalam batas proporsi"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2185,9 +2304,9 @@ SELECT DISTINCT ?evidence WHERE {
 :q-de-minimis-exceeded a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "de-minimis-exceeded" ; rdfs:label "Nilai input gagal CTC melebihi batas proporsi"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2213,9 +2332,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-exhibition-term-valid a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "exhibition-term-valid" ; rdfs:label "Jangka izin tidak diperpanjang dan dalam batas"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence ?deadline WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2228,9 +2347,9 @@ SELECT DISTINCT ?evidence ?deadline WHERE {
 
 :q-exhibition-term-invalid a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "exhibition-term-invalid" ; rdfs:label "Jangka izin melebihi batas atau ada perpanjangan"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence ?deadline WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2252,9 +2371,9 @@ SELECT DISTINCT ?evidence ?deadline WHERE {
 
 :q-exhibition-storage-met a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "exhibition-storage-met" ; rdfs:label "Bukti penyimpanan khusus dengan pengawasan"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2266,9 +2385,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-exhibition-storage-failed a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "exhibition-storage-failed" ; rdfs:label "Bukti penyimpanan yang tidak memenuhi kondisi"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2280,9 +2399,9 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-one-exhibition a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "one-exhibition" ; rdfs:label "Satu pameran tanpa jeda antar pameran"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cat: <urn:tradegraph:catalog#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cat: <http://www.semanticweb.org/tradegraph/catalog#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?shipment WHERE {
     ?context tg:assessmentShipment ?shipment .
@@ -2299,13 +2418,13 @@ SELECT DISTINCT ?shipment WHERE {
         [ catalog:name "batch" ; catalog:valueType catalog:IRI ; catalog:fromContext "batch" ]
     ) ;
     catalog:scopeParameter "worksheet" ;
-    catalog:closureSparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:closureSparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK {
     ?worksheet a tg:Document ; tg:documentBatch ?batch ; tg:valuationScopeClosed true .
     FILTER NOT EXISTS { ?worksheet tg:valuationScopeClosed false . }
     FILTER NOT EXISTS { ?worksheet tg:documentBatch ?other . FILTER (?other != ?batch) }
 }""" ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (((?fob - ?vnm) * 100 / ?fob) AS ?value) (tg:percentUnit AS ?unit) WHERE {
     ?worksheet tg:fobValue ?fob ; tg:nonOriginatingMaterialValue ?vnm ; tg:valuationCurrency ?inputCurrency .
@@ -2402,7 +2521,8 @@ SELECT (((?fob - ?vnm) * 100 / ?fob) AS ?value) (tg:percentUnit AS ?unit) WHERE 
     :hasCoverageStatus :coveragePartial ;
     :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
     :coverageAgreement :atiga ;
-    :coverageProcedure :importForUse ;
+    :coverageProcedure :importForUse, :commercialExport ;
+    :coverageDispatchCountry :indonesia ;
     :coverageDestinationCountry :indonesia ;
     :coverageWindow :review-atiga-psr-generic ;
     :hasSourceClause :atiga-article-26, :atiga-psr-annex3, :pmk131-article-5, :pmk35-submission .
@@ -2464,8 +2584,8 @@ SELECT (((?fob - ?vnm) * 100 / ?fob) AS ?value) (tg:percentUnit AS ?unit) WHERE 
 
 :q-fta-consignment-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "fta-consignment-pass" ; rdfs:label "Jalur langsung atau transit terverifikasi untuk perjanjian dagang"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
     ?evidence tg:documentType tg:transportRecord ; tg:documentShipment ?shipment .
@@ -2489,8 +2609,8 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-fta-origin-evidence a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "fta-origin-evidence" ; rdfs:label "Bukti asal barang sesuai perjanjian dagang yang dipilih"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
     ?shipment tg:shipmentDispatchCountry ?exportingCountry .
@@ -2501,7 +2621,7 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-psr-no-wo a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-no-wo" ; rdfs:label "PSR yang berlaku tidak mencantumkan alternatif WO"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?psr WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product .
     ?product tg:classifiedSubheading ?targetSub ;
@@ -2517,8 +2637,8 @@ SELECT DISTINCT ?psr WHERE {
 
 :q-psr-wo-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-wo-pass" ; rdfs:label "Pernyataan Wholly Obtained terverifikasi memenuhi PSR"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2540,8 +2660,8 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-psr-wo-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-wo-fail" ; rdfs:label "Pernyataan Wholly Obtained tidak terpenuhi"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2561,7 +2681,7 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-psr-no-rvc a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-no-rvc" ; rdfs:label "PSR yang berlaku tidak mencantumkan alternatif RVC"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?psr WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product .
     ?product tg:classifiedSubheading ?targetSub ;
@@ -2578,10 +2698,12 @@ SELECT DISTINCT ?psr WHERE {
 :q-psr-rvc-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-rvc-pass" ; rdfs:label "Nilai RVC memenuhi ambang minimum PSR"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT DISTINCT ?evidence WHERE {
+SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
+    (tg:meetsRvcThreshold AS ?supportPredicate)
+    (?threshold AS ?supportObject) WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
     ?product tg:hasBatch ?batch ; tg:classifiedSubheading ?targetSub ;
@@ -2596,9 +2718,11 @@ SELECT DISTINCT ?evidence WHERE {
     FILTER (BOUND(?psr))
     ?psr tg:hasPsrAlternative ?alt .
     ?alt tg:requiresCriterionKind tg:criterionRVC ;
-        tg:alternativeRvcThreshold/tg:minimumRvcPercent ?minimum .
+        tg:alternativeRvcThreshold ?threshold .
+    ?threshold tg:minimumRvcPercent ?minimum .
     ?evidence tg:documentType tg:rvcWorksheet ; tg:documentBatch ?batch ;
-        tg:documentShipment ?shipment ; tg:recordedRvcPercent ?percent .
+        tg:documentShipment ?shipment ; tg:recordedRvcPercent ?percent ;
+        tg:meetsRvcThreshold ?threshold .
     FILTER (DATATYPE(?percent) = xsd:decimal && DATATYPE(?minimum) = xsd:decimal
         && ?percent >= ?minimum && ?percent <= 100)
 }""" .
@@ -2606,10 +2730,12 @@ SELECT DISTINCT ?evidence WHERE {
 :q-psr-rvc-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-rvc-fail" ; rdfs:label "Nilai RVC di bawah ambang minimum PSR"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT DISTINCT ?evidence WHERE {
+SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
+    (tg:failsRvcThreshold AS ?supportPredicate)
+    (?threshold AS ?supportObject) WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
     ?product tg:hasBatch ?batch ; tg:classifiedSubheading ?targetSub ;
@@ -2624,22 +2750,24 @@ SELECT DISTINCT ?evidence WHERE {
     FILTER (BOUND(?psr))
     ?psr tg:hasPsrAlternative ?alt .
     ?alt tg:requiresCriterionKind tg:criterionRVC ;
-        tg:alternativeRvcThreshold/tg:minimumRvcPercent ?minimum .
+        tg:alternativeRvcThreshold ?threshold .
+    ?threshold tg:minimumRvcPercent ?minimum .
     ?evidence tg:documentType tg:rvcWorksheet ; tg:documentBatch ?batch ;
-        tg:documentShipment ?shipment ; tg:recordedRvcPercent ?percent .
+        tg:documentShipment ?shipment ; tg:recordedRvcPercent ?percent ;
+        tg:failsRvcThreshold ?threshold .
     FILTER (DATATYPE(?percent) = xsd:decimal && DATATYPE(?minimum) = xsd:decimal
         && ?percent >= 0 && ?percent < ?minimum)
     FILTER NOT EXISTS {
         ?psr tg:hasPsrAlternative ?otherAlt .
         ?otherAlt tg:requiresCriterionKind tg:criterionRVC ;
-            tg:alternativeRvcThreshold/tg:minimumRvcPercent ?otherMin .
-        FILTER (?percent >= ?otherMin)
+            tg:alternativeRvcThreshold ?otherThreshold .
+        ?evidence tg:meetsRvcThreshold ?otherThreshold .
     }
 }""" .
 
 :q-psr-no-ctc a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-no-ctc" ; rdfs:label "PSR yang berlaku tidak mencantumkan alternatif CC, CTH, atau CTSH"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?psr WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product .
     ?product tg:classifiedSubheading ?targetSub ;
@@ -2659,8 +2787,8 @@ SELECT DISTINCT ?psr WHERE {
 :q-psr-ctc-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-ctc-pass" ; rdfs:label "Semua input non-originating efektif memenuhi CTC, kumulasi, atau de minimis tanpa proses minimal"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
@@ -2763,8 +2891,8 @@ SELECT DISTINCT ?evidence WHERE {
 :q-psr-ctc-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-ctc-fail" ; rdfs:label "Input non-originating melanggar syarat CTC/pengecualian (tanpa penyelamatan kumulasi/de minimis) atau hanya proses minimal"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
@@ -2858,7 +2986,7 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-psr-no-process a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-no-process" ; rdfs:label "PSR yang berlaku tidak mencantumkan aturan proses spesifik"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?psr WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product .
     ?product tg:classifiedSubheading ?targetSub ;
@@ -2877,8 +3005,8 @@ SELECT DISTINCT ?psr WHERE {
 
 :q-psr-process-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-process-pass" ; rdfs:label "Bukti proses spesifik yang dipersyaratkan PSR terpenuhi"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2912,8 +3040,8 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-psr-process-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-process-fail" ; rdfs:label "Bukti proses spesifik yang dipersyaratkan PSR tidak terpenuhi"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -2935,8 +3063,8 @@ SELECT DISTINCT ?evidence WHERE {
 :q-psr-overall-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-overall-pass" ; rdfs:label "Minimal satu alternatif lengkap pada PSR terpenuhi (termasuk kumulasi & de minimis, bebas proses minimal)"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?alt WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
@@ -2976,8 +3104,10 @@ SELECT DISTINCT ?alt WHERE {
                     FILTER NOT EXISTS { ?ev tg:whollyObtainedConfirmed false . }
                 }) ||
                 (?reqKind = tg:criterionRVC && EXISTS {
-                    ?alt tg:alternativeRvcThreshold/tg:minimumRvcPercent ?min .
-                    ?ev tg:documentType tg:rvcWorksheet ; tg:recordedRvcPercent ?pct .
+                    ?alt tg:alternativeRvcThreshold ?rvcThr .
+                    ?rvcThr tg:minimumRvcPercent ?min .
+                    ?ev tg:documentType tg:rvcWorksheet ; tg:recordedRvcPercent ?pct ;
+                        tg:meetsRvcThreshold ?rvcThr .
                     FILTER (DATATYPE(?pct) = xsd:decimal && DATATYPE(?min) = xsd:decimal && ?pct >= ?min && ?pct <= 100)
                 }) ||
                 ((?reqKind = tg:criterionCC || ?reqKind = tg:criterionCTH || ?reqKind = tg:criterionCTSH) && EXISTS {
@@ -3055,8 +3185,8 @@ SELECT DISTINCT ?alt WHERE {
 :q-psr-overall-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-overall-fail" ; rdfs:label "Seluruh alternatif pada PSR terbukti tidak terpenuhi atau tergugurkan oleh proses minimal"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?psr WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
@@ -3097,8 +3227,10 @@ SELECT DISTINCT ?psr WHERE {
                         FILTER NOT EXISTS { ?ev tg:whollyObtainedConfirmed true . }
                     }) ||
                     (?reqKind = tg:criterionRVC && EXISTS {
-                        ?alt tg:alternativeRvcThreshold/tg:minimumRvcPercent ?min .
-                        ?ev tg:documentType tg:rvcWorksheet ; tg:recordedRvcPercent ?pct .
+                        ?alt tg:alternativeRvcThreshold ?rvcThr .
+                        ?rvcThr tg:minimumRvcPercent ?min .
+                        ?ev tg:documentType tg:rvcWorksheet ; tg:recordedRvcPercent ?pct ;
+                            tg:failsRvcThreshold ?rvcThr .
                         FILTER (DATATYPE(?pct) = xsd:decimal && DATATYPE(?min) = xsd:decimal && ?pct >= 0 && ?pct < ?min)
                     }) ||
                     ((?reqKind = tg:criterionCC || ?reqKind = tg:criterionCTH || ?reqKind = tg:criterionCTSH) && EXISTS {
@@ -3237,7 +3369,7 @@ SELECT DISTINCT ?psr WHERE {
     catalog:id "active-regulations" ;
     rdfs:label "Regulasi yang telah berlaku dan belum dicabut penuh pada tanggal acuan (CQ04)"@id ;
     catalog:parameters ( "asOfDate" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?document ?number ?effectiveFrom WHERE {
     ?document a tg:SourceDocument ; tg:effectiveFromDate ?effectiveFrom .
     OPTIONAL { ?document tg:regulationNumber ?number . }
@@ -3253,7 +3385,7 @@ SELECT DISTINCT ?document ?number ?effectiveFrom WHERE {
     catalog:id "regulation-lineage" ;
     rdfs:label "Riwayat perubahan dan pencabutan atas suatu regulasi (CQ17)"@id ;
     catalog:parameters ( "document" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?acting ?kind ?effectiveDate WHERE {
     ?event a tg:LegalRelationEvent ; tg:relationTargetDocument ?document ;
         tg:relationActingDocument ?acting ; tg:hasLegalRelationKind ?kind .
@@ -3528,7 +3660,8 @@ SELECT DISTINCT ?acting ?kind ?effectiveDate WHERE {
     :hasCoverageStatus :coveragePartial ;
     :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
     :coverageAgreement :ikcepa ;
-    :coverageProcedure :importForUse ;
+    :coverageProcedure :importForUse, :commercialExport ;
+    :coverageDispatchCountry :indonesia ;
     :coverageDestinationCountry :indonesia ;
     :coverageWindow :review-ikcepa-psr-generic ;
     :hasSourceClause :pmk219-pasal-4, :pmk219-pasal-5, :pmk219-pasal-9, :pmk219-lampiran-a, :pmk35-submission .
@@ -3599,7 +3732,8 @@ SELECT DISTINCT ?acting ?kind ?effectiveDate WHERE {
     :hasCoverageStatus :coveragePartial ;
     :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
     :coverageAgreement :iacepa ;
-    :coverageProcedure :importForUse ;
+    :coverageProcedure :importForUse, :commercialExport ;
+    :coverageDispatchCountry :indonesia ;
     :coverageDestinationCountry :indonesia ;
     :coverageWindow :review-iacepa-psr-generic ;
     :hasSourceClause :pmk82-pasal-6, :pmk82-pasal-7, :pmk82-pasal-12, :pmk82-lampiran-a-iv, :pmk35-submission .
@@ -3793,7 +3927,8 @@ SELECT DISTINCT ?acting ?kind ?effectiveDate WHERE {
     :hasCoverageStatus :coveragePartial ;
     :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
     :coverageAgreement :rcep ;
-    :coverageProcedure :importForUse ;
+    :coverageProcedure :importForUse, :commercialExport ;
+    :coverageDispatchCountry :indonesia ;
     :coverageDestinationCountry :indonesia ;
     :coverageWindow :review-rcep-psr-generic ;
     :hasSourceClause :pmk209-pasal-4, :rcep-psr-annex3a, :pmk209-pasal-5, :pmk209-pasal-8, :pmk209-pasal-9, :pmk35-submission .
@@ -3852,7 +3987,8 @@ SELECT DISTINCT ?acting ?kind ?effectiveDate WHERE {
     :hasCoverageStatus :coveragePartial ;
     :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
     :coverageAgreement :acfta ;
-    :coverageProcedure :importForUse ;
+    :coverageProcedure :importForUse, :commercialExport ;
+    :coverageDispatchCountry :indonesia ;
     :coverageDestinationCountry :indonesia ;
     :coverageWindow :review-acfta-psr-generic ;
     :hasSourceClause :pmk171-pasal-4, :pmk171-lampiran-a, :pmk171-pasal-5, :pmk171-pasal-7, :pmk35-submission .
@@ -3911,7 +4047,8 @@ SELECT DISTINCT ?acting ?kind ?effectiveDate WHERE {
     :hasCoverageStatus :coveragePartial ;
     :coverageJurisdiction :jurisdictionIndonesiaCustoms ;
     :coverageAgreement :ijepa ;
-    :coverageProcedure :importForUse ;
+    :coverageProcedure :importForUse, :commercialExport ;
+    :coverageDispatchCountry :indonesia ;
     :coverageDestinationCountry :indonesia ;
     :coverageWindow :review-ijepa-psr-generic ;
     :hasSourceClause :pmk73-pasal-4, :pmk73-lampiran-a, :pmk73-pasal-5, :pmk73-pasal-7, :pmk35-submission .
@@ -3971,7 +4108,7 @@ SELECT DISTINCT ?acting ?kind ?effectiveDate WHERE {
     catalog:id "compare-fta-schemes" ;
     rdfs:label "Perbandingan skema FTA yang memenuhi syarat untuk suatu kode HS dan rute negara (CQ05/CQ13/CQ14)"@id ;
     catalog:parameters ( "code" "dispatch" "destination" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?agreement ?agreementLabel ?facilityCode ?backToBackAllowed ?psr ?psrLevel ?conciseRule ?originDocType ?dutyPercent WHERE {
     ?agreement a tg:TradeAgreement ;
@@ -4167,7 +4304,7 @@ SELECT DISTINCT ?agreement ?agreementLabel ?facilityCode ?backToBackAllowed ?psr
 
 :q-psr-de-minimis-na a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-de-minimis-na" ; rdfs:label "De Minimis tidak berlaku (PSR tanpa CTC atau bab tidak tercakup De Minimis perjanjian)"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?psr WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product .
     ?product tg:classifiedSubheading ?targetSub ;
@@ -4195,8 +4332,8 @@ SELECT DISTINCT ?psr WHERE {
 :q-psr-de-minimis-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-de-minimis-pass" ; rdfs:label "Bahan non-originating gagal CTC berada dalam batas De Minimis perjanjian"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
@@ -4244,8 +4381,8 @@ SELECT DISTINCT ?evidence WHERE {
 :q-psr-de-minimis-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-de-minimis-fail" ; rdfs:label "Bahan non-originating gagal CTC melebihi seluruh batas De Minimis perjanjian yang berlaku"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
@@ -4314,8 +4451,8 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-psr-minimal-ops-pass a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-minimal-ops-pass" ; rdfs:label "Tahapan produksi melampaui proses minimal perjanjian"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesBatch ?batch ;
         tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -4328,8 +4465,8 @@ SELECT DISTINCT ?evidence WHERE {
 
 :q-psr-minimal-ops-fail a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "psr-minimal-ops-fail" ; rdfs:label "Tahapan produksi hanya berupa proses minimal yang menggugurkan status originating"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 SELECT DISTINCT ?evidence WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesBatch ?batch ;
         tg:assessmentShipment ?shipment ; cd:admittedDocument ?evidence .
@@ -4467,7 +4604,7 @@ SELECT DISTINCT ?evidence WHERE {
 :q-rcep-dv20-na a owl:NamedIndividual, catalog:DecisionQuery ;
     catalog:id "rcep-dv20-na" ;
     rdfs:label "Pos tarif tidak tercantum dalam Lampiran II (Appendix to Annex I) Tariff Differentials RCEP"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 SELECT DISTINCT ?code WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product .
     ?agreement tg:hasTariffDifferentialThreshold ?threshold .
@@ -4479,10 +4616,12 @@ SELECT DISTINCT ?code WHERE {
     catalog:id "rcep-dv20-pass" ;
     rdfs:label "Nilai Tambah Domestik (DV20) memenuhi ambang minimal 20% FOB sehingga Pihak pengekspor menjadi RCEP Country of Origin"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT DISTINCT ?evidence WHERE {
+SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
+    (tg:meetsDv20Threshold AS ?supportPredicate)
+    (?threshold AS ?supportObject) WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ;
         cd:admittedDocument ?evidence .
@@ -4493,7 +4632,8 @@ SELECT DISTINCT ?evidence WHERE {
     ?agreement tg:hasTariffDifferentialThreshold ?threshold .
     ?threshold tg:minimumDvPercent ?minDv .
     ?evidence tg:documentType tg:dv20Statement ; tg:documentBatch ?batch ;
-        tg:documentShipment ?shipment ; tg:recordedDomesticValueAdditionPercent ?dv .
+        tg:documentShipment ?shipment ; tg:recordedDomesticValueAdditionPercent ?dv ;
+        tg:meetsDv20Threshold ?threshold .
     FILTER (DATATYPE(?dv) = xsd:decimal && ?dv >= 0 && ?dv <= 100 && ?dv >= ?minDv)
 }""" .
 
@@ -4501,10 +4641,12 @@ SELECT DISTINCT ?evidence WHERE {
     catalog:id "rcep-dv20-fail" ;
     rdfs:label "Nilai Tambah Domestik (DV20) di bawah 20% FOB; RCEP Country of Origin beralih ke Pihak kontributor bahan originating tertinggi (Pasal 14 ayat 5 huruf b)"@id ;
     catalog:exactDecimal true ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT DISTINCT ?evidence WHERE {
+SELECT DISTINCT ?evidence (?evidence AS ?supportSubject)
+    (tg:failsDv20Threshold AS ?supportPredicate)
+    (?threshold AS ?supportObject) WHERE {
     ?context tg:selectedAgreement ?agreement ; tg:assessesProduct ?product ;
         tg:assessesBatch ?batch ; tg:assessmentShipment ?shipment ;
         cd:admittedDocument ?evidence .
@@ -4515,7 +4657,8 @@ SELECT DISTINCT ?evidence WHERE {
     ?agreement tg:hasTariffDifferentialThreshold ?threshold .
     ?threshold tg:minimumDvPercent ?minDv .
     ?evidence tg:documentType tg:dv20Statement ; tg:documentBatch ?batch ;
-        tg:documentShipment ?shipment ; tg:recordedDomesticValueAdditionPercent ?dv .
+        tg:documentShipment ?shipment ; tg:recordedDomesticValueAdditionPercent ?dv ;
+        tg:failsDv20Threshold ?threshold .
     FILTER (DATATYPE(?dv) = xsd:decimal && ?dv >= 0 && ?dv <= 100 && ?dv < ?minDv)
 }""" .
 
@@ -4533,7 +4676,7 @@ SELECT DISTINCT ?evidence WHERE {
     catalog:id "optimize-fta-tariff" ;
     rdfs:label "Optimasi dan pemeringkatan tarif preferensi Multi-FTA per tanggal, negara asal, MFN baseline, status pencabutan PMK, dan indikator RCEP DV20"@id ;
     catalog:parameters ( "code" "dispatch" "destination" "asOfDate" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?agreement ?agreementLabel ?facilityCode ?backToBackAllowed ?psr ?psrLevel ?conciseRule
     ?mfnDutyPercent ?effectiveDutyPercent ?dutySavingsPercent ?excludedToMfn ?requiresRcepDv20
@@ -4643,7 +4786,7 @@ ORDER BY ASC(IF(BOUND(?effectiveDutyPercent), 0, 1)) ASC(?effectiveDutyPercent) 
     catalog:id "import-tax-profile" ;
     rdfs:label "Profil tarif pajak impor (PPN dan PPh Pasal 22) berdasarkan yurisdiksi kepabeanan"@id ;
     catalog:parameters ( "jurisdiction" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?profile ?profileLabel ?vatRatePercent ?pph22WithApiPercent ?pph22WithoutApiPercent WHERE {
     ?jurisdiction tg:hasImportTaxProfile ?profile .
@@ -4656,8 +4799,8 @@ SELECT DISTINCT ?profile ?profileLabel ?vatRatePercent ?pph22WithApiPercent ?pph
 :goal-fta-origin-proof-ready a owl:NamedIndividual, catalog:GoalDefinition ;
     catalog:id "fta-origin-proof-ready" ;
     rdfs:label "Bukti Asal Barang (SKA/DAB) untuk skema FTA terpilih siap diserahkan"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?agreement tg:agreementOriginDocumentType ?docType .
     FILTER (
@@ -4672,8 +4815,8 @@ ASK {
 :goal-fta-preference-package-ready a owl:NamedIndividual, catalog:GoalDefinition ;
     catalog:id "fta-preference-package-ready" ;
     rdfs:label "Paket kepatuhan klaim tarif preferensi FTA (SKA/DAB, DV20 bila wajib, dan daftar periksa PIB) siap"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?revision tg:hasPreparationArtifact tg:ftaPreferenceChecklist .
     FILTER (
@@ -4708,13 +4851,13 @@ ASK {
         [ catalog:name "revision" ; catalog:valueType catalog:IRI ; catalog:fromContext "revision" ]
         [ catalog:name "agreement" ; catalog:valueType catalog:IRI ; catalog:fromContext "agreement" ]
     ) ;
-    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK {
     ?agreement a tg:TradeAgreement ; tg:primaryOriginDocumentType ?docType .
 }""" ;
     catalog:preconditions ( [
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?revision tg:revisionShipment ?shipment .
     ?shipment tg:shipmentDispatchCountry ?dispatch ; tg:shipmentDestinationCountry ?dest .
@@ -4729,7 +4872,7 @@ ASK {
     ] ) ;
     catalog:effects ( [
         catalog:operation "ADD" ;
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 CONSTRUCT { ?revision tg:hasDraftDocumentType ?docType . }
 WHERE { ?agreement tg:primaryOriginDocumentType ?docType . }"""
     ] ) .
@@ -4744,14 +4887,14 @@ WHERE { ?agreement tg:primaryOriginDocumentType ?docType . }"""
         [ catalog:name "agreement" ; catalog:valueType catalog:IRI ; catalog:fromContext "agreement" ]
         [ catalog:name "product" ; catalog:valueType catalog:IRI ; catalog:fromContext "product" ]
     ) ;
-    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK {
     ?agreement tg:hasTariffDifferentialThreshold ?t .
     ?product tg:hasTariffClassification/tg:subjectToRcepTariffDifferential true .
 }""" ;
     catalog:preconditions ( [
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?revision tg:revisionShipment ?shipment .
     FILTER (
@@ -4772,7 +4915,7 @@ ASK {
     ] ) ;
     catalog:effects ( [
         catalog:producesDraftOf :dv20Statement ; catalog:operation "ADD" ;
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 CONSTRUCT { ?revision tg:hasDraftDocumentType tg:dv20Statement . } WHERE {}"""
     ] ) .
 
@@ -4788,13 +4931,13 @@ CONSTRUCT { ?revision tg:hasDraftDocumentType tg:dv20Statement . } WHERE {}"""
         [ catalog:name "jurisdiction" ; catalog:valueType catalog:IRI ; catalog:fromContext "jurisdiction" ]
         [ catalog:name "transactionAt" ; catalog:valueType xsd:dateTime ; catalog:fromContext "transactionAt" ]
     ) ;
-    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK {
     ?agreement a tg:TradeAgreement ; tg:pibFacilityCode ?code .
 }""" ;
     catalog:preconditions ( [
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?revision tg:revisionShipment ?shipment .
     FILTER (
@@ -4841,7 +4984,7 @@ ASK {
     ] ) ;
     catalog:effects ( [
         catalog:operation "ADD" ;
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 CONSTRUCT { ?revision tg:hasPreparationArtifact tg:ftaPreferenceChecklist . } WHERE {}"""
     ] ) .
 
@@ -5161,7 +5304,7 @@ CONSTRUCT { ?revision tg:hasPreparationArtifact tg:ftaPreferenceChecklist . } WH
     catalog:id "export-lartas" ;
     rdfs:label "Aturan Larangan dan Pembatasan (Lartas) Ekspor Indonesia aktif per kode HS, yurisdiksi, dan tanggal"@id ;
     catalog:parameters ( "code" "jurisdiction" "asOfDate" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?rule ?commodityGroup ?supervisionMode ?supervisionLabel ?prohibited
     ?requiredDocType ?requiredDocLabel ?effectiveFrom ?sourceClause
@@ -5187,7 +5330,7 @@ WHERE {
     catalog:id "export-fta-options" ;
     rdfs:label "Skema FTA ekspor yang tersedia antara negara asal dan negara tujuan beserta PSR, bukti asal, Back-to-Back, dan Third-Party Invoicing"@id ;
     catalog:parameters ( "code" "origin" "destination" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?agreement ?agreementLabel ?facilityCode ?primaryOriginDoc ?primaryOriginDocLabel
     ?backToBackAllowed ?backToBackClause ?thirdPartyAllowed ?thirdPartyReq ?thirdPartyClause
@@ -5317,7 +5460,7 @@ WHERE {
     catalog:id "export-duty" ;
     rdfs:label "Aturan tarif Bea Keluar (Export Duty) Indonesia aktif per kode HS, yurisdiksi, dan tanggal"@id ;
     catalog:parameters ( "code" "jurisdiction" "asOfDate" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?rule ?commodityGroup ?basis ?basisLabel ?ratePercent ?specificUsdPerMt
     ?refPriceMinExcl ?refPriceMaxIncl ?tierColumn ?effectiveFrom ?effectiveUntil ?sourceClause
@@ -5346,7 +5489,7 @@ WHERE {
     catalog:id "import-lartas" ;
     rdfs:label "Aturan Larangan dan Pembatasan (Lartas / NTM) aktif per kode HS, yurisdiksi, dan tanggal"@id ;
     catalog:parameters ( "code" "jurisdiction" "asOfDate" ) ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?rule ?commodityGroup ?supervisionMode ?supervisionLabel ?prohibited
     ?requiredDocType ?requiredDocLabel ?allowedApi ?effectiveFrom
@@ -5391,8 +5534,8 @@ WHERE {
 :goal-fta-full-clearance-ready a owl:NamedIndividual, catalog:GoalDefinition ;
     catalog:id "fta-full-clearance-ready" ;
     rdfs:label "Paket kepatuhan lengkap (preferensi FTA + seluruh perizinan Lartas non-terlarang) siap"@id ;
-    catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?revision tg:hasPreparationArtifact tg:ftaPreferenceChecklist .
     FILTER (
@@ -5449,7 +5592,7 @@ ASK {
         [ catalog:name "jurisdiction" ; catalog:valueType catalog:IRI ; catalog:fromContext "jurisdiction" ]
         [ catalog:name "transactionAt" ; catalog:valueType xsd:dateTime ; catalog:fromContext "transactionAt" ]
     ) ;
-    catalog:applicabilitySparql """PREFIX tg: <urn:tradegraph:kb#>
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 ASK {
     ?product tg:hasTariffClassification ?code .
     ?rule a tg:ImportRestrictionRule ; tg:lartasTargetCode ?code ;
@@ -5459,8 +5602,8 @@ ASK {
     FILTER NOT EXISTS { ?rule tg:lartasProhibited true . }
 }""" ;
     catalog:preconditions ( [
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 ASK {
     ?revision tg:revisionShipment ?shipment .
     ?product tg:hasTariffClassification ?code .
@@ -5504,8 +5647,8 @@ ASK {
     ] ) ;
     catalog:effects ( [
         catalog:operation "ADD" ;
-        catalog:sparql """PREFIX tg: <urn:tradegraph:kb#>
-PREFIX cd: <urn:tradegraph:case-data#>
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
 CONSTRUCT { ?revision tg:hasDraftDocumentType ?reqDoc . }
 WHERE {
     ?product tg:hasTariffClassification ?code .
