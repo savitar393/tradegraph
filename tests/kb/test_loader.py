@@ -84,7 +84,7 @@ def test_canonical_kb_has_cq01_fields_actions_and_partial_coverage():
     assert "transactionAt" in compiled.field_catalog
     assert "prepare-reexport-notice" in compiled.action_catalog
     assert {entry.status for entry in compiled.snapshot.coverage} == {"PARTIAL"}
-    assert len(compiled.snapshot.coverage) == 3
+    assert len(compiled.snapshot.coverage) >= 7
 
 
 @pytest.mark.parametrize(

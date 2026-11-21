@@ -12,13 +12,21 @@ import id.tradegraph.InferenceResult.Fact;
 import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataHasValue;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDataRestriction;
 import org.semanticweb.owlapi.model.OWLIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.profiles.OWL2DLProfile;
 import org.semanticweb.owlapi.reasoner.FreshEntityPolicy;
 import org.semanticweb.owlapi.reasoner.IndividualNodeSetPolicy;
+import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.NullReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
@@ -132,6 +140,46 @@ public final class ReasoningCoordinator {
                 .filter(property -> !property.isBuiltIn()).toList();
         var dataProperties = core.getDataPropertiesInSignature().stream()
                 .filter(property -> !property.isBuiltIn()).toList();
+
+        // Sound candidate pruning for data properties: an OWL 2 DL ontology can entail DataPropertyAssertion(p, s, v)
+        // only if p (or a sub-property) occurs in a TBox data restriction, or s (or a sameAs alias) asserts q <= p.
+        Set<OWLDataProperty> tboxDataProps = new HashSet<>();
+        for (OWLClassExpression expr : core.getNestedClassExpressions()) {
+            if (expr instanceof OWLDataRestriction restriction
+                    && restriction.getProperty() instanceof OWLDataProperty dp && !dp.isBuiltIn()) {
+                tboxDataProps.add(dp);
+                for (var sup : reasoner.getSuperDataProperties(dp, false).getFlattened()) {
+                    if (!sup.isBuiltIn()) {
+                        tboxDataProps.add(sup);
+                    }
+                }
+            }
+        }
+        reasoner.precomputeInferences(InferenceType.SAME_INDIVIDUAL);
+        Map<OWLDataProperty, Set<OWLDataProperty>> superDataProps = new HashMap<>();
+        Map<OWLNamedIndividual, Set<OWLNamedIndividual>> sameCache = new HashMap<>();
+        Map<OWLNamedIndividual, Set<OWLDataProperty>> candidateDataProps = new HashMap<>();
+        for (OWLDataPropertyAssertionAxiom axiom : core.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION)) {
+            if (axiom.getSubject().isAnonymous() || !(axiom.getProperty() instanceof OWLDataProperty dp) || dp.isBuiltIn()) {
+                continue;
+            }
+            var supers = superDataProps.computeIfAbsent(dp, prop -> {
+                Set<OWLDataProperty> set = new HashSet<>();
+                set.add(prop);
+                for (var sup : reasoner.getSuperDataProperties(prop, false).getFlattened()) {
+                    if (!sup.isBuiltIn()) {
+                        set.add(sup);
+                    }
+                }
+                return set;
+            });
+            OWLNamedIndividual subj = axiom.getSubject().asOWLNamedIndividual();
+            var aliases = sameCache.computeIfAbsent(subj, key -> reasoner.getSameIndividuals(key).getEntities());
+            for (var alias : aliases) {
+                candidateDataProps.computeIfAbsent(alias, key -> new HashSet<>()).addAll(supers);
+            }
+        }
+
         Set<OWLIndividualAxiom> facts = new HashSet<>();
         for (var subject : core.getIndividualsInSignature()) {
             remainingMs(job, started);
@@ -146,9 +194,21 @@ public final class ReasoningCoordinator {
                     facts.add(factory.getOWLObjectPropertyAssertionAxiom(property, subject, object));
                 }
             }
-            for (var property : dataProperties) {
-                for (var value : reasoner.getDataPropertyValues(subject, property)) {
-                    facts.add(factory.getOWLDataPropertyAssertionAxiom(property, subject, value));
+            Set<OWLDataProperty> subjectDataProps = candidateDataProps.get(subject);
+            if (!tboxDataProps.isEmpty()) {
+                for (var property : dataProperties) {
+                    if (tboxDataProps.contains(property)
+                            || (subjectDataProps != null && subjectDataProps.contains(property))) {
+                        for (var value : reasoner.getDataPropertyValues(subject, property)) {
+                            facts.add(factory.getOWLDataPropertyAssertionAxiom(property, subject, value));
+                        }
+                    }
+                }
+            } else if (subjectDataProps != null) {
+                for (var property : subjectDataProps) {
+                    for (var value : reasoner.getDataPropertyValues(subject, property)) {
+                        facts.add(factory.getOWLDataPropertyAssertionAxiom(property, subject, value));
+                    }
                 }
             }
         }

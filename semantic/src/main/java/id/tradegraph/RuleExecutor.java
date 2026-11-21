@@ -35,6 +35,7 @@ public final class RuleExecutor {
 
     private final Map<String, SWRLRule> rules;
     private final Set<OWLEntity> headPredicates = new HashSet<>();
+    private final Set<OWLEntity> relevantPredicates = new HashSet<>();
 
     RuleExecutor(Map<String, SWRLRule> rules) {
         this.rules = Map.copyOf(rules);
@@ -42,8 +43,15 @@ public final class RuleExecutor {
             if (RulePreflight.check(rule) != RulePreflight.Status.ACCEPTED) {
                 throw new UnsupportedRule("Rule " + id + " is outside the supported SWRL syntax.");
             }
+            rule.getBody().forEach(atom -> {
+                if (atom.getPredicate() instanceof OWLEntity entity && !entity.isBuiltIn()) {
+                    relevantPredicates.add(entity);
+                }
+            });
             rule.getHead().forEach(atom -> {
-                headPredicates.add((OWLEntity) atom.getPredicate());
+                OWLEntity entity = (OWLEntity) atom.getPredicate();
+                headPredicates.add(entity);
+                relevantPredicates.add(entity);
             });
         });
     }
@@ -53,9 +61,21 @@ public final class RuleExecutor {
             return Set.of();
         }
         checkComparisonInputs(facts);
+        Set<OWLAxiom> relevantFacts = new HashSet<>();
+        Set<OWLEntity> presentPredicates = new HashSet<>();
+        for (var fact : facts) {
+            OWLEntity pred = predicateOf(fact);
+            if (pred != null && relevantPredicates.contains(pred)) {
+                relevantFacts.add(fact);
+                presentPredicates.add(pred);
+            }
+        }
+        if (!anyRulePotentiallyFireable(presentPredicates)) {
+            return Set.of();
+        }
         var manager = OWLManager.createOWLOntologyManager();
         var factory = manager.getOWLDataFactory();
-        Set<OWLAxiom> input = new HashSet<>(facts);
+        Set<OWLAxiom> input = new HashSet<>(relevantFacts);
         input.addAll(rules.values());
         Set<OWLAxiom> declarations = new HashSet<>();
         for (var axiom : input) {
@@ -80,6 +100,35 @@ public final class RuleExecutor {
         }
         derived.removeAll(facts);
         return derived;
+    }
+
+    private boolean anyRulePotentiallyFireable(Set<OWLEntity> presentPredicates) {
+        for (var rule : rules.values()) {
+            boolean possible = true;
+            for (var atom : rule.getBody()) {
+                if (atom.getPredicate() instanceof OWLEntity entity && !entity.isBuiltIn()) {
+                    if (!presentPredicates.contains(entity) && !headPredicates.contains(entity)) {
+                        possible = false;
+                        break;
+                    }
+                }
+            }
+            if (possible) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static OWLEntity predicateOf(OWLIndividualAxiom axiom) {
+        return switch (axiom) {
+            case OWLClassAssertionAxiom fact ->
+                    fact.getClassExpression().isAnonymous() ? null : fact.getClassExpression().asOWLClass();
+            case OWLObjectPropertyAssertionAxiom fact ->
+                    fact.getProperty().isAnonymous() ? null : fact.getProperty().asOWLObjectProperty();
+            case OWLDataPropertyAssertionAxiom fact -> fact.getProperty().asOWLDataProperty();
+            default -> null;
+        };
     }
 
     private boolean isNamedHeadFact(OWLAxiom axiom) {

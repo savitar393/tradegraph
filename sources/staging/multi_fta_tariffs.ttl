@@ -1,0 +1,3527 @@
+@prefix : <urn:tradegraph:kb#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:hs-72083930 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-653 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72083940 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-654 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72083990 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-655 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72084000 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-656 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72085100 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-657 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72085200 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-658 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72085300 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-659 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72085410 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-660 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72085490 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-661 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72089010 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-662 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72089020 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-663 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72089090 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-664 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72091500 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-665 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72091610 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-666 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72091690 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-667 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72091710 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-668 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72091790 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-669 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72091891 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-670 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72091899 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-671 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72092500 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-672 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72092690 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-674 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-72092710 a owl:NamedIndividual,
+        :HSCode ;
+    :codeValue "7209.27.10" ;
+    :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-675 ;
+    :nomenclature "AHTN 2022" ;
+    :subjectToRcepTariffDifferential true ;
+    :tariffSubheading :hs6-720927 .
+
+:hs-72092790 a owl:NamedIndividual,
+        :HSCode ;
+    :codeValue "7209.27.90" ;
+    :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-676 ;
+    :nomenclature "AHTN 2022" ;
+    :subjectToRcepTariffDifferential true ;
+    :tariffSubheading :hs6-720927 .
+
+:hs-72092810 a owl:NamedIndividual,
+        :HSCode ;
+    :codeValue "7209.28.10" ;
+    :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-677 ;
+    :nomenclature "AHTN 2022" ;
+    :subjectToRcepTariffDifferential true ;
+    :tariffSubheading :hs6-720928 .
+
+:hs-72092890 a owl:NamedIndividual,
+        :HSCode ;
+    :codeValue "7209.28.90" ;
+    :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-678 ;
+    :nomenclature "AHTN 2022" ;
+    :subjectToRcepTariffDifferential true ;
+    :tariffSubheading :hs6-720928 .
+
+:tariff-acfta-01012100 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-01012100 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-01012100 .
+
+:tariff-acfta-09012111 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-09012111 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-acfta-09021010 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-09021010 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-acfta-23091010 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-23091010 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-acfta-30041015 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-30041015 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-acfta-58013610 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-58013610 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-acfta-61012000 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-61012000 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-acfta-72092610 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-72092610 ;
+    :preferentialDutyPercent 5.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-acfta-84137011 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-84137011 ;
+    :preferentialDutyPercent 5.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-acfta-84221100 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-84221100 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-acfta-96050000 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-acfta-96050000 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :acfta ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-ijepa-id-tarif-ijepa-01012100 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-01012100 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-01012100 .
+
+:tariff-ijepa-id-tarif-ijepa-09012111 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-09012111 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-ijepa-id-tarif-ijepa-09021010 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-09021010 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-ijepa-id-tarif-ijepa-23091010 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-23091010 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-ijepa-id-tarif-ijepa-30041015 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-30041015 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-ijepa-id-tarif-ijepa-58013610 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-58013610 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-ijepa-id-tarif-ijepa-61012000 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-61012000 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-ijepa-id-tarif-ijepa-72092610 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-72092610 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-ijepa-id-tarif-ijepa-84137011 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-84137011 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-ijepa-id-tarif-ijepa-84221100 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-84221100 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-ijepa-id-tarif-ijepa-96050000 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-ijepa-96050000 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :ijepa ;
+    :tariffEffectiveFrom "2022-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-asean-09012111-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09012111-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-asean-09012111-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09012111-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-asean-09012111-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09012111-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-asean-09012111-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09012111-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-asean-09012111-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09012111-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-asean-09021010-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09021010-2023-01-02 ;
+    :preferentialDutyPercent 4.30 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-asean-09021010-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09021010-2023-04-01 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-asean-09021010-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09021010-2024-04-01 ;
+    :preferentialDutyPercent 3.60 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-asean-09021010-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09021010-2025-04-01 ;
+    :preferentialDutyPercent 3.30 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-asean-09021010-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-09021010-2026-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-asean-23091010-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-23091010-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-asean-23091010-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-23091010-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-asean-23091010-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-23091010-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-asean-23091010-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-23091010-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-asean-30041015-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-30041015-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-asean-30041015-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-30041015-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-asean-30041015-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-30041015-2024-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-asean-30041015-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-30041015-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-asean-30041015-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-30041015-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-asean-58013610-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-58013610-2023-01-02 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-asean-58013610-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-58013610-2023-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-asean-58013610-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-58013610-2024-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-asean-58013610-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-58013610-2025-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-asean-58013610-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-58013610-2026-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-asean-61012000-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-61012000-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-asean-61012000-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-61012000-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-asean-61012000-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-61012000-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-asean-61012000-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-61012000-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-asean-61012000-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-61012000-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-asean-72092610-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-72092610-2023-01-02 ;
+    :preferentialDutyPercent 8.60 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-asean-72092610-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-72092610-2023-04-01 ;
+    :preferentialDutyPercent 7.90 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-asean-72092610-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-72092610-2024-04-01 ;
+    :preferentialDutyPercent 7.30 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-asean-72092610-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-72092610-2025-04-01 ;
+    :preferentialDutyPercent 6.60 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-asean-72092610-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-72092610-2026-04-01 ;
+    :preferentialDutyPercent 5.90 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-asean-84137011-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84137011-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-asean-84137011-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84137011-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-asean-84137011-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84137011-2024-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-asean-84137011-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84137011-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-asean-84137011-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84137011-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-asean-84221100-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84221100-2023-01-02 ;
+    :preferentialDutyPercent 9.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-asean-84221100-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84221100-2023-04-01 ;
+    :preferentialDutyPercent 8.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-asean-84221100-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84221100-2024-04-01 ;
+    :preferentialDutyPercent 7.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-asean-84221100-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84221100-2025-04-01 ;
+    :preferentialDutyPercent 6.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-asean-84221100-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-84221100-2026-04-01 ;
+    :preferentialDutyPercent 5.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-asean-96050000-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-96050000-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-asean-96050000-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-96050000-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-asean-96050000-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-96050000-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-asean-96050000-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-96050000-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-asean-96050000-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-asean-96050000-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :brunei,
+        :cambodia,
+        :indonesia,
+        :laos,
+        :malaysia,
+        :myanmar,
+        :philippines,
+        :singapore,
+        :thailand,
+        :vietnam ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-cn-09021010-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-09021010-2023-01-02 ;
+    :preferentialDutyPercent 4.30 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-cn-09021010-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-09021010-2023-04-01 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-cn-09021010-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-09021010-2024-04-01 ;
+    :preferentialDutyPercent 3.60 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-cn-09021010-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-09021010-2025-04-01 ;
+    :preferentialDutyPercent 3.30 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-cn-09021010-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-09021010-2026-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-cn-23091010-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-23091010-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-cn-23091010-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-23091010-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-cn-23091010-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-23091010-2024-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-cn-23091010-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-23091010-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-cn-23091010-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-23091010-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-cn-30041015-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-30041015-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-cn-30041015-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-30041015-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-cn-30041015-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-30041015-2024-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-cn-30041015-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-30041015-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-cn-30041015-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-30041015-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-cn-58013610-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-58013610-2023-01-02 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-cn-58013610-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-58013610-2023-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-cn-58013610-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-58013610-2024-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-cn-58013610-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-58013610-2025-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-cn-58013610-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-58013610-2026-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-cn-61012000-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-61012000-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-cn-72092610-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-72092610-2023-01-02 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-cn-72092610-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-72092610-2023-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-cn-72092610-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-72092610-2024-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-cn-72092610-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-72092610-2025-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-cn-72092610-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-72092610-2026-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-cn-84137011-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84137011-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-cn-84137011-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84137011-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-cn-84137011-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84137011-2024-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-cn-84137011-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84137011-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-cn-84137011-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84137011-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-cn-84221100-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84221100-2023-01-02 ;
+    :preferentialDutyPercent 9.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-cn-84221100-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84221100-2023-04-01 ;
+    :preferentialDutyPercent 8.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-cn-84221100-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84221100-2024-04-01 ;
+    :preferentialDutyPercent 7.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-cn-84221100-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84221100-2025-04-01 ;
+    :preferentialDutyPercent 6.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-cn-84221100-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-84221100-2026-04-01 ;
+    :preferentialDutyPercent 5.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-cn-96050000-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-96050000-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-cn-96050000-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-96050000-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-cn-96050000-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-96050000-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-cn-96050000-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-96050000-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-cn-96050000-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-cn-96050000-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :china ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-jp-01012100-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-01012100-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-01012100 .
+
+:tariff-rcep-id-tarif-rcep-jp-01012100-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-01012100-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-01012100 .
+
+:tariff-rcep-id-tarif-rcep-jp-01012100-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-01012100-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-01012100 .
+
+:tariff-rcep-id-tarif-rcep-jp-01012100-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-01012100-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-01012100 .
+
+:tariff-rcep-id-tarif-rcep-jp-01012100-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-01012100-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-01012100 .
+
+:tariff-rcep-id-tarif-rcep-jp-09012111-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09012111-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-jp-09012111-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09012111-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-jp-09012111-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09012111-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-jp-09012111-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09012111-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-jp-09012111-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09012111-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09012111 .
+
+:tariff-rcep-id-tarif-rcep-jp-09021010-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09021010-2023-01-02 ;
+    :preferentialDutyPercent 4.30 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-jp-09021010-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09021010-2023-04-01 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-jp-09021010-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09021010-2024-04-01 ;
+    :preferentialDutyPercent 3.60 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-jp-09021010-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09021010-2025-04-01 ;
+    :preferentialDutyPercent 3.30 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-jp-09021010-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-09021010-2026-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-09021010 .
+
+:tariff-rcep-id-tarif-rcep-jp-23091010-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-23091010-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-jp-23091010-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-23091010-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-jp-23091010-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-23091010-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-jp-23091010-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-23091010-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-23091010 .
+
+:tariff-rcep-id-tarif-rcep-jp-30041015-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-30041015-2024-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-jp-30041015-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-30041015-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-jp-30041015-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-30041015-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-30041015 .
+
+:tariff-rcep-id-tarif-rcep-jp-58013610-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-58013610-2023-01-02 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-jp-58013610-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-58013610-2023-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-jp-58013610-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-58013610-2024-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-jp-58013610-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-58013610-2025-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-jp-58013610-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-58013610-2026-04-01 ;
+    :preferentialDutyPercent 10.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-58013610 .
+
+:tariff-rcep-id-tarif-rcep-jp-61012000-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-61012000-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-jp-61012000-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-61012000-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-jp-61012000-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-61012000-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-jp-61012000-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-61012000-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-jp-61012000-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-61012000-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-61012000 .
+
+:tariff-rcep-id-tarif-rcep-jp-72092610-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-72092610-2023-01-02 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-jp-72092610-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-72092610-2023-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-jp-72092610-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-72092610-2024-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-jp-72092610-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-72092610-2025-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-jp-72092610-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-72092610-2026-04-01 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffExcludedToMfn true ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-72092610 .
+
+:tariff-rcep-id-tarif-rcep-jp-84137011-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84137011-2023-01-02 ;
+    :preferentialDutyPercent 4.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-jp-84137011-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84137011-2023-04-01 ;
+    :preferentialDutyPercent 3.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-jp-84137011-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84137011-2024-04-01 ;
+    :preferentialDutyPercent 3.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-jp-84137011-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84137011-2025-04-01 ;
+    :preferentialDutyPercent 2.50 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-jp-84137011-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84137011-2026-04-01 ;
+    :preferentialDutyPercent 2.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84137011 .
+
+:tariff-rcep-id-tarif-rcep-jp-84221100-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84221100-2023-01-02 ;
+    :preferentialDutyPercent 9.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-jp-84221100-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84221100-2023-04-01 ;
+    :preferentialDutyPercent 8.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-jp-84221100-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84221100-2024-04-01 ;
+    :preferentialDutyPercent 7.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-jp-84221100-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84221100-2025-04-01 ;
+    :preferentialDutyPercent 6.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-jp-84221100-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-84221100-2026-04-01 ;
+    :preferentialDutyPercent 5.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-84221100 .
+
+:tariff-rcep-id-tarif-rcep-jp-96050000-2023-01-02 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-96050000-2023-01-02 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-01-02" ;
+    :tariffEffectiveUntilExclusive "2023-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-jp-96050000-2023-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-96050000-2023-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2023-04-01" ;
+    :tariffEffectiveUntilExclusive "2024-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-jp-96050000-2024-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-96050000-2024-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2024-04-01" ;
+    :tariffEffectiveUntilExclusive "2025-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-jp-96050000-2025-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-96050000-2025-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2025-04-01" ;
+    :tariffEffectiveUntilExclusive "2026-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-96050000 .
+
+:tariff-rcep-id-tarif-rcep-jp-96050000-2026-04-01 a owl:NamedIndividual,
+        :TariffRateEntry ;
+    :hasSourceClause :staged-tariff-id-tarif-rcep-jp-96050000-2026-04-01 ;
+    :preferentialDutyPercent 0.00 ;
+    :tariffAgreement :rcep ;
+    :tariffEffectiveFrom "2026-04-01" ;
+    :tariffEffectiveUntilExclusive "2027-04-01" ;
+    :tariffPartnerCountry :japan ;
+    :tariffTargetCode :hs-96050000 .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-653 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 653 (7208.39.30)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-654 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 654 (7208.39.40)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-655 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 655 (7208.39.90)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-656 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 656 (7208.40.00)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-657 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 657 (7208.51.00)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-658 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 658 (7208.52.00)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-659 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 659 (7208.53.00)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-660 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 660 (7208.54.10)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-661 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 661 (7208.54.90)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-662 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 662 (7208.90.10)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-663 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 663 (7208.90.20)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-664 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 664 (7208.90.90)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-665 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 665 (7209.15.00)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-666 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 666 (7209.16.10)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-667 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 667 (7209.16.90)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-668 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 668 (7209.17.10)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-669 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 669 (7209.17.90)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-670 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 670 (7209.18.91)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-671 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 671 (7209.18.99)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-672 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 672 (7209.25.00)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-673 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 673 (7209.26.10)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-674 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 674 (7209.26.90)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-675 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 675 (7209.27.10)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-676 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 676 (7209.27.90)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-677 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 677 (7209.28.10)" .
+
+:staged-rcep-app-id-tarif-rcep-asean-row-678 a owl:NamedIndividual,
+        :SourceClause ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran II (Appendix to Annex I), baris 678 (7209.28.90)" .
+
+:staged-tariff-id-tarif-mfn-01012100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=0.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 1 (0101.21.00)" .
+
+:staged-tariff-id-tarif-mfn-09012111 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=20.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 883 (0901.21.11)" .
+
+:staged-tariff-id-tarif-mfn-09021010 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=5.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 891 (0902.10.10)" .
+
+:staged-tariff-id-tarif-mfn-23091010 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=5.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 1775 (2309.10.10)" .
+
+:staged-tariff-id-tarif-mfn-30041015 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=5.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 2785 (3004.10.15)" .
+
+:staged-tariff-id-tarif-mfn-58013610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=10.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 5212 (5801.36.10)" .
+
+:staged-tariff-id-tarif-mfn-61012000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=25.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 5385 (6101.20.00)" .
+
+:staged-tariff-id-tarif-mfn-72092610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=15.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 6342 (7209.26.10)" .
+
+:staged-tariff-id-tarif-mfn-84137011 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=5.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 7571 (8413.70.11)" .
+
+:staged-tariff-id-tarif-mfn-84221100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=10.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 7813 (8422.11.00)" .
+
+:staged-tariff-id-tarif-mfn-96050000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "MFN duty=10.00" ;
+    :clauseInDocument :source-id-tarif-mfn ;
+    :clauseLocator "Lampiran, baris 11311 (9605.00.00)" .
+
+:staged-tariff-id-tarif-acfta-01012100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 1 (0101.21.00)" .
+
+:staged-tariff-id-tarif-acfta-09012111 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 883 (0901.21.11)" .
+
+:staged-tariff-id-tarif-acfta-09021010 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 891 (0902.10.10)" .
+
+:staged-tariff-id-tarif-acfta-23091010 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 1775 (2309.10.10)" .
+
+:staged-tariff-id-tarif-acfta-30041015 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 2785 (3004.10.15)" .
+
+:staged-tariff-id-tarif-acfta-58013610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 5212 (5801.36.10)" .
+
+:staged-tariff-id-tarif-acfta-61012000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 5385 (6101.20.00)" .
+
+:staged-tariff-id-tarif-acfta-72092610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=5.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 6342 (7209.26.10)" .
+
+:staged-tariff-id-tarif-acfta-84137011 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=5.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 7571 (8413.70.11)" .
+
+:staged-tariff-id-tarif-acfta-84221100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 7813 (8422.11.00)" .
+
+:staged-tariff-id-tarif-acfta-96050000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ACFTA duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-46-pmk-010-2022-54d01dcb ;
+    :clauseLocator "Lampiran, baris 11311 (9605.00.00)" .
+
+:staged-tariff-id-tarif-ijepa-01012100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 1 (0101.21.00)" .
+
+:staged-tariff-id-tarif-ijepa-09012111 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 883 (0901.21.11)" .
+
+:staged-tariff-id-tarif-ijepa-09021010 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 891 (0902.10.10)" .
+
+:staged-tariff-id-tarif-ijepa-23091010 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 1775 (2309.10.10)" .
+
+:staged-tariff-id-tarif-ijepa-30041015 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 2785 (3004.10.15)" .
+
+:staged-tariff-id-tarif-ijepa-58013610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 5212 (5801.36.10)" .
+
+:staged-tariff-id-tarif-ijepa-61012000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 5385 (6101.20.00)" .
+
+:staged-tariff-id-tarif-ijepa-72092610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=MFN" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 6342 (7209.26.10)" .
+
+:staged-tariff-id-tarif-ijepa-84137011 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 7571 (8413.70.11)" .
+
+:staged-tariff-id-tarif-ijepa-84221100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 7813 (8422.11.00)" .
+
+:staged-tariff-id-tarif-ijepa-96050000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "IJEPA duty=0.00" ;
+    :clauseInDocument :staged-source-ref-50-pmk-010-2022-0f962878 ;
+    :clauseLocator "Lampiran, baris 11311 (9605.00.00)" .
+
+:staged-tariff-id-tarif-rcep-asean-09012111-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09012111-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09012111-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09012111-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09012111-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09021010-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.30" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09021010-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09021010-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.60" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09021010-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.30" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-09021010-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-23091010-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-23091010-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-23091010-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-23091010-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-30041015-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-30041015-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-30041015-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-30041015-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-30041015-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-58013610-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-58013610-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-58013610-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-58013610-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-58013610-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-61012000-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5385 (6101.20.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-61012000-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5385 (6101.20.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-61012000-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5385 (6101.20.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-61012000-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5385 (6101.20.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-61012000-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 5385 (6101.20.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-72092610-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=8.60" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-72092610-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=7.90" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-72092610-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=7.30" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-72092610-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=6.60" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-72092610-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=5.90" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84137011-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84137011-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84137011-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84137011-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84137011-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84221100-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=9.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84221100-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=8.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84221100-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=7.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84221100-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=6.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-84221100-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=5.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-96050000-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-96050000-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-96050000-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-96050000-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-asean-96050000-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-221-pmk-010-2022-3699f4f3 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-09021010-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.30" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-09021010-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-09021010-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.60" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-09021010-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.30" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-09021010-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-23091010-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-23091010-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-23091010-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-23091010-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-23091010-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-30041015-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-30041015-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-30041015-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-30041015-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-30041015-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-58013610-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-58013610-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-58013610-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-58013610-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-58013610-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-61012000-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 1 (6101.20.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-72092610-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-72092610-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-72092610-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-72092610-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-72092610-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84137011-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84137011-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84137011-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84137011-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84137011-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84221100-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=9.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84221100-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=8.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84221100-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=7.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84221100-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=6.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-84221100-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=5.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-96050000-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-96050000-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-96050000-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-96050000-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-cn-96050000-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-jdih-kemenkeu-224-pmk-010-2022-5518ea52 ;
+    :clauseLocator "Lampiran I, baris 11311 (9605.00.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-01012100-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (0101.21.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-01012100-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (0101.21.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-01012100-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (0101.21.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-01012100-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (0101.21.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-01012100-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (0101.21.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09012111-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09012111-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09012111-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09012111-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09012111-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 883 (0901.21.11, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09021010-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.30" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09021010-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09021010-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.60" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09021010-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.30" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-09021010-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 891 (0902.10.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-23091010-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-23091010-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-23091010-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-23091010-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1775 (2309.10.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-30041015-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-30041015-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-30041015-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 2785 (3004.10.15, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-58013610-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-58013610-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-58013610-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-58013610-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-58013610-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=10.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 5212 (5801.36.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-61012000-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (6101.20.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-61012000-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (6101.20.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-61012000-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (6101.20.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-61012000-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (6101.20.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-61012000-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (6101.20.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-72092610-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-72092610-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-72092610-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-72092610-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-72092610-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=MFN" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 6342 (7209.26.10, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84137011-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=4.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84137011-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.50" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84137011-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=3.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84137011-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.50" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84137011-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=2.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7571 (8413.70.11, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84221100-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=9.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84221100-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=8.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84221100-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=7.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84221100-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=6.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-84221100-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=5.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 7813 (8422.11.00, 2026-04-01..2027-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-96050000-2023-01-02 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (9605.00.00, 2023-01-02..2023-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-96050000-2023-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (9605.00.00, 2023-04-01..2024-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-96050000-2024-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (9605.00.00, 2024-04-01..2025-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-96050000-2025-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (9605.00.00, 2025-04-01..2026-04-01)" .
+
+:staged-tariff-id-tarif-rcep-jp-96050000-2026-04-01 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP duty=0.00" ;
+    :clauseInDocument :staged-source-ref-225-pmk-010-2022-2fe6cebb ;
+    :clauseLocator "Lampiran I, baris 1 (9605.00.00, 2026-04-01..2027-04-01)" .
+
+:hs-01012100 :hasSourceClause :staged-tariff-id-tarif-acfta-01012100,
+        :staged-tariff-id-tarif-ijepa-01012100,
+        :staged-tariff-id-tarif-mfn-01012100,
+        :staged-tariff-id-tarif-rcep-jp-01012100-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-01012100-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-01012100-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-01012100-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-01012100-2026-04-01 ;
+    :mfnDutyPercent 0.00 .
+
+:hs-09012111 :hasSourceClause :staged-tariff-id-tarif-acfta-09012111,
+        :staged-tariff-id-tarif-ijepa-09012111,
+        :staged-tariff-id-tarif-mfn-09012111,
+        :staged-tariff-id-tarif-rcep-asean-09012111-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-09012111-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-09012111-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-09012111-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-09012111-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09012111-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-09012111-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09012111-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09012111-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09012111-2026-04-01 ;
+    :mfnDutyPercent 20.00 .
+
+:hs-61012000 :hasSourceClause :staged-tariff-id-tarif-acfta-61012000,
+        :staged-tariff-id-tarif-ijepa-61012000,
+        :staged-tariff-id-tarif-mfn-61012000,
+        :staged-tariff-id-tarif-rcep-asean-61012000-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-61012000-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-61012000-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-61012000-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-61012000-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-61012000-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-61012000-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-61012000-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-61012000-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-61012000-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-61012000-2026-04-01 ;
+    :mfnDutyPercent 25.00 .
+
+:hs-23091010 :hasSourceClause :staged-tariff-id-tarif-acfta-23091010,
+        :staged-tariff-id-tarif-ijepa-23091010,
+        :staged-tariff-id-tarif-mfn-23091010,
+        :staged-tariff-id-tarif-rcep-asean-23091010-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-23091010-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-23091010-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-23091010-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-23091010-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-23091010-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-23091010-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-23091010-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-23091010-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-23091010-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-23091010-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-23091010-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-23091010-2026-04-01 ;
+    :mfnDutyPercent 5.00 .
+
+:hs-30041015 :hasSourceClause :staged-tariff-id-tarif-acfta-30041015,
+        :staged-tariff-id-tarif-ijepa-30041015,
+        :staged-tariff-id-tarif-mfn-30041015,
+        :staged-tariff-id-tarif-rcep-asean-30041015-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-30041015-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-30041015-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-30041015-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-30041015-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-30041015-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-30041015-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-30041015-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-30041015-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-30041015-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-30041015-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-30041015-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-30041015-2026-04-01 ;
+    :mfnDutyPercent 5.00 .
+
+:hs-09021010 :hasSourceClause :staged-tariff-id-tarif-acfta-09021010,
+        :staged-tariff-id-tarif-ijepa-09021010,
+        :staged-tariff-id-tarif-mfn-09021010,
+        :staged-tariff-id-tarif-rcep-asean-09021010-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-09021010-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-09021010-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-09021010-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-09021010-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-09021010-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-09021010-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-09021010-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-09021010-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-09021010-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09021010-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-09021010-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09021010-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09021010-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-09021010-2026-04-01 ;
+    :mfnDutyPercent 5.00 .
+
+:hs-58013610 :hasSourceClause :staged-tariff-id-tarif-acfta-58013610,
+        :staged-tariff-id-tarif-ijepa-58013610,
+        :staged-tariff-id-tarif-mfn-58013610,
+        :staged-tariff-id-tarif-rcep-asean-58013610-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-58013610-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-58013610-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-58013610-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-58013610-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-58013610-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-58013610-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-58013610-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-58013610-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-58013610-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-58013610-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-58013610-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-58013610-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-58013610-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-58013610-2026-04-01 ;
+    :mfnDutyPercent 10.00 .
+
+:hs-72092610 :hasSourceClause :staged-rcep-app-id-tarif-rcep-asean-row-673,
+        :staged-tariff-id-tarif-acfta-72092610,
+        :staged-tariff-id-tarif-ijepa-72092610,
+        :staged-tariff-id-tarif-mfn-72092610,
+        :staged-tariff-id-tarif-rcep-asean-72092610-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-72092610-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-72092610-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-72092610-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-72092610-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-72092610-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-72092610-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-72092610-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-72092610-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-72092610-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-72092610-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-72092610-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-72092610-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-72092610-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-72092610-2026-04-01 ;
+    :mfnDutyPercent 15.00 ;
+    :subjectToRcepTariffDifferential true .
+
+:hs-84137011 :hasSourceClause :staged-tariff-id-tarif-acfta-84137011,
+        :staged-tariff-id-tarif-ijepa-84137011,
+        :staged-tariff-id-tarif-mfn-84137011,
+        :staged-tariff-id-tarif-rcep-asean-84137011-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-84137011-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-84137011-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-84137011-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-84137011-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84137011-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-84137011-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84137011-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84137011-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84137011-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84137011-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-84137011-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84137011-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84137011-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84137011-2026-04-01 ;
+    :mfnDutyPercent 5.00 .
+
+:hs-84221100 :hasSourceClause :staged-tariff-id-tarif-acfta-84221100,
+        :staged-tariff-id-tarif-ijepa-84221100,
+        :staged-tariff-id-tarif-mfn-84221100,
+        :staged-tariff-id-tarif-rcep-asean-84221100-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-84221100-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-84221100-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-84221100-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-84221100-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84221100-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-84221100-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84221100-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84221100-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-84221100-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84221100-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-84221100-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84221100-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84221100-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-84221100-2026-04-01 ;
+    :mfnDutyPercent 10.00 .
+
+:hs-96050000 :hasSourceClause :staged-tariff-id-tarif-acfta-96050000,
+        :staged-tariff-id-tarif-ijepa-96050000,
+        :staged-tariff-id-tarif-mfn-96050000,
+        :staged-tariff-id-tarif-rcep-asean-96050000-2023-01-02,
+        :staged-tariff-id-tarif-rcep-asean-96050000-2023-04-01,
+        :staged-tariff-id-tarif-rcep-asean-96050000-2024-04-01,
+        :staged-tariff-id-tarif-rcep-asean-96050000-2025-04-01,
+        :staged-tariff-id-tarif-rcep-asean-96050000-2026-04-01,
+        :staged-tariff-id-tarif-rcep-cn-96050000-2023-01-02,
+        :staged-tariff-id-tarif-rcep-cn-96050000-2023-04-01,
+        :staged-tariff-id-tarif-rcep-cn-96050000-2024-04-01,
+        :staged-tariff-id-tarif-rcep-cn-96050000-2025-04-01,
+        :staged-tariff-id-tarif-rcep-cn-96050000-2026-04-01,
+        :staged-tariff-id-tarif-rcep-jp-96050000-2023-01-02,
+        :staged-tariff-id-tarif-rcep-jp-96050000-2023-04-01,
+        :staged-tariff-id-tarif-rcep-jp-96050000-2024-04-01,
+        :staged-tariff-id-tarif-rcep-jp-96050000-2025-04-01,
+        :staged-tariff-id-tarif-rcep-jp-96050000-2026-04-01 ;
+    :mfnDutyPercent 10.00 .
+

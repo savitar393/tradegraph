@@ -24,6 +24,7 @@ from tradegraph.contracts import (
 from tradegraph.graph.store import CaseGraphs, project_case_graphs
 from tradegraph.kb.loader import CATALOG
 from tradegraph.kb.queries import context_bindings, prepare_local_query
+from tradegraph.reasoning.slicing import slice_owl_for_case
 
 
 def _case_graphs(kb: CompiledKB, case: CaseSnapshot) -> CaseGraphs:
@@ -37,17 +38,34 @@ def _case_graphs(kb: CompiledKB, case: CaseSnapshot) -> CaseGraphs:
 def _evidence_data(
     kb: CompiledKB, graphs: CaseGraphs, extra: Graph, inferred_facts: Iterable[NamedFact],
 ) -> Graph:
-    facts = kb.dataset.graph(kb.owl_projection_ref) + graphs.facts + extra
+    owl = kb.dataset.graph(kb.owl_projection_ref)
     protected = {graphs.context.identifier, *graphs.evidence.subjects()}
-    for subject, predicate, value in facts:
-        if predicate == TG.usesEvidenceSet or subject in protected:
+    for source_graph in (graphs.facts, extra):
+        for subject, predicate, value in source_graph:
+            if predicate == TG.usesEvidenceSet or subject in protected:
+                if (subject, predicate, value) not in graphs.context and (subject, predicate, value) not in graphs.evidence:
+                    raise ValueError(f"Case facts cannot supply scoped metadata for {subject} and {predicate}.")
+    for subject, predicate, value in owl.triples((None, TG.usesEvidenceSet, None)):
+        if (subject, predicate, value) not in graphs.context and (subject, predicate, value) not in graphs.evidence:
+            raise ValueError(f"Case facts cannot supply scoped metadata for {subject} and {predicate}.")
+    for node in protected:
+        for subject, predicate, value in owl.triples((node, None, None)):
             if (subject, predicate, value) not in graphs.context and (subject, predicate, value) not in graphs.evidence:
                 raise ValueError(f"Case facts cannot supply scoped metadata for {subject} and {predicate}.")
+    case_delta = Graph()
+    for source_graph in (graphs.facts, extra, graphs.context, graphs.evidence):
+        for triple in source_graph:
+            case_delta.add(triple)
     # OWL can entail aliases for pinned context values. Only case records supply scope selectors.
     for subject, predicate, value in inferred_facts:
         if subject not in protected and predicate != TG.usesEvidenceSet:
-            facts.add((subject, predicate, value))
-    return facts + graphs.context + graphs.evidence
+            case_delta.add((subject, predicate, value))
+    sliced_owl = slice_owl_for_case(owl, case_delta, graphs.context, Graph())
+    data = Graph()
+    for source_graph in (sliced_owl, case_delta):
+        for triple in source_graph:
+            data.add(triple)
+    return data
 
 
 def validate_evidence(

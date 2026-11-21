@@ -1,0 +1,14 @@
+.git
+.venv
+.pytest_cache
+__pycache__
+*.py[cod]
+*.db
+*.db-journal
+*.db-wal
+.env
+semantic/target
+sources/raw
+sources/staging
+tests
+docs

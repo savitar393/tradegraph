@@ -1,5 +1,9 @@
 /.pytest_cache/
+/.venv/
+*.egg-info/
 __pycache__/
 /semantic/target/
 Plan.md
 docs/
+.env
+/sources/raw/

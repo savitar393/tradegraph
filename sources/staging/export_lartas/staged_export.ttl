@@ -1,0 +1,247 @@
+@prefix : <urn:tradegraph:kb#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:export-lartas-id-lartas-ekspor-amend25-27011100 a owl:NamedIndividual,
+        :ExportRestrictionRule ;
+    :exportLartasCommodityGroup "Batubara (Anthracite Coal)" ;
+    :exportLartasEffectiveFrom "2025-03-13" ;
+    :exportLartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :exportLartasRequiresDocumentType :eksportirTerdaftar,
+        :laporanSurveyorEkspor ;
+    :exportLartasSupervisionMode :supervisionExportRestricted ;
+    :exportLartasTargetCode :hs-27011100 ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-amend25-27011100 .
+
+:export-lartas-id-lartas-ekspor-amend25-72042100 a owl:NamedIndividual,
+        :ExportRestrictionRule ;
+    :exportLartasCommodityGroup "Sisa dan Skrap Baja Tahan Karat (Stainless Scrap)" ;
+    :exportLartasEffectiveFrom "2025-03-13" ;
+    :exportLartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :exportLartasRequiresDocumentType :persetujuanEkspor ;
+    :exportLartasSupervisionMode :supervisionExportRestricted ;
+    :exportLartasTargetCode :hs-72042100 ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-amend25-72042100 .
+
+:export-lartas-id-lartas-ekspor-larangan-amend25-14012010 a owl:NamedIndividual,
+        :ExportRestrictionRule ;
+    :exportLartasCommodityGroup "Bidang Kehutanan (Rotan Utuh)" ;
+    :exportLartasEffectiveFrom "2025-03-13" ;
+    :exportLartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :exportLartasProhibited true ;
+    :exportLartasSupervisionMode :supervisionExportProhibited ;
+    :exportLartasTargetCode :hs-14012010 ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-larangan-amend25-14012010 .
+
+:export-lartas-id-lartas-ekspor-larangan-amend25-26040000 a owl:NamedIndividual,
+        :ExportRestrictionRule ;
+    :exportLartasCommodityGroup "Bidang Pertambangan (Bijih Nikel dan Konsentratnya)" ;
+    :exportLartasEffectiveFrom "2025-03-13" ;
+    :exportLartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :exportLartasProhibited true ;
+    :exportLartasSupervisionMode :supervisionExportProhibited ;
+    :exportLartasTargetCode :hs-26040000 ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-larangan-amend25-26040000 .
+
+:psr-atiga-140120 a owl:NamedIndividual,
+        :ProductSpecificRule ;
+    :conciseRuleText "WO" ;
+    :hasPsrAlternative :psr-atiga-140120-alt-1 ;
+    :hasSourceClause :staged-psr-atiga-psr22-row-444 ;
+    :psrAgreement :atiga ;
+    :psrForSubheading :hs6-140120 .
+
+:psr-rcep-c26 a owl:NamedIndividual,
+        :ProductSpecificRule ;
+    :conciseRuleText "CTH" ;
+    :hasPsrAlternative :psr-rcep-c26-alt-1 ;
+    :hasSourceClause :staged-psr-rcep-psr22-row-3 ;
+    :psrAgreement :rcep ;
+    :psrForChapter :hs2-26 .
+
+:psr-rcep-h2701 a owl:NamedIndividual,
+        :ProductSpecificRule ;
+    :conciseRuleText "CTH" ;
+    :hasPsrAlternative :psr-rcep-h2701-alt-1 ;
+    :hasSourceClause :staged-psr-rcep-psr22-row-4 ;
+    :psrAgreement :rcep ;
+    :psrForHeading :hs4-2701 .
+
+:psr-rcep-h8001 a owl:NamedIndividual,
+        :ProductSpecificRule ;
+    :conciseRuleText "CTH or RVC40" ;
+    :hasPsrAlternative :psr-rcep-h8001-alt-1,
+        :psr-rcep-h8001-alt-2 ;
+    :hasSourceClause :staged-psr-rcep-psr22-row-15 ;
+    :psrAgreement :rcep ;
+    :psrForHeading :hs4-8001 .
+
+:hs-14012010 a owl:NamedIndividual,
+        :HSCode ;
+    rdfs:label "1401.20.10 -- Utuh"@id ;
+    :codeValue "1401.20.10" ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-larangan-amend25-14012010 ;
+    :nomenclature "AHTN 2022" ;
+    :tariffSubheading :hs6-140120 .
+
+:hs-26040000 a owl:NamedIndividual,
+        :HSCode ;
+    rdfs:label "2604.00.00 Bijih nikel dan konsentratnya"@id ;
+    :codeValue "2604.00.00" ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-larangan-amend25-26040000 ;
+    :nomenclature "AHTN 2022" ;
+    :tariffSubheading :hs6-260400 .
+
+:hs-27011100 a owl:NamedIndividual,
+        :HSCode ;
+    rdfs:label "2701.11.00 -- Antrasit"@id ;
+    :codeValue "2701.11.00" ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-amend25-27011100 ;
+    :nomenclature "AHTN 2022" ;
+    :tariffSubheading :hs6-270111 .
+
+:hs-72042100 a owl:NamedIndividual,
+        :HSCode ;
+    rdfs:label "7204.21.00 Sisa dan skrap dari baja stainless."@id ;
+    :codeValue "7204.21.00" ;
+    :hasSourceClause :staged-export-lartas-id-lartas-ekspor-amend25-72042100 ;
+    :nomenclature "AHTN 2022" ;
+    :tariffSubheading :hs6-720421 .
+
+:hs2-14 a owl:NamedIndividual,
+        :HSChapter ;
+    :chapterCode "14" .
+
+:hs2-27 a owl:NamedIndividual,
+        :HSChapter ;
+    :chapterCode "27" .
+
+:hs2-80 a owl:NamedIndividual,
+        :HSChapter ;
+    :chapterCode "80" .
+
+:hs4-1401 a owl:NamedIndividual,
+        :HSHeading ;
+    :headingChapter :hs2-14 ;
+    :headingCode "1401" .
+
+:hs4-2604 a owl:NamedIndividual,
+        :HSHeading ;
+    :headingChapter :hs2-26 ;
+    :headingCode "2604" .
+
+:hs4-7204 :hasSourceClause :staged-psr-rcep-psr22-row-1 .
+
+:hs4-8001 a owl:NamedIndividual,
+        :HSHeading ;
+    :hasSourceClause :staged-psr-rcep-psr22-row-15 ;
+    :headingChapter :hs2-80 ;
+    :headingCode "8001" .
+
+:hs6-260400 a owl:NamedIndividual,
+        :HSSubheading ;
+    :subheadingCode "260400" ;
+    :subheadingHeading :hs4-2604 .
+
+:hs6-270111 a owl:NamedIndividual,
+        :HSSubheading ;
+    :subheadingCode "270111" ;
+    :subheadingHeading :hs4-2701 .
+
+:hs6-720421 a owl:NamedIndividual,
+        :HSSubheading ;
+    :subheadingCode "720421" ;
+    :subheadingHeading :hs4-7204 .
+
+:psr-atiga-140120-alt-1 a owl:NamedIndividual,
+        :OriginRuleAlternative ;
+    :requiresCriterionKind :criterionWO .
+
+:psr-rcep-c26-alt-1 a owl:NamedIndividual,
+        :OriginRuleAlternative ;
+    :requiresCriterionKind :criterionCTH .
+
+:psr-rcep-h2701-alt-1 a owl:NamedIndividual,
+        :OriginRuleAlternative ;
+    :requiresCriterionKind :criterionCTH .
+
+:psr-rcep-h8001-alt-1 a owl:NamedIndividual,
+        :OriginRuleAlternative ;
+    :requiresCriterionKind :criterionCTH .
+
+:psr-rcep-h8001-alt-2 a owl:NamedIndividual,
+        :OriginRuleAlternative ;
+    :alternativeRvcThreshold :rcep-rvc-40-threshold ;
+    :requiresCriterionKind :criterionRVC .
+
+:staged-psr-atiga-psr22-row-444 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "ATIGA PSR 1401.20: WO | Wholly obtained or produced in the exporting Member State" ;
+    :clauseInDocument :source-atiga-psr22 ;
+    :clauseLocator "Annex 3 HS 2022, baris 444 (1401.20)" .
+
+:staged-psr-rcep-psr22-row-1 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP PSR 72.04: CTH" ;
+    :clauseInDocument :source-rcep-psr22 ;
+    :clauseLocator "RCEP Annex 3A HS 2022, p.82 (72.04)" .
+
+:hs2-26 a owl:NamedIndividual,
+        :HSChapter ;
+    :chapterCode "26" ;
+    :hasSourceClause :staged-psr-rcep-psr22-row-3 .
+
+:hs4-2701 a owl:NamedIndividual,
+        :HSHeading ;
+    :hasSourceClause :staged-psr-rcep-psr22-row-4 ;
+    :headingChapter :hs2-27 ;
+    :headingCode "2701" .
+
+:hs6-140120 a owl:NamedIndividual,
+        :HSSubheading ;
+    :subheadingCode "140120" ;
+    :subheadingHeading :hs4-1401 .
+
+:staged-export-lartas-id-lartas-ekspor-amend25-27011100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Export Lartas 2701.11.00: Batubara (Anthracite Coal)" ;
+    :clauseInDocument :source-id-lartas-ekspor-amend25 ;
+    :clauseLocator "Lampiran, baris 705 (2701.11.00, Batubara (Anthracite Coal))" .
+
+:staged-export-lartas-id-lartas-ekspor-amend25-72042100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Export Lartas 7204.21.00: Sisa dan Skrap Baja Tahan Karat (Stainless Scrap)" ;
+    :clauseInDocument :source-id-lartas-ekspor-amend25 ;
+    :clauseLocator "Lampiran, baris 291 (7204.21.00, Sisa dan Skrap Baja Tahan Karat (Stainless Scrap))" .
+
+:staged-export-lartas-id-lartas-ekspor-larangan-amend25-14012010 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Export Lartas 1401.20.10: Bidang Kehutanan (Rotan Utuh)" ;
+    :clauseInDocument :source-id-lartas-ekspor-larangan-amend25 ;
+    :clauseLocator "Lampiran, baris 1 (1401.20.10, Bidang Kehutanan (Rotan Utuh))" .
+
+:staged-export-lartas-id-lartas-ekspor-larangan-amend25-26040000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Export Lartas 2604.00.00: Bidang Pertambangan (Bijih Nikel dan Konsentratnya)" ;
+    :clauseInDocument :source-id-lartas-ekspor-larangan-amend25 ;
+    :clauseLocator "Lampiran, baris 228 (2604.00.00, Bidang Pertambangan (Bijih Nikel dan Konsentratnya))" .
+
+:staged-psr-rcep-psr22-row-15 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP PSR 80.01: CTH or RVC40" ;
+    :clauseInDocument :source-rcep-psr22 ;
+    :clauseLocator "RCEP Annex 3A HS 2022, p.86 (80.01)" .
+
+:staged-psr-rcep-psr22-row-3 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP PSR 26: CTH" ;
+    :clauseInDocument :source-rcep-psr22 ;
+    :clauseLocator "RCEP Annex 3A HS 2022, p.30 (26)" .
+
+:staged-psr-rcep-psr22-row-4 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "RCEP PSR 27.01: CTH" ;
+    :clauseInDocument :source-rcep-psr22 ;
+    :clauseLocator "RCEP Annex 3A HS 2022, p.30 (27.01)" .
+

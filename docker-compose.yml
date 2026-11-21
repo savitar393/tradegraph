@@ -1,0 +1,53 @@
+services:
+  fuseki:
+    image: ${FUSEKI_IMAGE:-stain/jena-fuseki:5.1.0}
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${FUSEKI_ADMIN_PASSWORD:-tradegraph-dev}
+      JVM_ARGS: ${FUSEKI_JVM_ARGS:--Xmx1g}
+    ports:
+      - "${FUSEKI_PORT:-3030}:3030"
+    volumes:
+      - fuseki_data:/fuseki
+      - ./deploy/fuseki/tradegraph.ttl:/tmp/tradegraph.ttl:ro
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "mkdir -p /fuseki/configuration /fuseki/databases && cp /tmp/tradegraph.ttl /fuseki/configuration/tradegraph.ttl && exec /docker-entrypoint.sh /jena-fuseki/fuseki-server"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:3030/$/ping > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  tradegraph:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      fuseki:
+        condition: service_healthy
+    environment:
+      TRADEGRAPH_KB_PATH: /app/knowledge/tradegraph.ttl
+      TRADEGRAPH_CASE_DB_PATH: /data/cases.db
+      TRADEGRAPH_FUSEKI_URL: http://fuseki:3030/tradegraph
+      TRADEGRAPH_FUSEKI_USER: admin
+      TRADEGRAPH_FUSEKI_PASSWORD: ${FUSEKI_ADMIN_PASSWORD:-tradegraph-dev}
+      TRADEGRAPH_SYNC_KB_ON_STARTUP: "true"
+    ports:
+      - "${TRADEGRAPH_PORT:-8000}:8000"
+    volumes:
+      - tradegraph_data:/data
+      - ./src/tradegraph/api/workbench.html:/usr/local/lib/python3.12/site-packages/tradegraph/api/workbench.html:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/v1/ready', timeout=5).status == 200 else 1)"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 25s
+
+volumes:
+  fuseki_data:
+  tradegraph_data:

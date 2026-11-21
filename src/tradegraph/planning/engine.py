@@ -75,13 +75,15 @@ class PlanningEngine:
             while queue:
                 _remaining(deadline)
                 state = queue.popleft()
+                extra_coverage = tuple(
+                    (URIRef(f"{revision_ref(state.case.case_id, state.case.revision)}:context"),
+                     CASE_DATA.assessedCoverage, URIRef(entry.iri))
+                    for entry in state.report.coverage if entry.status in {"SUPPORTED", "PARTIAL"}
+                )
                 data, context = assessment_graph(
                     kb, state.case, ((finding.triple, finding.support) for finding in state.report.findings),
-                    state.report.validation_report,
+                    state.report.validation_report, extra_triples=extra_coverage,
                 )
-                for entry in state.report.coverage:
-                    if entry.status in {"SUPPORTED", "PARTIAL"}:
-                        data.add((context.identifier, CASE_DATA.assessedCoverage, URIRef(entry.iri)))
                 selectors = context_bindings(context)
                 if data.query(query(goal.sparql, "AskQuery"), initBindings=selectors).askAnswer is True:
                     accepted.append(state)

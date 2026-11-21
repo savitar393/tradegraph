@@ -1,10 +1,13 @@
 """Build revision-scoped RDF views and publish them transactionally to Fuseki."""
 
+from base64 import b64encode
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from hashlib import sha256
 import json
-from urllib.error import HTTPError
+import os
+from time import monotonic
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 from uuid import UUID
@@ -12,7 +15,7 @@ from uuid import UUID
 from rdflib import Graph, Literal, RDF, URIRef, XSD
 
 from tradegraph.cases.facts import CASE_DATA, TG, parse_persisted_facts, require_iri, serialize_assertions
-from tradegraph.contracts import CaseSnapshot
+from tradegraph.contracts import CaseSnapshot, CompiledKB
 from tradegraph.kb.rdf import parse_turtle
 
 
@@ -104,12 +107,133 @@ def project_case_graphs(snapshot: CaseSnapshot) -> CaseGraphs:
 
 
 class FusekiGraphStore:
-    def __init__(self, dataset_url: str, *, timeout: float = 15):
+    def __init__(
+        self,
+        dataset_url: str,
+        *,
+        timeout: float = 15,
+        username: str | None = None,
+        password: str | None = None,
+    ):
         parts = urlsplit(dataset_url)
         if parts.scheme not in {"http", "https"} or not parts.netloc or parts.query or parts.fragment:
             raise ValueError("Expected an HTTP(S) Fuseki dataset URL")
         self.dataset_url = dataset_url.rstrip("/")
+        self.server_base_url = f"{parts.scheme}://{parts.netloc}"
         self.timeout = timeout
+        self._username = username if username is not None else os.environ.get("TRADEGRAPH_FUSEKI_USER")
+        self._password = password if password is not None else os.environ.get("TRADEGRAPH_FUSEKI_PASSWORD")
+
+    def _auth_header(self) -> str | None:
+        if self._username and self._password is not None:
+            token = b64encode(f"{self._username}:{self._password}".encode("utf-8")).decode("ascii")
+            return f"Basic {token}"
+        return None
+
+    def ping(self) -> dict[str, object]:
+        """Check Fuseki server & dataset liveness without raising."""
+        started = monotonic()
+        try:
+            # First test the dataset SPARQL endpoint directly (validates dataset existence & auth too)
+            raw = self._request(
+                "query",
+                query={"query": "ASK {}"},
+                accept="application/sparql-results+json",
+            )
+            payload = json.loads(raw)
+            ok = bool(payload.get("boolean", True))
+            return {
+                "reachable": ok,
+                "dataset_url": self.dataset_url,
+                "latency_ms": round((monotonic() - started) * 1000.0, 2),
+                "error": None if ok else "Unexpected SPARQL ASK response",
+            }
+        except (HTTPError, URLError, OSError, ValueError) as err:
+            return {
+                "reachable": False,
+                "dataset_url": self.dataset_url,
+                "latency_ms": round((monotonic() - started) * 1000.0, 2),
+                "error": str(err),
+            }
+
+    def publish_kb(self, compiled: CompiledKB) -> dict[str, object]:
+        """Idempotently publish the canonical KB OWL projection into a snapshot-pinned named graph."""
+        snap = compiled.snapshot
+        graph_iri = require_iri(f"urn:tradegraph:kb-snapshot:{snap.sha256}")
+        ask_q = f"ASK {{ GRAPH {graph_iri.n3()} {{ ?s ?p ?o }} }}"
+        ask_res = json.loads(self._request(
+            "query", query={"query": ask_q}, accept="application/sparql-results+json",
+        ))
+        owl_graph = compiled.dataset.graph(compiled.owl_projection_ref)
+        if ask_res.get("boolean") is True:
+            return {
+                "graph_iri": str(graph_iri),
+                "kb_version": snap.version,
+                "kb_sha256": snap.sha256,
+                "triples": len(owl_graph),
+                "status": "ALREADY_SYNCED",
+            }
+        nt_bytes = owl_graph.serialize(format="nt", encoding="utf-8")
+        self._request(
+            "data",
+            query={"graph": str(graph_iri)},
+            body=nt_bytes,
+            content_type="application/n-triples; charset=utf-8",
+            method="PUT",
+        )
+        return {
+            "graph_iri": str(graph_iri),
+            "kb_version": snap.version,
+            "kb_sha256": snap.sha256,
+            "triples": len(owl_graph),
+            "status": "PUBLISHED",
+        }
+
+    def list_case_revisions(self, *, limit: int = 50) -> list[dict[str, object]]:
+        """Query Fuseki across named graphs for published TradeCaseRevision summaries."""
+        query = f"""
+        PREFIX tg: <urn:tradegraph:kb#>
+        SELECT DISTINCT ?graph ?case ?revision ?revNum ?kbVersion ?kbSha ?agreement ?procedure ?product ?txAt
+        WHERE {{
+            GRAPH ?graph {{
+                ?ctx a tg:AssessmentContext ;
+                    tg:assessesRevision ?revision ;
+                    tg:usesKnowledgeRevision ?kb .
+                ?revision tg:revisionOf ?case ;
+                    tg:caseRevisionNumber ?revNum .
+                OPTIONAL {{ ?kb tg:knowledgeVersion ?kbVersion . }}
+                OPTIONAL {{ ?kb tg:snapshotSha256 ?kbSha . }}
+                OPTIONAL {{ ?ctx tg:selectedAgreement ?agreement . }}
+                OPTIONAL {{ ?ctx tg:selectedProcedure ?procedure . }}
+                OPTIONAL {{ ?ctx tg:assessesProduct ?product . }}
+                OPTIONAL {{ ?ctx tg:transactionAt ?txAt . }}
+            }}
+        }}
+        ORDER BY DESC(?txAt) DESC(?revNum)
+        LIMIT {max(1, int(limit))}
+        """
+        response = json.loads(self._request(
+            "query", query={"query": query}, accept="application/sparql-results+json",
+        ))
+        items: list[dict[str, object]] = []
+        for row in response.get("results", {}).get("bindings", []):
+            def _val(key: str) -> str | None:
+                cell = row.get(key)
+                return cell["value"] if isinstance(cell, dict) and "value" in cell else None
+
+            case_iri = _val("case") or ""
+            items.append({
+                "case_id": case_iri.removeprefix("urn:tradegraph:case:"),
+                "revision": int(_val("revNum") or "1"),
+                "context_graph": _val("graph"),
+                "kb_version": _val("kbVersion"),
+                "kb_sha256": _val("kbSha"),
+                "agreement_iri": _val("agreement"),
+                "procedure_iri": _val("procedure"),
+                "product_iri": _val("product"),
+                "transaction_at": _val("txAt"),
+            })
+        return items
 
     def publish(self, snapshot: CaseSnapshot) -> CaseGraphs:
         """Publish all named graphs in one guarded SPARQL Update request."""
@@ -158,7 +282,7 @@ class FusekiGraphStore:
             graph.add(triple)
         return graph
 
-    def _request(self, operation, *, query=None, body=None, content_type=None, accept=None):
+    def _request(self, operation, *, query=None, body=None, content_type=None, accept=None, method=None):
         url = f"{self.dataset_url}/{operation}"
         if query is not None:
             url = f"{url}?{urlencode(query)}"
@@ -167,5 +291,9 @@ class FusekiGraphStore:
             headers["Content-Type"] = content_type
         if accept is not None:
             headers["Accept"] = accept
-        with urlopen(Request(url, data=body, headers=headers), timeout=self.timeout) as response:
+        auth = self._auth_header()
+        if auth is not None:
+            headers["Authorization"] = auth
+        req = Request(url, data=body, headers=headers, method=method)
+        with urlopen(req, timeout=self.timeout) as response:
             return response.read()

@@ -1,5 +1,7 @@
 """Prepare declarative queries against local RDF graphs."""
 
+from functools import lru_cache
+
 from rdflib import Graph, Literal, URIRef
 from rdflib.plugins.sparql import prepareQuery
 from rdflib.plugins.sparql.parserutils import CompValue
@@ -21,6 +23,7 @@ def _local_pattern(node):
     return True
 
 
+@lru_cache(maxsize=512)
 def prepare_local_query(sparql: str, *kinds: str):
     query = prepareQuery(sparql)
     if query.algebra.name not in kinds or not _local_pattern(query.algebra):

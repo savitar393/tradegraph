@@ -1,0 +1,4148 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TradeGraph Compliance Workbench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ==========================================================================
+     LIGHT MODE — Bright Coastal Maritime Palette (NO dark navy blocks!)
+     ========================================================================== */
+  :root[data-theme="light"] {
+    --bg-canvas: #f0f5fa;
+    --bg-gradient:
+      radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.12), transparent 40%),
+      radial-gradient(circle at 100% 0%, rgba(13, 148, 136, 0.10), transparent 38%),
+      linear-gradient(180deg, #e8f1f8 0%, #f3f7fb 100%);
+    --header-bg: linear-gradient(135deg, #ffffff 0%, #f0f9ff 55%, #ecfdf5 100%);
+    --header-border: #cbd5e1;
+    --header-text: #0f172a;
+    --header-sub: #475569;
+    --nav-group-bg: #e2e8f0;
+    --nav-group-border: #cbd5e1;
+    --nav-tab-text: #334155;
+    --nav-tab-hover-bg: rgba(255, 255, 255, 0.7);
+    --user-pill-bg: #f1f5f9;
+    --user-pill-border: #cbd5e1;
+    --hdr-btn-bg: #ffffff;
+    --hdr-btn-border: #cbd5e1;
+    --hdr-btn-text: #1e293b;
+    --route-bg: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 55%, #ccfbf1 100%);
+    --route-border: #7dd3fc;
+    --route-text: #0f172a;
+    --route-sub: #334155;
+    --route-node-bg: #ffffff;
+    --route-node-border: #93c5fd;
+    --route-ship-bg: #0284c7;
+    --route-ship-text: #ffffff;
+    --fta-badge-bg: #ffffff;
+    --fta-badge-border: #14b8a6;
+    --fta-badge-text: #0f766e;
+    --panel: #ffffff;
+    --panel-2: #f8fafc;
+    --panel-3: #f1f5f9;
+    --panel-tint: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+    --border: #dce4f0;
+    --border-strong: #c2d0e3;
+    --text: #0f172a;
+    --text-secondary: #334155;
+    --muted: #64748b;
+    --accent: #0284c7;
+    --accent-bright: #0284c7;
+    --accent-grad: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+    --accent-soft: #e0f2fe;
+    --accent-border: #7dd3fc;
+    --accent-text: #0369a1;
+    --emerald: #059669;
+    --emerald-soft: #d1fae5;
+    --emerald-border: #6ee7b7;
+    --emerald-text: #065f46;
+    --amber: #d97706;
+    --amber-soft: #fef3c7;
+    --amber-border: #fcd34d;
+    --amber-text: #92400e;
+    --red: #e11d48;
+    --red-soft: #ffe4e6;
+    --red-border: #fda4af;
+    --red-text: #9f1239;
+    --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 10px 24px -6px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 20px 40px -12px rgba(15, 23, 42, 0.16);
+    --code-bg: #f8fafc;
+    --code-text: #0f172a;
+  }
+
+  /* ==========================================================================
+     DARK MODE — Deep Ocean Maritime Palette
+     ========================================================================== */
+  :root[data-theme="dark"] {
+    --bg-canvas: #071120;
+    --bg-gradient:
+      radial-gradient(circle at 8% 0%, rgba(14, 165, 233, 0.18), transparent 42%),
+      radial-gradient(circle at 92% 6%, rgba(13, 148, 136, 0.15), transparent 40%),
+      linear-gradient(180deg, #060e1b 0%, #091527 100%);
+    --header-bg: linear-gradient(135deg, #071529 0%, #0b2342 55%, #0a3340 100%);
+    --header-border: #1e3a5f;
+    --header-text: #f8fafc;
+    --header-sub: #94a3b8;
+    --nav-group-bg: rgba(6, 16, 33, 0.65);
+    --nav-group-border: rgba(148, 163, 184, 0.2);
+    --nav-tab-text: #cbd5e1;
+    --nav-tab-hover-bg: rgba(255, 255, 255, 0.08);
+    --user-pill-bg: rgba(15, 32, 58, 0.85);
+    --user-pill-border: rgba(56, 189, 248, 0.3);
+    --hdr-btn-bg: rgba(255, 255, 255, 0.08);
+    --hdr-btn-border: rgba(255, 255, 255, 0.2);
+    --hdr-btn-text: #f8fafc;
+    --route-bg: linear-gradient(135deg, #091e38 0%, #0e2e4f 60%, #0c3b47 100%);
+    --route-border: rgba(56, 189, 248, 0.35);
+    --route-text: #f8fafc;
+    --route-sub: #cbd5e1;
+    --route-node-bg: rgba(255, 255, 255, 0.1);
+    --route-node-border: rgba(255, 255, 255, 0.22);
+    --route-ship-bg: #0284c7;
+    --route-ship-text: #ffffff;
+    --fta-badge-bg: rgba(16, 185, 129, 0.22);
+    --fta-badge-border: rgba(52, 211, 153, 0.48);
+    --fta-badge-text: #6ee7b7;
+    --panel: #0f1d33;
+    --panel-2: #152642;
+    --panel-3: #1c3154;
+    --panel-tint: linear-gradient(135deg, rgba(2, 132, 199, 0.16) 0%, rgba(13, 148, 136, 0.14) 100%);
+    --border: #23385c;
+    --border-strong: #324f7c;
+    --text: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --muted: #8ea3c2;
+    --accent: #38bdf8;
+    --accent-bright: #0ea5e9;
+    --accent-grad: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+    --accent-soft: rgba(14, 165, 233, 0.16);
+    --accent-border: rgba(56, 189, 248, 0.38);
+    --accent-text: #7dd3fc;
+    --emerald: #10b981;
+    --emerald-soft: rgba(16, 185, 129, 0.16);
+    --emerald-border: rgba(52, 211, 153, 0.38);
+    --emerald-text: #6ee7b7;
+    --amber: #f59e0b;
+    --amber-soft: rgba(245, 158, 11, 0.16);
+    --amber-border: rgba(251, 191, 36, 0.38);
+    --amber-text: #fcd34d;
+    --red: #f43f5e;
+    --red-soft: rgba(244, 63, 94, 0.18);
+    --red-border: rgba(251, 113, 133, 0.42);
+    --red-text: #fda4af;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.32);
+    --shadow-md: 0 12px 28px -6px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.65);
+    --code-bg: #070e1b;
+    --code-text: #cbd5e1;
+  }
+
+  :root {
+    --font-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg-canvas);
+    background-image: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.5;
+    font-size: 13.5px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, .brand-name, .verdict-title, .kpi .k-val {
+    font-family: var(--font-display);
+  }
+  a { color: var(--accent-bright); text-decoration: none; font-weight: 600; }
+  a:hover { text-decoration: underline; }
+  .hidden { display: none !important; }
+  body:not(.is-admin) .admin-only { display: none !important; }
+  .mono { font-family: var(--mono); }
+
+  /* ==========================================================================
+     HEADER (Normal scroll flow — NOT fixed/sticky, zero overlap!)
+     ========================================================================== */
+  header.sovereign-header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-top: 3px solid #0d9488;
+    border-bottom: 1px solid var(--header-border);
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-inner {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0284c7 0%, #10b981 100%);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 3px 10px rgba(2, 132, 199, 0.3);
+    flex-shrink: 0;
+  }
+  .brand-name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--header-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .brand-tag {
+    display: none;
+  }
+  .brand small {
+    color: var(--header-sub);
+    font-size: 11px;
+    display: block;
+    max-width: 170px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Primary Multi-Page Navigation */
+  .page-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    background: var(--nav-group-bg);
+    padding: 4px;
+    border-radius: 11px;
+    border: 1px solid var(--nav-group-border);
+    flex-shrink: 0;
+  }
+  .nav-tab {
+    background: transparent;
+    color: var(--nav-tab-text);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    font-family: var(--font-display);
+  }
+  .nav-tab:hover {
+    background: var(--nav-tab-hover-bg);
+    color: var(--header-text);
+  }
+  .nav-tab.active {
+    background: var(--accent-grad);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.32);
+  }
+  .nav-tab.admin-tab.active {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    color: #ffffff;
+  }
+
+  /* Compact User & Theme Controls */
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .auth-user-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--user-pill-bg);
+    border: 1px solid var(--user-pill-border);
+    padding: 4px 10px 4px 6px;
+    border-radius: 999px;
+    color: var(--header-text);
+    font-size: 12px;
+  }
+  .avatar-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent-grad);
+    color: #fff;
+    font-weight: 800;
+    font-size: 11.5px;
+    display: grid;
+    place-items: center;
+  }
+  .role-badge {
+    font-size: 9.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 999px;
+  }
+  .role-badge.admin {
+    background: var(--amber-soft);
+    color: var(--amber-text);
+    border: 1px solid var(--amber-border);
+  }
+  .role-badge.user {
+    background: var(--accent-soft);
+    color: var(--accent-text);
+    border: 1px solid var(--accent-border);
+  }
+
+  .hdr-btn {
+    background: var(--hdr-btn-bg);
+    color: var(--hdr-btn-text);
+    border: 1px solid var(--hdr-btn-border);
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .hdr-btn:hover {
+    border-color: var(--accent-bright);
+    color: var(--accent-bright);
+  }
+  .hdr-btn.primary {
+    background: var(--accent-grad);
+    border-color: transparent;
+    color: #fff;
+  }
+
+  .lang-group {
+    display: inline-flex;
+    background: var(--nav-group-bg);
+    padding: 2px;
+    border-radius: 8px;
+    border: 1px solid var(--nav-group-border);
+  }
+  .lang-btn {
+    background: transparent;
+    color: var(--nav-tab-text);
+    border: none;
+    border-radius: 6px;
+    padding: 4px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .lang-btn.active {
+    background: var(--accent-grad);
+    color: #ffffff;
+  }
+
+  @media (max-width: 1200px) {
+    .topbar-inner { flex-wrap: wrap; }
+    .brand small { display: none; }
+  }
+
+  /* ==========================================================================
+     MAIN PAGE SHELL & SPACIOUS 2-COLUMN WORKSPACE
+     ========================================================================== */
+  .page-shell {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 18px 24px 36px;
+  }
+
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: 470px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+  @media (max-width: 1120px) {
+    .workspace-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Cards */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-md);
+  }
+  .card.featured-card {
+    border-top: 4px solid var(--accent-bright);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title {
+    margin: 0;
+    font-size: 15.5px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .card h2 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  /* ==========================================================================
+     COMPACT SCENARIO BAR + STEP TABS INSIDE INPUT CARD (Zero Clutter!)
+     ========================================================================== */
+  .quick-preset-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 8px 11px;
+    margin-bottom: 14px;
+  }
+  .quick-preset-bar label {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    margin: 0;
+  }
+  .quick-preset-bar select {
+    flex: 1;
+    height: 34px;
+    padding: 4px 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: var(--panel);
+  }
+
+  /* Form Step Sub-Tabs (Paso 1: Barang & Rute | Paso 2: RVC & Dokumen) */
+  .form-step-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    background: var(--panel-3);
+    padding: 4px;
+    border-radius: 11px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+  .form-step-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-display);
+    transition: all .15s;
+    text-align: center;
+  }
+  .form-step-btn:hover { color: var(--text); }
+  .form-step-btn.active {
+    background: var(--panel);
+    color: var(--accent-bright);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ==========================================================================
+     THEME-AWARE VISUAL TRADE ROUTE BAR (Light in Light Mode, Deep in Dark Mode)
+     ========================================================================== */
+  .route-visualizer {
+    background: var(--route-bg);
+    color: var(--route-text);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border: 1px solid var(--route-border);
+  }
+  .route-nodes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .route-node {
+    background: var(--route-node-bg);
+    border: 1px solid var(--route-node-border);
+    color: var(--route-text);
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12.5px;
+    font-family: var(--font-display);
+  }
+  .route-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #0284c7, #10b981);
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+  .route-ship-icon {
+    background: var(--route-ship-bg);
+    color: var(--route-ship-text);
+    border-radius: 999px;
+    padding: 2px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .route-ftas {
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px solid var(--route-border);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: 11.5px;
+    color: var(--route-sub);
+    font-weight: 600;
+  }
+  .fta-mini-badge {
+    background: var(--fta-badge-bg);
+    border: 1px solid var(--fta-badge-border);
+    color: var(--fta-badge-text);
+    padding: 1px 7px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  /* ==========================================================================
+     SEPARATED COMMODITY DROPDOWN & SEARCH FIELD (Zero Floating Overlap Bug!)
+     ========================================================================== */
+  .commodity-picker-box {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 14px;
+    margin-bottom: 15px;
+  }
+  .picker-grid {
+    display: grid;
+    grid-template-columns: 145px minmax(0, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  @media (max-width: 520px) {
+    .picker-grid { grid-template-columns: 1fr; }
+  }
+  .search-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Commodity Info Badge */
+  .hs-preview {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--panel);
+    border: 1px solid var(--accent-border);
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .hs-preview-title {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  /* Quick Amount Chips & Spacious RVC Slider (No Truncated Text!) */
+  .quick-amount-chips {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .amt-chip {
+    background: var(--panel-3);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--mono);
+  }
+  .amt-chip:hover {
+    border-color: var(--accent-bright);
+    color: var(--accent-bright);
+    background: var(--accent-soft);
+  }
+
+  .rvc-slider-box {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 15px;
+    margin-bottom: 15px;
+  }
+  .rvc-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .rvc-control-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  input[type="range"].rvc-range {
+    flex: 1;
+    accent-color: var(--accent-bright);
+    cursor: pointer;
+    height: 6px;
+  }
+  .rvc-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-top: 6px;
+  }
+
+  /* Form Fields & Grids */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; align-items: start; }
+  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 13px; }
+  label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="password"], select, textarea {
+    width: 100%;
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    padding: 8px 11px;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="password"], select {
+    height: 39px;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-bright);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Status Pills */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    background: var(--panel-3);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .pill.mono { font-family: var(--mono); }
+  .pill.ok { background: var(--emerald-soft); border-color: var(--emerald-border); color: var(--emerald-text); }
+  .pill.warn { background: var(--amber-soft); border-color: var(--amber-border); color: var(--amber-text); }
+  .pill.danger { background: var(--red-soft); border-color: var(--red-border); color: var(--red-text); }
+  .pill.info { background: var(--accent-soft); border-color: var(--accent-border); color: var(--accent-text); }
+  .pill.accent { background: var(--accent-soft); border-color: var(--accent-border); color: var(--accent-text); }
+
+  /* Checkboxes */
+  .check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .check-chip {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 8px 10px;
+    cursor: pointer;
+    color: var(--text);
+    transition: all .15s;
+  }
+  .check-chip:hover { border-color: var(--accent-bright); background: var(--accent-soft); }
+  .check-chip input { margin: 2px 0 0; accent-color: var(--accent-bright); flex-shrink: 0; width: 15px; height: 15px; }
+  .check-chip .chip-sub { display: block; font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 2px; line-height: 1.3; }
+
+  .bom-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 10px;
+    background: var(--panel-2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .bom-row .checks { grid-column: 1 / -1; display: flex; gap: 12px; font-size: 12px; color: var(--text-secondary); padding-top: 4px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: var(--font-display);
+  }
+  .btn-primary {
+    background: var(--accent-grad);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+  }
+  .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--panel-2);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .btn-secondary:hover { border-color: var(--accent-bright); color: var(--accent-bright); background: var(--accent-soft); }
+  .btn-sm { padding: 6px 11px; font-size: 12px; border-radius: 8px; }
+  .btn-danger { background: var(--red-soft); color: var(--red-text); border-color: var(--red-border); }
+  .btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
+  .actions-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+  /* ==========================================================================
+     RIGHT RESULT PANEL — PAGINATED SUB-TABS (ONE CARD AT A TIME, ZERO CLUTTER)
+     ========================================================================== */
+  .verdict-hero {
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    background-image: var(--panel-tint);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .verdict-hero::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: var(--accent-bright);
+  }
+  .verdict-hero.ok::before { background: linear-gradient(180deg, #10b981, #059669); }
+  .verdict-hero.prohibited::before { background: linear-gradient(180deg, #f43f5e, #be123c); }
+  .verdict-hero.warn::before { background: linear-gradient(180deg, #f59e0b, #d97706); }
+
+  .verdict-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .verdict-route {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .verdict-title {
+    font-size: 18.5px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .exec-summary-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 11px 14px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* 4 KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 820px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .kpi .k-lbl { font-size: 11.5px; color: var(--muted); font-weight: 700; }
+  .kpi .k-val { font-size: 20px; font-weight: 800; margin-top: 4px; color: var(--text); font-variant-numeric: tabular-nums; }
+  .kpi .k-val.positive { color: var(--emerald); }
+  .kpi .k-val.negative { color: var(--red); }
+  .kpi .k-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* Paginated Result Sub-Tabs */
+  .report-tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--panel-3);
+    padding: 5px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  .report-tab-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+    font-family: var(--font-display);
+  }
+  .report-tab-btn:hover { color: var(--text); background: var(--panel-2); }
+  .report-tab-btn.active {
+    background: var(--accent-grad);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  th {
+    color: var(--muted);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: var(--panel-2);
+  }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+
+  /* Checklist Steps */
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: var(--accent-grad);
+    color: #fff;
+    font-weight: 800;
+    font-size: 12.5px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(5px);
+    display: none;
+    place-items: center;
+    z-index: 60;
+    padding: 18px;
+  }
+  .modal-backdrop.open { display: grid; }
+  .auth-modal {
+    background: var(--panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    max-width: 450px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+  .auth-modal-hero {
+    background: var(--accent-grad);
+    color: #ffffff;
+    padding: 20px 24px;
+  }
+  .auth-modal-body { padding: 20px 24px; }
+  .demo-quick-box {
+    background: var(--panel-tint);
+    border: 1px solid var(--accent-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+
+  /* Admin Banner */
+  .admin-banner {
+    background: var(--panel-tint);
+    color: var(--text);
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    border: 1px solid var(--accent-border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .loading-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 44px 24px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+  }
+  .spinner-lg {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent-bright);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    margin-bottom: 10px;
+  }
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  details.clean-accordion {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 13px;
+    margin-top: 10px;
+  }
+  details summary {
+    cursor: pointer;
+    color: var(--accent-bright);
+    font-weight: 700;
+    font-size: 12.5px;
+    user-select: none;
+    font-family: var(--font-display);
+  }
+  pre.json-box {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    overflow-x: auto;
+    max-height: 360px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  footer.app-footer {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 16px 24px 32px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  /* Quick Scroll to Top Floating Button */
+  .scroll-top-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 50;
+    background: var(--accent-grad);
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-size: 12.5px;
+    font-weight: 800;
+    font-family: var(--font-display);
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(2, 132, 199, 0.38);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity .2s ease, transform .2s ease, filter .15s ease;
+  }
+  .scroll-top-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .scroll-top-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+  }
+</style>
+</head>
+<body>
+<header class="sovereign-header">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 3L24 8.5V19.5L14 25L4 19.5V8.5L14 3Z" stroke="#ffffff" stroke-width="2.2" />
+          <path d="M7 16.5L14 11L21 16.5" stroke="#A7F3D0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="14" cy="11" r="2.5" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-name">
+          <span id="appTitle">TradeGraph</span>
+          <span class="brand-tag" id="brandBadge">Maritime Trade AI</span>
+        </h1>
+        <small id="appSubtitle">Kalkulator Tarif FTA, Pajak Impor-Ekspor, Lartas &amp; Bea Keluar</small>
+        <span class="hidden">TradeGraph Compliance Workbench</span>
+      </div>
+    </div>
+
+    <!-- Primary Multi-Page Navigation -->
+    <nav class="page-nav" role="tablist" aria-label="Main Navigation">
+      <button type="button" class="nav-tab active" id="modeImportBtn" role="tab" aria-selected="true">🚢 Impor (PIB)</button>
+      <button type="button" class="nav-tab" id="modeExportBtn" role="tab" aria-selected="false">🌍 Ekspor &amp; Bea Keluar</button>
+      <button type="button" class="nav-tab" id="modeBatchBtn" role="tab" aria-selected="false">📊 Cek Massal (Excel)</button>
+      <button type="button" class="nav-tab" id="modeImpactBtn" role="tab" aria-selected="false">⚡ Simulasi Regulasi</button>
+      <button type="button" class="nav-tab admin-tab admin-only" id="modeGovBtn" role="tab" aria-selected="false">🛡️ Admin Dashboard</button>
+    </nav>
+
+    <!-- Compact Right Toolbar -->
+    <div class="toolbar-right">
+      <div id="guestAuthControls" style="display:flex;align-items:center;gap:6px;">
+        <button type="button" class="hdr-btn primary" id="btnOpenLogin">Masuk / Daftar</button>
+      </div>
+      <div id="userAuthControls" class="hidden" style="display:flex;align-items:center;gap:6px;">
+        <div class="auth-user-pill" title="Akun Aktif">
+          <div class="avatar-circle" id="userAvatar">U</div>
+          <span style="font-weight:700;max-width:115px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="userNameDisplay">Pengguna</span>
+          <span class="hidden" id="userCompanyDisplay"></span>
+          <span class="role-badge user" id="userRoleBadge">USER</span>
+        </div>
+        <button type="button" class="hdr-btn" id="btnSwitchAccount" title="Ganti Akun">Ganti Akun</button>
+        <button type="button" class="hdr-btn" id="btnLogout" title="Keluar">Keluar</button>
+      </div>
+
+      <div class="lang-group" aria-label="Language">
+        <button type="button" class="lang-btn active" id="langIdBtn">ID</button>
+        <button type="button" class="lang-btn" id="langEnBtn">EN</button>
+      </div>
+      <button type="button" class="hdr-btn" id="themeToggleBtn" title="Ganti Tema Terang / Gelap" style="padding:5px 9px;">🌙</button>
+      <button class="hidden" id="btnRegulations">Regulasi</button>
+      <button class="hidden" id="btnMonitor">Monitor</button>
+    </div>
+  </div>
+</header>
+
+<div class="page-shell">
+  <!-- PAGE 1–4 WORKSPACE -->
+  <main class="workspace-grid" id="calculatorWorkspace">
+    <!-- LEFT COLUMN: STEP-BY-STEP GUIDED INPUT FORM (NO LONG SCROLL) -->
+    <section>
+      <!-- Compact Scenario Selector Bar (Replaces the bulky full-width chip wall) -->
+      <div class="quick-preset-bar" id="presetBar">
+        <label for="presetSelect" id="presetBarLabel">⚡ Contoh Kasus:</label>
+        <select id="presetSelect" onchange="selectAndRunPreset(Number(this.value), true)"></select>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnLoadRunPreset" onclick="selectAndRunPreset(Number(document.getElementById('presetSelect').value || 0), true)">Muat</button>
+        <div class="hidden" id="scenarioCardsGrid"></div>
+        <span class="hidden" id="presetSummaryText"></span>
+      </div>
+
+      <!-- PAGE 1 & 2: SINGLE SHIPMENT CALCULATOR -->
+      <div id="singleShipmentPane">
+        <div class="card featured-card" style="margin-bottom:0;">
+          <div class="card-header">
+            <h2 class="card-title" id="specHeading" style="margin:0;">Spesifikasi Pengiriman Impor</h2>
+            <span class="pill info" id="directionBadgePill">PIB &middot; Impor</span>
+          </div>
+
+          <!-- Visual Trade Route Bar (100% Theme-Adaptive in Light & Dark Mode) -->
+          <div class="route-visualizer">
+            <div class="route-nodes">
+              <span class="route-node" id="routeOriginNode">TH — Thailand</span>
+              <div class="route-line">
+                <span class="route-ship-icon" id="routeShipLabel">🚢 Langsung</span>
+              </div>
+              <span class="route-node" id="routeDestNode">ID — Indonesia</span>
+            </div>
+            <div class="route-ftas" id="routeActiveFtas">
+              <span>Perjanjian FTA Aktif:</span>
+              <span class="fta-mini-badge">ATIGA</span>
+              <span class="fta-mini-badge">RCEP</span>
+            </div>
+          </div>
+
+          <!-- Form Step Sub-Tabs so the Left Form is Compact & Never Cluttered -->
+          <div class="form-step-tabs">
+            <button type="button" class="form-step-btn active" id="formTabStep1Btn" onclick="switchFormStep(1)">① Barang &amp; Rute</button>
+            <button type="button" class="form-step-btn" id="formTabStep2Btn" onclick="switchFormStep(2)">② RVC (%) &amp; Dokumen</button>
+          </div>
+
+          <!-- ==================== FORM STEP 1: BARANG & RUTE ==================== -->
+          <div id="formStep1Pane">
+            <!-- Separated Commodity Dropdown + Manual Search Box (No floating overlay bug!) -->
+            <div class="commodity-picker-box">
+              <label for="hsSelectDropdown" id="lblHsCode" style="display:block;margin-bottom:7px;">Pilih Komoditas atau Cari Kode HS (BTKI 2022)</label>
+              <div class="picker-grid">
+                <select id="hsCategorySelect" aria-label="Filter Kategori Komoditas">
+                  <option value="all">📂 Semua Kategori</option>
+                  <option value="steel">🔩 Besi &amp; Baja</option>
+                  <option value="machinery">⚙️ Mesin &amp; Baterai</option>
+                  <option value="agro">🌴 Sawit &amp; Kakao</option>
+                  <option value="mining">⛏️ Tambang &amp; Logam</option>
+                  <option value="pharma">💊 Farmasi &amp; Tekstil</option>
+                </select>
+                <select id="hsSelectDropdown" aria-label="Daftar Komoditas BTKI"></select>
+              </div>
+              <div class="search-input-row">
+                <input type="text" id="hsCode" list="hsCodeList" autocomplete="off" placeholder="Ketik kode HS (mis. 7209.26.10) atau kata kunci..." style="flex:1;" />
+                <datalist id="hsCodeList"></datalist>
+              </div>
+              <div id="hsPreviewBox" class="hs-preview hidden"></div>
+            </div>
+
+            <!-- IMPORT FIELDS -->
+            <div id="importRouteFields">
+              <div class="grid-2">
+                <div class="field">
+                  <label for="dispatchCountry" id="lblDispatchCountry">Negara Asal Pengiriman</label>
+                  <select id="dispatchCountry"></select>
+                </div>
+                <div class="field">
+                  <label for="cifValue" id="lblCifValue">Nilai Pabean CIF (USD)</label>
+                  <input type="number" id="cifValue" min="0" step="0.01" value="100000" />
+                  <div class="quick-amount-chips">
+                    <button type="button" class="amt-chip" onclick="setQuickValue('cifValue', 25000)">$25k</button>
+                    <button type="button" class="amt-chip" onclick="setQuickValue('cifValue', 100000)">$100k</button>
+                    <button type="button" class="amt-chip" onclick="setQuickValue('cifValue', 250000)">$250k</button>
+                    <button type="button" class="amt-chip" onclick="setQuickValue('cifValue', 1000000)">$1M</button>
+                  </div>
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="apiMode" id="lblApiMode">Jenis Izin Impor (API)</label>
+                  <select id="apiMode">
+                    <option value="API-P">API-P (Produsen &mdash; PPh 2,5%)</option>
+                    <option value="API-U">API-U (Umum &mdash; PPh 2,5%)</option>
+                    <option value="NONE">Tanpa API (PPh 7,5%)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="asOfDate" id="lblAsOfDate">Tanggal Pengiriman</label>
+                  <input type="date" id="asOfDate" value="2025-09-15" />
+                </div>
+              </div>
+            </div>
+
+            <!-- EXPORT FIELDS -->
+            <div id="exportRouteFields" class="hidden">
+              <div class="grid-2">
+                <div class="field">
+                  <label for="exportDestCountry" id="lblExportDest">Negara Tujuan Ekspor</label>
+                  <select id="exportDestCountry"></select>
+                </div>
+                <div class="field">
+                  <label for="fobValue" id="lblFobValue">Nilai Ekspor FOB (USD)</label>
+                  <input type="number" id="fobValue" min="0" step="0.01" value="250000" />
+                  <div class="quick-amount-chips">
+                    <button type="button" class="amt-chip" onclick="setQuickValue('fobValue', 100000)">$100k</button>
+                    <button type="button" class="amt-chip" onclick="setQuickValue('fobValue', 250000)">$250k</button>
+                    <button type="button" class="amt-chip" onclick="setQuickValue('fobValue', 500000)">$500k</button>
+                    <button type="button" class="amt-chip" onclick="setQuickValue('fobValue', 950000)">$950k</button>
+                  </div>
+                </div>
+              </div>
+              <div class="grid-3">
+                <div class="field">
+                  <label for="quantityMt" id="lblQuantityMt">Berat (Ton / MT)</label>
+                  <input type="number" id="quantityMt" min="0" step="0.01" placeholder="1000" />
+                </div>
+                <div class="field">
+                  <label for="referencePriceUsd" id="lblRefPrice">HR Kemendag (USD)</label>
+                  <input type="number" id="referencePriceUsd" min="0" step="0.01" placeholder="HR/Ton" />
+                </div>
+                <div class="field">
+                  <label for="exportPriceUsdPerMt" id="lblHpePrice">HPE (USD/Ton)</label>
+                  <input type="number" id="exportPriceUsdPerMt" min="0" step="0.01" placeholder="HPE/Ton" />
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="transshipmentHub" id="lblHub">Negara Transit / Hub</label>
+                  <select id="transshipmentHub"><option value="">(Kirim Langsung)</option></select>
+                </div>
+                <div class="field">
+                  <label for="thirdPartyInvoiceCountry" id="lblTpi">Invoice Pihak Ketiga</label>
+                  <input type="text" id="thirdPartyInvoiceCountry" list="tpiCountryList" placeholder="Mis. HK, SG" />
+                  <datalist id="tpiCountryList">
+                    <option value="HK">Hong Kong</option>
+                    <option value="SG">Singapore</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="JP">Japan</option>
+                    <option value="US">United States</option>
+                  </datalist>
+                </div>
+              </div>
+              <label class="check-chip" style="margin-bottom:10px;"><input type="checkbox" id="requiresBackToBack" /> <span id="lblBackToBack">Terbitkan ulang SKA Back-to-Back di negara transit</span></label>
+            </div>
+          </div>
+
+          <!-- ==================== FORM STEP 2: RVC (%) & DOKUMEN ==================== -->
+          <div id="formStep2Pane" class="hidden">
+            <!-- Spacious 2-Row RVC Slider Box (Zero text truncation!) -->
+            <div class="rvc-slider-box">
+              <div class="rvc-top-row">
+                <label for="rvcPercent" id="lblRvcPercent" style="margin:0;">Kandungan Nilai Regional / RVC (%)</label>
+                <span class="pill ok" id="rvcThresholdPill">≥ 40% (Lolos Ambang RVC FTA)</span>
+              </div>
+              <div class="rvc-control-row">
+                <input type="range" id="rvcSlider" class="rvc-range" min="0" max="100" step="1" value="40" />
+                <div style="display:flex;align-items:center;gap:4px;">
+                  <input type="number" id="rvcPercent" min="0" max="100" step="1" value="40" style="width:76px;height:34px;padding:4px 8px;text-align:right;font-family:var(--mono);font-weight:700;" />
+                  <span class="mono" style="font-weight:700;color:var(--muted);">%</span>
+                </div>
+              </div>
+              <div class="rvc-scale">
+                <span>0% (Impor Penuh)</span>
+                <span style="color:var(--accent-bright);font-weight:700;">▲ 40% Standar FTA</span>
+                <span>100% (100% Lokal)</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="woConfirmed" id="lblWoConfirmed">Sumber Perolehan Komoditas (Wholly Obtained)</label>
+              <select id="woConfirmed">
+                <option value="">Pabrikasi / Campuran Bahan Lokal &amp; Impor</option>
+                <option value="true">100% Hasil Alam / Tambang / Pertanian Lokal (WO)</option>
+                <option value="false">Menggunakan Bahan Baku Impor (Non-WO)</option>
+              </select>
+            </div>
+
+            <div id="importDocsSection">
+              <div class="field">
+                <label id="lblLartasDocs">Perizinan Impor yang Sudah Dimiliki (Centang jika sudah ada)</label>
+                <div class="check-grid" id="lartasDocsGrid"></div>
+              </div>
+              <details class="clean-accordion" id="originDocsAccordion">
+                <summary id="lblOriginDocsSummary">Surat Keterangan Asal (SKA / Form FTA) yang Sudah Dimiliki</summary>
+                <div class="check-grid" id="originDocsGrid" style="margin-top:8px;"></div>
+              </details>
+            </div>
+
+            <div id="exportDocsSection" class="hidden">
+              <div class="field">
+                <label id="lblExportDocs">Dokumen &amp; Izin Ekspor yang Sudah Dimiliki</label>
+                <div class="check-grid" id="exportDocsGrid"></div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <label id="lblBomHeading" style="margin:0;">Komposisi Bahan Baku / Kumulasi Mitra FTA (BOM)</label>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnAddMat">+ Tambah Bahan</button>
+              </div>
+              <div id="bomContainer"></div>
+            </div>
+
+            <details class="clean-accordion admin-only">
+              <summary id="lblAdvRooSummary">Parameter RoO Spesialis (RCEP DV20, Proses Spesifik &amp; De Minimis)</summary>
+              <div class="grid-2" style="margin-top:10px;" id="importDv20Fields">
+                <div class="field">
+                  <label for="dv20Percent" id="lblDv20Percent">RCEP DV20 (%)</label>
+                  <input type="number" id="dv20Percent" min="0" max="100" step="0.01" />
+                </div>
+                <div class="field">
+                  <label for="highestContrib" id="lblHighestContrib">Kontributor Nilai Tertinggi</label>
+                  <select id="highestContrib"><option value="">(Tidak dipilih)</option></select>
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="processKind" id="lblProcessKind">Kriteria Proses Spesifik</label>
+                  <select id="processKind"><option value="">(Tidak ada)</option></select>
+                </div>
+                <div class="field">
+                  <label for="processSatisfied" id="lblProcessSat">Proses Terpenuhi?</label>
+                  <select id="processSatisfied">
+                    <option value="">Otomatis</option>
+                    <option value="true">Ya</option>
+                    <option value="false">Tidak</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="dmFobTotal" id="lblDmTotal">Total FOB (De Minimis)</label>
+                  <input type="number" id="dmFobTotal" min="0" step="0.01" />
+                </div>
+                <div class="field">
+                  <label for="dmFobFailed" id="lblDmFailed">Bahan Gagal CTC</label>
+                  <input type="number" id="dmFobFailed" min="0" step="0.01" />
+                </div>
+              </div>
+              <div class="field">
+                <label id="lblMinimalOps">Operasi Sederhana (Minimal Operations)</label>
+                <div class="check-grid" id="minimalOpsGrid"></div>
+              </div>
+              <div class="check-grid" style="margin-top: 8px;">
+                <label class="check-chip" id="optPlanWrap"><input type="checkbox" id="optPlan" checked /> <span id="lblOptPlan">Susun Langkah Kepatuhan</span></label>
+                <label class="check-chip"><input type="checkbox" id="optExplain" checked /> <span id="lblOptExplain">Sertakan Sitasi Hukum</span></label>
+              </div>
+            </details>
+          </div>
+
+          <div class="hidden">
+            <input type="text" id="currency" value="USD" />
+          </div>
+
+          <!-- Primary Action Buttons Always Visible at Bottom of Form Card -->
+          <div class="actions-row" id="importActionsRow">
+            <button type="button" class="btn btn-primary" id="btnOptimize" style="flex: 1;">Hitung Tarif Termurah &amp; Pajak</button>
+            <button type="button" class="btn btn-secondary" id="btnLartas">Cek Izin Saja</button>
+          </div>
+          <div class="actions-row hidden" id="exportActionsRow">
+            <button type="button" class="btn btn-primary" id="btnExportEvaluate" style="flex: 1;">Hitung Bea Keluar &amp; Syarat Ekspor</button>
+            <button type="button" class="btn btn-secondary" id="btnExportDuty">Bea Keluar Saja</button>
+            <button type="button" class="btn btn-secondary admin-only" id="btnExportLartas">Cek Izin Ekspor</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 3: BATCH SCREENING -->
+      <div id="batchBuilderPane" class="hidden">
+        <div class="card featured-card" style="margin-bottom:0;">
+          <div class="card-header">
+            <h2 class="card-title" id="lblBatchHeading" style="margin:0;">Studio Pemeriksaan Massal (Excel / CSV)</h2>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="batchMode" id="lblBatchMode">Jenis Transaksi</label>
+              <select id="batchMode">
+                <option value="export">Ekspor (PEB + Bea Keluar)</option>
+                <option value="import">Impor (PIB + Pajak Impor)</option>
+              </select>
+            </div>
+            <div class="field" id="batchDepthWrap">
+              <label for="batchDepth" id="lblBatchDepth">Mode Pemeriksaan</label>
+              <select id="batchDepth">
+                <option value="fast_lartas">Kilat: Izin &amp; Tarif (&lt;10ms)</option>
+                <option value="full">Lengkap: Evaluasi RoO</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="batchFileInput" id="lblBatchFile">Unggah File Daftar Barang (.xlsx, .csv, atau .json)</label>
+            <input type="file" id="batchFileInput" accept=".csv,.xlsx,.xlsm,.json" style="padding:6px 10px;font-size:12px;" />
+          </div>
+          <div class="field">
+            <label for="batchCsvText" id="lblBatchCsv">Atau Gunakan / Edit Daftar Barang di Bawah Ini</label>
+            <textarea id="batchCsvText" rows="8" style="font-family:var(--mono);font-size:11.5px;resize:vertical;"></textarea>
+          </div>
+          <div class="hidden">
+            <input type="checkbox" id="batchExplain" checked />
+          </div>
+          <div class="actions-row">
+            <button type="button" class="btn btn-primary" id="btnRunBatch" style="flex: 1;">Proses Seluruh Daftar Barang</button>
+          </div>
+          <div class="actions-row">
+            <button type="button" class="btn btn-secondary" id="btnDownloadXlsx" style="flex: 1;">Unduh Excel (.xlsx)</button>
+            <button type="button" class="btn btn-secondary" id="btnDownloadCsv" style="flex: 1;">Unduh CSV (.csv)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 4: REGULATORY IMPACT SIMULATOR -->
+      <div id="impactBuilderPane" class="hidden">
+        <div class="card featured-card" style="margin-bottom:0;">
+          <div class="card-header">
+            <h2 class="card-title" id="lblImpactHeading" style="margin:0;">Simulasi Dampak Regulasi Baru</h2>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="impactFromDate" id="lblImpactFrom">Tanggal Sebelumnya</label>
+              <input type="date" id="impactFromDate" value="2025-09-15" />
+            </div>
+            <div class="field">
+              <label for="impactToDate" id="lblImpactTo">Tanggal Peraturan Baru</label>
+              <input type="date" id="impactToDate" value="2025-11-15" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="impactMode" id="lblImpactMode">Jenis Transaksi</label>
+              <select id="impactMode">
+                <option value="export">Ekspor (Bea Keluar &amp; Izin)</option>
+                <option value="import">Impor (Bea Masuk &amp; Izin)</option>
+              </select>
+            </div>
+            <div class="field" id="impactDepthWrap">
+              <label for="impactDepth" id="lblImpactDepth">Mode Pemeriksaan</label>
+              <select id="impactDepth">
+                <option value="fast_lartas">Kilat: Tarif &amp; Izin</option>
+                <option value="full">Lengkap: Evaluasi RoO</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="impactFileInput" id="lblImpactFile">Unggah File Portofolio (.xlsx, .csv, atau .json)</label>
+            <input type="file" id="impactFileInput" accept=".csv,.xlsx,.xlsm,.json" style="padding:6px 10px;font-size:12px;" />
+          </div>
+          <div class="field">
+            <label for="impactCsvText" id="lblImpactCsv">Atau Edit Daftar Barang di Bawah Ini</label>
+            <textarea id="impactCsvText" rows="7" style="font-family:var(--mono);font-size:11.5px;resize:vertical;"></textarea>
+          </div>
+          <div class="hidden">
+            <input type="checkbox" id="impactExplain" checked />
+          </div>
+          <div class="actions-row">
+            <button type="button" class="btn btn-primary" id="btnRunImpact" style="flex: 1;">Hitung Selisih Biaya &amp; Dampak</button>
+          </div>
+          <div class="actions-row">
+            <button type="button" class="btn btn-secondary" id="btnImpactXlsx" style="flex: 1;">Unduh Excel (.xlsx)</button>
+            <button type="button" class="btn btn-secondary" id="btnImpactCsv" style="flex: 1;">Unduh CSV</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: PAGINATED EXECUTIVE REPORT (ONE TAB PANEL AT A TIME) -->
+    <section id="resultsPane"></section>
+  </main>
+
+  <!-- PAGE 5: EXCLUSIVE ADMIN DASHBOARD (Only accessible when role === 'admin') -->
+  <section id="govPagePane" class="hidden">
+    <div id="regModal">
+      <div class="admin-banner">
+        <div>
+          <span class="pill warn" style="margin-bottom:6px;">🛡️ RESTRICTED ADMINISTRATOR CONSOLE</span>
+          <h2 style="margin:0;font-size:20px;">Admin Dashboard &mdash; Ontology Governance, JDIH Monitor &amp; RBAC</h2>
+          <p style="margin:4px 0 0;color:var(--text-secondary);font-size:13px;">Kelola hak akses pengguna, sinkronisasi Apache Jena Fuseki TDB2, dan pemantauan otomatis JDIH Kemenkeu / Kemendag / BPOM.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-primary btn-sm" id="btnAdminSyncFuseki">🔄 Sync KB ke Fuseki TDB2</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnAdminRefreshOverview">Muat Ulang Status</button>
+          <a href="/docs" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">OpenAPI /docs &nearr;</a>
+        </div>
+      </div>
+
+      <!-- Admin KPI Row -->
+      <div class="kpi-grid" id="adminOverviewKpis"></div>
+
+      <!-- Admin Sub-Tabs so Admin Dashboard is also cleanly paginated! -->
+      <div class="report-tabs" id="adminSectionTabs">
+        <button type="button" class="report-tab-btn active" data-admintab="jdih" onclick="switchAdminSubTab('jdih')">📡 Monitor JDIH &amp; Staging Diff</button>
+        <button type="button" class="report-tab-btn" data-admintab="regs" onclick="switchAdminSubTab('regs')">📜 Katalog Regulasi &amp; Linimasa Hukum</button>
+        <button type="button" class="report-tab-btn" data-admintab="users" onclick="switchAdminSubTab('users')">👥 Manajemen Pengguna &amp; Role (RBAC)</button>
+      </div>
+
+      <!-- Admin Sub-Tab 1: JDIH Monitor -->
+      <div id="adminTabJdih" class="admin-subpanel">
+        <div class="card featured-card" id="monitorModal">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title" id="lblMonTitle">Pemantau Regulasi Baru (JDIH Kemenkeu, Kemendag &amp; BPOM)</h2>
+              <p style="margin:3px 0 0;font-size:12.5px;color:var(--muted);">Mendeteksi PMK, Permendag, dan PerBPOM terbaru serta menguji konsistensi OWL 2 DL + HermiT.</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="date" id="monDate" value="2026-08-15" style="width:145px;height:34px;" />
+              <button type="button" class="btn btn-secondary btn-sm" id="btnRefreshMonitor">Cek Status Arsip</button>
+            </div>
+          </div>
+          <div class="field">
+            <label id="lblMonTargets">Pilih Topik Regulasi JDIH untuk Dipindai:</label>
+            <div id="monTargetsGrid" class="check-grid"></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;">
+              <span>Maks/topik:</span>
+              <input type="number" id="monLimit" min="1" max="5" value="2" style="width:64px;height:32px;" />
+            </label>
+            <label class="check-chip" style="padding:5px 10px;">
+              <input type="checkbox" id="monValidateMerge" checked />
+              <span>Validasi staging diff dengan OWL 2 DL + HermiT + SHACL</span>
+            </label>
+            <button type="button" class="btn btn-primary btn-sm" id="btnRunMonitorScan">Pindai Portal JDIH Sekarang</button>
+          </div>
+          <div id="monFreshnessOutput" style="margin-top:12px;"></div>
+          <div id="monScanOutput" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Admin Sub-Tab 2: Regulations Catalog -->
+      <div id="adminTabRegs" class="admin-subpanel hidden">
+        <div class="card featured-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title" id="lblGovRegTitle">Katalog Peraturan Resmi &amp; Riwayat Perubahan</h2>
+              <p style="margin:3px 0 0;font-size:12.5px;color:var(--muted);">Daftar peraturan aktif beserta hubungan pencabutan dan perubahan di dalam Knowledge Base.</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="date" id="regDate" value="2026-08-15" style="width:145px;height:34px;" />
+              <button type="button" class="btn btn-primary btn-sm" id="btnRefreshRegs">Tampilkan</button>
+            </div>
+          </div>
+          <div id="regContent"></div>
+        </div>
+      </div>
+
+      <!-- Admin Sub-Tab 3: User & Role Management -->
+      <div id="adminTabUsers" class="admin-subpanel hidden">
+        <div class="card featured-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Manajemen Pengguna &amp; Hak Akses (RBAC)</h2>
+              <p style="margin:3px 0 0;font-size:12.5px;color:var(--muted);">Promosikan akun pelanggan menjadi Administrator atau kembalikan ke role Pelanggan.</p>
+            </div>
+          </div>
+          <div id="adminUsersTableWrap"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- LOGIN & REGISTER MODAL -->
+<div class="modal-backdrop" id="authModal">
+  <div class="auth-modal">
+    <div class="auth-modal-hero">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <span class="pill info" style="margin-bottom:8px;">TRADEGRAPH ACCOUNT</span>
+          <h2 style="margin:0;font-size:19px;" id="authModalTitle">Masuk atau Daftar Akun</h2>
+          <p style="margin:4px 0 0;font-size:12.5px;color:rgba(255,255,255,0.88);" id="authModalSub">Login sebagai Pelanggan untuk kalkulator kepatuhan, atau sebagai Admin untuk membuka Admin Dashboard.</p>
+        </div>
+        <button type="button" class="hdr-btn" id="btnCloseAuthModal" style="background:rgba(255,255,255,0.18);color:#fff;border:none;padding:4px 10px;">&times;</button>
+      </div>
+    </div>
+    <div class="auth-modal-body">
+      <div class="demo-quick-box">
+        <div style="font-size:11.5px;font-weight:800;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;" id="lblQuickDemo">⚡ Masuk Cepat Akun Demo (1-Klik)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="runDemoLogin('user')">👤 Demo Pelanggan</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="runDemoLogin('admin')">🛡️ Demo Admin</button>
+        </div>
+      </div>
+
+      <div class="report-tabs" style="margin-bottom:14px;">
+        <button type="button" class="report-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex:1;">Masuk (Login)</button>
+        <button type="button" class="report-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')" style="flex:1;">Daftar Baru</button>
+      </div>
+
+      <div id="authErrorBox" class="hidden" style="background:var(--red-soft);border:1px solid var(--red-border);color:var(--red-text);padding:9px 12px;border-radius:9px;font-size:12.5px;margin-bottom:12px;"></div>
+
+      <form id="loginForm" onsubmit="submitLogin(event)">
+        <div class="field">
+          <label for="loginEmail">Alamat Email</label>
+          <input type="email" id="loginEmail" required placeholder="nama@perusahaan.co.id" value="importir@nusantara.co.id" />
+        </div>
+        <div class="field">
+          <label for="loginPassword">Kata Sandi</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••" value="UserDemo2026!" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:4px;">Masuk ke TradeGraph</button>
+      </form>
+
+      <form id="registerForm" class="hidden" onsubmit="submitRegister(event)">
+        <div class="grid-2">
+          <div class="field">
+            <label for="regName">Nama Lengkap</label>
+            <input type="text" id="regName" required placeholder="Budi Santoso" />
+          </div>
+          <div class="field">
+            <label for="regCompany">Nama Perusahaan</label>
+            <input type="text" id="regCompany" placeholder="PT Logistik Nusantara" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="regEmail">Alamat Email</label>
+          <input type="email" id="regEmail" required placeholder="budi@perusahaan.co.id" />
+        </div>
+        <div class="field">
+          <label for="regPassword">Kata Sandi (Min. 6 Karakter)</label>
+          <input type="password" id="regPassword" required minlength="6" placeholder="Minimal 6 karakter" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:4px;">Buat Akun Pelanggan</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="app-footer">
+  <div>
+    <strong>TradeGraph Maritime Trade Intelligence</strong> &mdash; <span id="footerLegalText">Mengacu pada BTKI 2022, PMK Bea Masuk FTA &amp; Bea Keluar, Permendag Lartas, dan PerBPOM Resmi</span>
+  </div>
+  <div class="admin-only" style="display:flex;gap:8px;align-items:center;">
+    <span class="pill mono" id="kbVersionPill">KB ...</span>
+    <span class="pill mono" id="kbShaPill">sha256 ...</span>
+  </div>
+</footer>
+
+<button type="button" class="scroll-top-btn" id="btnScrollTop" title="Kembali ke Atas" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+  <span>&uarr;</span> <span id="lblScrollTop">Ke Atas</span>
+</button>
+
+<script>
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("btnScrollTop");
+  if (btn) btn.classList.toggle("visible", window.scrollY > 220);
+}, { passive: true });
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+let CATALOG = null;
+let MODE = "import";
+let LANG = localStorage.getItem("tradegraph_lang") || "id";
+let THEME = localStorage.getItem("tradegraph_theme") || "light";
+let AUTH_TOKEN = localStorage.getItem("tradegraph_auth_token") || null;
+let CURRENT_USER = null;
+let LAST_RESULT = null;
+let LAST_VIEW_KIND = null;
+let ACTIVE_PRESET_INDEX = 0;
+let ACTIVE_REPORT_TAB = "tax";
+let REQUEST_SEQ = 0;
+const RESULTS_CACHE = {};
+
+const COUNTRY_FTA_MAP = {
+  TH: ["ATIGA", "RCEP"],
+  MY: ["ATIGA", "RCEP"],
+  SG: ["ATIGA", "RCEP"],
+  VN: ["ATIGA", "RCEP"],
+  PH: ["ATIGA", "RCEP"],
+  BN: ["ATIGA", "RCEP"],
+  KH: ["ATIGA", "RCEP"],
+  LA: ["ATIGA", "RCEP"],
+  MM: ["ATIGA", "RCEP"],
+  CN: ["ACFTA", "RCEP"],
+  JP: ["IJEPA", "RCEP"],
+  KR: ["IK-CEPA", "RCEP"],
+  AU: ["IA-CEPA", "RCEP"],
+  NZ: ["RCEP"],
+};
+
+const FRIENDLY_HS_NAMES = {
+  "1301.90.90": {
+    cat: "agro",
+    id: "Getah Pinus / Gondorukem Alam (Natural Pine Oleoresin / Gum)",
+    en: "Natural Pine Oleoresin / Pine Gum",
+  },
+  "1511.10.00": {
+    cat: "agro",
+    id: "Minyak Kelapa Sawit Mentah (Crude Palm Oil / CPO)",
+    en: "Crude Palm Oil (CPO)",
+  },
+  "1511.90.36": {
+    cat: "agro",
+    id: "Minyak Sawit RBD Palm Olein (Kemasan Bersih ≤ 25 kg)",
+    en: "Refined Bleached Deodorized (RBD) Palm Olein (≤ 25 kg)",
+  },
+  "1801.00.10": {
+    cat: "agro",
+    id: "Biji Kakao Utuh, Mentah atau Panggang (Whole Cocoa Beans)",
+    en: "Whole Cocoa Beans, Raw or Roasted",
+  },
+  "2603.00.00": {
+    cat: "mining",
+    id: "Bijih Tembaga dan Konsentratnya (Copper Ores & Concentrates)",
+    en: "Copper Ores and Concentrates",
+  },
+  "2604.00.00": {
+    cat: "mining",
+    id: "Bijih Nikel dan Konsentratnya (Nickel Ores & Concentrates — Dilarang Ekspor)",
+    en: "Nickel Ores and Concentrates (Export Prohibited)",
+  },
+  "2701.11.00": {
+    cat: "mining",
+    id: "Batu Bara Antrasit (Anthracite Coal, Tidak Diaglomerasi)",
+    en: "Anthracite Coal, Unagglomerated",
+  },
+  "3004.10.15": {
+    cat: "pharma",
+    id: "Obat Jadi Antibiotik Penisilin G (Sediaan Dosis Terukur / Ritel)",
+    en: "Medicaments Containing Penicillin G (Measured Doses)",
+  },
+  "4104.11.10": {
+    cat: "agro",
+    id: "Kulit Jangat & Kulit Sapi/Kerbau Samak Basah (Wet-Blue Bovine Hide)",
+    en: "Full Grains Unsplit Wet-Blue Bovine/Equine Hides",
+  },
+  "6309.00.00": {
+    cat: "pharma",
+    id: "Pakaian Bekas dan Barang Tekstil Bekas (Worn Clothing — Dilarang Impor)",
+    en: "Worn Clothing and Other Worn Textile Articles (Import Prohibited)",
+  },
+  "7208.54.10": {
+    cat: "steel",
+    id: "Baja Canai Panas Lembaran (Hot-Rolled Steel, tebal < 3 mm)",
+    en: "Flat-Rolled Iron/Non-Alloy Steel, Hot-Rolled (< 3 mm)",
+  },
+  "7209.26.10": {
+    cat: "steel",
+    id: "Baja Canai Dingin Gulungan (Cold-Rolled Steel Coil, tebal 0,5–1 mm, lebar ≤ 1.250 mm)",
+    en: "Cold-Rolled Iron/Non-Alloy Steel Coils (thickness 0.5–1 mm, width ≤ 1,250 mm)",
+  },
+  "8001.10.00": {
+    cat: "mining",
+    id: "Timah Murni Tidak Ditempa (Unwrought Refined Tin ≥ 99,9%)",
+    en: "Unwrought Non-Alloyed Refined Tin",
+  },
+  "8413.70.11": {
+    cat: "machinery",
+    id: "Pompa Air Sentrifugal Submersible (Diameter Masukan ≤ 100 mm)",
+    en: "Submersible Centrifugal Water Pumps (Inlet ≤ 100 mm)",
+  },
+  "8422.11.00": {
+    cat: "machinery",
+    id: "Mesin Pencuci Piring Rumah Tangga (Household Dishwashing Machine)",
+    en: "Household Type Dishwashing Machines",
+  },
+  "8507.60.33": {
+    cat: "machinery",
+    id: "Baterai Mobil Listrik / Lithium-Ion EV Traction Battery Pack",
+    en: "Lithium-Ion Electric Vehicle (EV) Traction Accumulators",
+  },
+};
+
+const FRIENDLY_PRESETS = {
+  "crc-th-rcep-cumulation": {
+    route: "TH → ID",
+    id: ["Baja Canai Dingin (TH → ID)", "Hemat pajak lewat RCEP + cek izin PI & LS Besi Baja"],
+    en: ["Cold-Rolled Steel (TH → ID)", "RCEP cumulation tax savings + steel import permits"],
+  },
+  "dishwasher-cn-rvc-fallback": {
+    route: "CN → ID",
+    id: ["Mesin Pencuci Piring (CN → ID)", "Otomatis pilih RCEP 6% saat RVC gagal syarat ACFTA"],
+    en: ["Household Dishwasher (CN → ID)", "Auto-selects RCEP 6% when low RVC fails ACFTA"],
+  },
+  "penicillin-jp-2026-revocation": {
+    route: "JP → ID",
+    id: ["Antibiotik Penisilin (JP → ID)", "Cek izin SKI & Izin Edar BPOM serta pencabutan PMK IJEPA"],
+    en: ["Penicillin G Antibiotic (JP → ID)", "BPOM SKI & Marketing Auth check + IJEPA revocation alert"],
+  },
+  "pump-cn-2026-rcep-beats-acfta": {
+    route: "CN → ID",
+    id: ["Pompa Sentrifugal (CN → ID)", "Tarif RCEP 2% lebih hemat dari ACFTA 5% & siap rilis dengan LS"],
+    en: ["Centrifugal Pump (CN → ID)", "RCEP 2% beats ACFTA 5% + cleared with Surveyor Report"],
+  },
+  "worn-clothing-prohibited": {
+    route: "TH → ID",
+    id: ["Pakaian Bekas (Dilarang Impor)", "Deteksi otomatis barang dilarang impor (Permendag 47/2025)"],
+    en: ["Worn Clothing (Banned Import)", "Automatic detection of banned goods (Permendag 47/2025)"],
+  },
+  "ev-battery-kr-ikcepa-vs-rcep": {
+    route: "KR → ID",
+    id: ["Baterai Mobil Listrik EV (KR → ID)", "Perbandingan syarat tarif 0% IK-CEPA vs tarif RCEP"],
+    en: ["EV Traction Battery (KR → ID)", "Compares 0% IK-CEPA tariff vs RCEP requirements"],
+  },
+  "crc-au-iacepa": {
+    route: "AU → ID",
+    id: ["Baja Canai Dingin (AU → ID)", "Skema IA-CEPA 4,5% menghemat USD 11.917 dibanding MFN"],
+    en: ["Cold-Rolled Steel (AU → ID)", "IA-CEPA 4.5% saves USD 11,917 over MFN tariff"],
+  },
+  "export-tin-sg-jp-b2b": {
+    route: "ID → SG → JP",
+    id: ["Timah Murni (Transit SG → JP)", "Rekomendasi SKA RCEP karena IJEPA menolak Back-to-Back CO"],
+    en: ["Refined Tin (Transit SG → JP)", "Recommends RCEP because IJEPA blocks Back-to-Back CO"],
+  },
+  "export-nickel-ore-prohibited": {
+    route: "ID → CN",
+    id: ["Bijih Nikel (Dilarang Ekspor)", "Deteksi otomatis larangan ekspor bijih nikel (Permendag 22/2023)"],
+    en: ["Nickel Ore (Banned Export)", "Automatic export ban detection under Permendag 22/2023"],
+  },
+  "export-ev-battery-kr-cumulation": {
+    route: "ID → KR",
+    id: ["Ekspor Baterai EV (ID → KR)", "Saran sumber bahan baku agar pembeli Korea dapat tarif 0%"],
+    en: ["EV Battery Export (ID → KR)", "Material sourcing advice to unlock 0% tariff for Korean buyer"],
+  },
+  "export-coal-cn-et-peb": {
+    route: "ID → CN",
+    id: ["Batu Bara Antrasit (ID → CN)", "Cek syarat Eksportir Terdaftar (ET), LS, dan pilihan SKA"],
+    en: ["Anthracite Coal (ID → CN)", "Registered Exporter (ET), Surveyor Report & FTA CO check"],
+  },
+  "export-cpo-cn-bea-keluar": {
+    route: "ID → CN",
+    id: ["Minyak Sawit CPO (ID → CN)", "Hitung Bea Keluar CPO USD 124/Ton (PMK 68/2025) & SKA"],
+    en: ["Crude Palm Oil CPO (ID → CN)", "Calculates USD 124/MT Export Duty (PMK 68/2025) & FTA CO"],
+  },
+  "export-cocoa-pmk68-rate-cut": {
+    route: "ID → MY",
+    id: ["Biji Kakao (ID → MY)", "Diskon 50% Bea Keluar Biji Kakao dari 15% menjadi 7,5%"],
+    en: ["Cocoa Beans (ID → MY)", "50% Export Duty cut from 15% to 7.5% under PMK 68/2025"],
+  },
+  "export": {
+    route: "5 Barang Ekspor",
+    id: ["Portofolio Ekspor (5 Komoditas)", "CPO, Kakao, Konsentrat Tembaga, Timah & Bijih Nikel"],
+    en: ["Export Portfolio (5 Commodities)", "CPO, Cocoa, Copper, Refined Tin & Nickel Ore"],
+  },
+  "import": {
+    route: "5 Barang Impor",
+    id: ["Manifes Impor (5 Komoditas)", "Baja, Baterai EV, Pompa Air, Antibiotik & Pakaian Bekas"],
+    en: ["Import Manifest (5 Commodities)", "Steel, EV Battery, Water Pump, Antibiotic & Worn Clothing"],
+  },
+  "pmk68-2025-bea-keluar-shock": {
+    route: "Sep → Nov 2025",
+    id: ["Dampak PMK 68/2025 (Bea Keluar)", "Perubahan Bea Keluar Kakao (-50%), Getah Pinus (+25%) & CPO"],
+    en: ["PMK 68/2025 Export Duty Impact", "Export duty changes on Cocoa (-50%), Pine Gum (+25%) & CPO"],
+  },
+  "import-2026-permendag47-rcep-staging": {
+    route: "2025 → 2026",
+    id: ["Dampak Regulasi Impor 2026", "Larangan Permendag 47/2025, pencabutan PMK IJEPA & penurunan RCEP"],
+    en: ["2026 Import Regulation Impact", "Permendag 47/2025 ban, IJEPA revocation & RCEP tariff cut"],
+  },
+};
+
+const FRIENDLY_DOCS = {
+  id: {
+    persetujuanImpor: ["Persetujuan Impor (PI Kemendag)", "Izin kuota/persetujuan impor dari Kementerian Perdagangan"],
+    laporanSurveyor: ["Laporan Surveyor (LS Impor)", "Laporan pemeriksaan teknis barang sebelum muat (KSO Sucofindo/Surveyor)"],
+    bpomNie: ["Nomor Izin Edar (NIE) BPOM", "Registrasi izin edar produk obat/makanan dari BPOM"],
+    bpomSkiBorder: ["SKI BPOM (Border)", "Surat Keterangan Impor Obat & Makanan — wajib sebelum rilis PIB"],
+    bpomSkiPostBorder: ["SKI BPOM (Post-Border)", "Surat Keterangan Impor BPOM yang diverifikasi setelah pengeluaran"],
+    pebDeclaration: ["Pemberitahuan Ekspor Barang (PEB / BC 3.0)", "Dokumen pabean wajib untuk setiap pengiriman ekspor"],
+    eksportirTerdaftar: ["Eksportir Terdaftar (ET Kemendag)", "Status pengakuan resmi perusahaan eksportir di Kemendag"],
+    persetujuanEkspor: ["Persetujuan Ekspor (PE Kemendag)", "Surat izin kuota/alokasi ekspor dari Kementerian Perdagangan"],
+    laporanSurveyorEkspor: ["Laporan Surveyor Ekspor (LS Ekspor)", "Verifikasi teknis komoditas ekspor oleh surveyor resmi"],
+    acftaFormE: ["SKA Form E (ACFTA — Tiongkok/ASEAN)", "Sertifikat asal barang untuk klaim tarif preferensi ACFTA"],
+    atigaFormD: ["SKA Form D (ATIGA — ASEAN)", "Sertifikat asal barang fisik untuk perdagangan sesama ASEAN"],
+    atigaElectronicFormD: ["e-Form D (ATIGA via INSW / ASW)", "Sertifikat asal elektronik ASEAN Single Window"],
+    atigaOriginDeclaration: ["Deklarasi Asal Barang (DAB) ATIGA", "Pernyataan asal mandiri oleh Eksportir Bersertifikat (CE)"],
+    iacepaFormIacepa: ["SKA Form IA-CEPA (Australia)", "Sertifikat asal barang untuk skema Indonesia–Australia CEPA"],
+    iacepaOriginDeclaration: ["Deklarasi Asal Barang IA-CEPA", "Pernyataan asal mandiri eksportir terdaftar IA-CEPA"],
+    ijepaFormJiepa: ["SKA Form JIEPA / IJEPA (Jepang)", "Sertifikat asal barang untuk skema Indonesia–Jepang EPA"],
+    ikcepaFormKicepa: ["SKA Form AK / IK-CEPA (Korea Selatan)", "Sertifikat asal barang untuk skema Indonesia–Korea CEPA"],
+    rcepFormRcep: ["SKA Form RCEP (Regional 15 Negara)", "Sertifikat asal barang untuk skema Regional Comprehensive Economic Partnership"],
+    rcepElectronicFormRcep: ["e-Form RCEP (Elektronik)", "Sertifikat asal barang elektronik skema RCEP"],
+    rcepOriginDeclaration: ["Deklarasi Asal Barang (DAB) RCEP", "Pernyataan asal mandiri oleh Eksportir Terdaftar/Disetujui RCEP"],
+  },
+  en: {
+    persetujuanImpor: ["Import Approval (PI Kemendag)", "Ministry of Trade import quota/approval permit"],
+    laporanSurveyor: ["Surveyor Report (LS Import)", "Pre-shipment technical inspection report"],
+    bpomNie: ["BPOM Marketing Authorization (NIE)", "Food & Drug product registration number"],
+    bpomSkiBorder: ["BPOM Import Certificate (SKI Border)", "Mandatory BPOM clearance before customs release"],
+    bpomSkiPostBorder: ["BPOM Import Certificate (SKI Post-Border)", "Post-border BPOM import notification"],
+    pebDeclaration: ["Export Customs Declaration (PEB / BC 3.0)", "Mandatory customs declaration for all exports"],
+    eksportirTerdaftar: ["Registered Exporter (ET Kemendag)", "Ministry of Trade registered exporter status"],
+    persetujuanEkspor: ["Export Approval (PE Kemendag)", "Ministry of Trade export allocation permit"],
+    laporanSurveyorEkspor: ["Export Surveyor Report (LS Export)", "Pre-shipment technical verification for exports"],
+    acftaFormE: ["Form E (ACFTA — China/ASEAN)", "Certificate of Origin for ASEAN–China FTA"],
+    atigaFormD: ["Form D (ATIGA — ASEAN)", "Certificate of Origin for ASEAN Trade in Goods"],
+    atigaElectronicFormD: ["e-Form D (ATIGA Electronic)", "Electronic Form D via ASEAN Single Window"],
+    atigaOriginDeclaration: ["ATIGA Origin Declaration", "Self-certification by Certified Exporter"],
+    iacepaFormIacepa: ["Form IA-CEPA (Australia)", "Certificate of Origin for Indonesia–Australia CEPA"],
+    iacepaOriginDeclaration: ["IA-CEPA Declaration of Origin", "Self-declaration by registered exporter"],
+    ijepaFormJiepa: ["Form JIEPA / IJEPA (Japan)", "Certificate of Origin for Indonesia–Japan EPA"],
+    ikcepaFormKicepa: ["Form IK-CEPA (South Korea)", "Certificate of Origin for Indonesia–Korea CEPA"],
+    rcepFormRcep: ["Form RCEP", "Certificate of Origin for RCEP"],
+    rcepElectronicFormRcep: ["e-Form RCEP (Electronic)", "Electronic Certificate of Origin for RCEP"],
+    rcepOriginDeclaration: ["RCEP Declaration of Origin", "Approved exporter self-declaration for RCEP"],
+  },
+};
+
+const FRIENDLY_PROCESS = {
+  id: {
+    criterionChemicalReaction: "Reaksi Kimia / Pemurnian (Chemical Reaction)",
+    criterionTextileProcess: "Proses Tekstil (Pemintalan / Penenunan / Pencelupan)",
+    criterionCutAndSewnAMS: "Pemotongan & Penjahitan Garmen di Negara Anggota",
+    criterionRefiningProcess: "Proses Pemurnian / Refining Minyak & Logam",
+  },
+  en: {
+    criterionChemicalReaction: "Chemical Reaction Rule",
+    criterionTextileProcess: "Textile Processing Rule",
+    criterionCutAndSewnAMS: "Cut and Sewn in Member State",
+    criterionRefiningProcess: "Refining Process Rule",
+  },
+};
+
+const FRIENDLY_OPS = {
+  id: {
+    opSimplePackaging: "Pengemasan ulang atau pelabelan sederhana",
+    opSimpleDilution: "Pengenceran dengan air tanpa reaksi kimia",
+    opSimpleAssembly: "Perakitan sederhana dengan obeng/sekrup",
+    opPreservationStorage: "Penyimpanan/pendinginan untuk menjaga kesegaran",
+    opSlaughteringAnimals: "Penyembelihan hewan semata",
+    opSimplePaintingPolishing: "Pengecatan atau pemolesan permukaan sederhana",
+    opSimpleMixing: "Pencampuran sederhana tanpa mengubah sifat zat",
+    opWashingCleaning: "Pencucian, pembersihan debu, atau pengayakan",
+  },
+  en: {
+    opSimplePackaging: "Simple packaging or relabeling",
+    opSimpleDilution: "Simple dilution with water",
+    opSimpleAssembly: "Simple screwdriver assembly",
+    opPreservationStorage: "Preservation during storage/transport",
+    opSlaughteringAnimals: "Slaughtering of animals",
+    opSimplePaintingPolishing: "Simple painting or polishing",
+    opSimpleMixing: "Simple mixing of materials",
+    opWashingCleaning: "Washing, cleaning, or sifting",
+  },
+};
+
+const FRIENDLY_STATUS = {
+  id: {
+    CLEAR: "Siap Rilis / Bebas Izin",
+    BORDER_BLOCKED: "Wajib Lengkapi Izin Impor (Border)",
+    POST_BORDER_PENDING: "Bisa Rilis (Wajib Izin Post-Border)",
+    PROHIBITED: "Dilarang Impor",
+    PROHIBITED_EXPORT: "Dilarang Ekspor",
+    EXPORT_READY: "Siap Ekspor",
+    EXPORT_PERMITS_MISSING: "Wajib Lengkapi Izin Ekspor",
+    PEB_PENDING: "Siapkan Dokumen PEB",
+    RESTRICTED_EXPORT: "Wajib Izin Ekspor (ET/PE/LS)",
+    ELIGIBLE: "Memenuhi Syarat Tarif FTA",
+    ELIGIBLE_PENDING_DOCS: "Bahan Memenuhi Syarat (Lampirkan SKA / Izin)",
+    INELIGIBLE: "Tidak Memenuhi Syarat",
+    INELIGIBLE_ROO: "Bahan Baku Belum Memenuhi Syarat RoO",
+    EXCLUDED_TO_MFN: "Tarif Normal MFN",
+    SATISFIED: "Terpenuhi",
+    MISSING: "Belum Dilampirkan",
+    UNSATISFIED: "Belum Terpenuhi",
+    APPLICABLE: "Dikenakan Bea Keluar",
+    ZERO_RATE: "Tarif Bea Keluar 0%",
+    NOT_SUBJECT: "Bebas Bea Keluar",
+    REFERENCE_PRICE_REQUIRED: "Perlu Input Harga Referensi (HR)",
+    ALLOWED: "Diizinkan",
+    DIRECT: "Pengiriman Langsung",
+    BLOCKED_NO_BACK_TO_BACK: "Skema Ini Menolak Back-to-Back CO",
+    BLOCKED_NON_PARTY_HUB: "Negara Transit Bukan Anggota FTA",
+    DISALLOWED_BILATERAL: "Tidak Diizinkan (FTA Bilateral)",
+    HUB_NOT_A_PARTY: "Hub Transit Bukan Anggota FTA",
+    READY: "Siap Jalan",
+    ACTION_REQUIRED: "Perlu Lengkapi Dokumen",
+    BLOCKED: "Tertahan",
+    BREAKING: "Kritis / Terblokir",
+    ADVERSE: "Biaya Naik",
+    FAVORABLE: "Biaya Turun (Hemat)",
+    REGULATORY_UPDATE: "Perubahan Peraturan",
+    UNCHANGED: "Tetap / Tidak Berubah",
+    ENACTED: "Peraturan Baru",
+    REVOKES: "Mencabut",
+    relRevokes: "Mencabut",
+    AMENDS: "Mengubah",
+    relAmends: "Mengubah",
+    PARTIALLY_REVOKES: "Mencabut Sebagian",
+    relPartiallyRevokes: "Mencabut Sebagian",
+    partiallyRevokesDocument: "Mencabut Sebagian",
+    BORDER: "Wajib Sebelum Keluar Pelabuhan (Border)",
+    POST_BORDER: "Pemeriksaan Setelah Keluar Pelabuhan (Post-Border)",
+    SPECIFIC_USD_PER_MT: "Spesifik (USD / Ton)",
+    AD_VALOREM: "Persentase (% dari HPE/FOB)",
+    NEW_UNTRACKED: "Peraturan Baru",
+    KB_ONLY_UNARCHIVED: "Ada di Database (PDF Belum Diarsip)",
+    RELATION_DRIFT: "Amandemen Baru",
+    METADATA_DRIFT: "Pembaruan Metadata",
+    UP_TO_DATE: "Sudah Terbaru",
+    HEALTHY: "Lengkap & Terbaru",
+    ATTENTION: "Perlu Pembaruan",
+    CURRENT: "Aktif",
+    REVOKED: "Sudah Dicabut",
+    UPCOMING_REVOCATION: "Akan Dicabut",
+    AMENDED_GAP: "Ada Perubahan Baru",
+    AMENDED: "Telah Diubah",
+  },
+  en: {
+    CLEAR: "Clear / No Permit Needed",
+    BORDER_BLOCKED: "Import Permit Required (Border)",
+    POST_BORDER_PENDING: "Post-Border Permit Required",
+    PROHIBITED: "Import Prohibited",
+    PROHIBITED_EXPORT: "Export Prohibited",
+    EXPORT_READY: "Ready for Export",
+    EXPORT_PERMITS_MISSING: "Export Permits Required",
+    PEB_PENDING: "Prepare PEB Declaration",
+    RESTRICTED_EXPORT: "Subject to Export Permit (ET/PE/LS)",
+    ELIGIBLE: "Qualifies for FTA Tariff",
+    ELIGIBLE_PENDING_DOCS: "Origin Qualifies (Attach CO / Permit)",
+    INELIGIBLE: "Ineligible",
+    INELIGIBLE_ROO: "Does Not Meet Origin Rules (RoO)",
+    EXCLUDED_TO_MFN: "Standard MFN Tariff",
+    SATISFIED: "Satisfied",
+    MISSING: "Not Attached",
+    UNSATISFIED: "Not Satisfied",
+    APPLICABLE: "Subject to Export Duty",
+    ZERO_RATE: "0% Export Duty",
+    NOT_SUBJECT: "Free of Export Duty",
+    REFERENCE_PRICE_REQUIRED: "Reference Price Required",
+    ALLOWED: "Allowed",
+    DIRECT: "Direct Shipment",
+    BLOCKED_NO_BACK_TO_BACK: "Back-to-Back CO Disallowed",
+    BLOCKED_NON_PARTY_HUB: "Hub Not an FTA Member",
+    DISALLOWED_BILATERAL: "Disallowed (Bilateral FTA)",
+    HUB_NOT_A_PARTY: "Hub Not an FTA Party",
+    READY: "Ready",
+    ACTION_REQUIRED: "Documents Required",
+    BLOCKED: "Blocked",
+    BREAKING: "Critical / Blocked",
+    ADVERSE: "Higher Cost",
+    FAVORABLE: "Cost Savings (Lower Duty)",
+    REGULATORY_UPDATE: "Regulation Updated",
+    UNCHANGED: "Unchanged",
+    ENACTED: "Enacted",
+    REVOKES: "Revokes",
+    relRevokes: "Revokes",
+    AMENDS: "Amends",
+    relAmends: "Amends",
+    PARTIALLY_REVOKES: "Partially Revokes",
+    relPartiallyRevokes: "Partially Revokes",
+    partiallyRevokesDocument: "Partially Revokes",
+    BORDER: "Required at Customs Border",
+    POST_BORDER: "Post-Border Verification",
+    SPECIFIC_USD_PER_MT: "Specific (USD / MT)",
+    AD_VALOREM: "Percentage (% of Export Price)",
+    NEW_UNTRACKED: "New Regulation",
+    KB_ONLY_UNARCHIVED: "In Database (PDF Unarchived)",
+    RELATION_DRIFT: "New Amendment",
+    METADATA_DRIFT: "Metadata Updated",
+    UP_TO_DATE: "Up to Date",
+    HEALTHY: "Healthy",
+    ATTENTION: "Needs Attention",
+    CURRENT: "Current",
+    REVOKED: "Revoked",
+    UPCOMING_REVOCATION: "Upcoming Revocation",
+    AMENDED_GAP: "New Amendment Available",
+    AMENDED: "Amended",
+  },
+};
+
+function t(idText, enText) {
+  return LANG === "id" ? idText : enText;
+}
+
+function authHeaders(extra = {}) {
+  const h = { ...extra };
+  if (AUTH_TOKEN) h["Authorization"] = `Bearer ${AUTH_TOKEN}`;
+  return h;
+}
+
+/* --- FORM STEP SUB-TAB SWITCHER (Prevents long left form scrolling) --- */
+function switchFormStep(stepNum) {
+  const isStep1 = stepNum === 1;
+  $("formTabStep1Btn").classList.toggle("active", isStep1);
+  $("formTabStep2Btn").classList.toggle("active", !isStep1);
+  $("formStep1Pane").classList.toggle("hidden", !isStep1);
+  $("formStep2Pane").classList.toggle("hidden", isStep1);
+}
+
+/* --- ADMIN SUB-TAB SWITCHER --- */
+function switchAdminSubTab(tabId) {
+  document.querySelectorAll("#adminSectionTabs .report-tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.admintab === tabId);
+  });
+  $("adminTabJdih").classList.toggle("hidden", tabId !== "jdih");
+  $("adminTabRegs").classList.toggle("hidden", tabId !== "regs");
+  $("adminTabUsers").classList.toggle("hidden", tabId !== "users");
+}
+
+/* --- AUTHENTICATION & STRICT ROLE SEPARATION --- */
+function applyAuthState() {
+  const isAdmin = Boolean(CURRENT_USER && CURRENT_USER.role === "admin");
+  document.body.classList.toggle("is-admin", isAdmin);
+
+  if (CURRENT_USER) {
+    $("guestAuthControls").classList.add("hidden");
+    $("userAuthControls").classList.remove("hidden");
+    $("userNameDisplay").textContent = CURRENT_USER.name;
+    $("userCompanyDisplay").textContent = CURRENT_USER.company || CURRENT_USER.email;
+    $("userAvatar").textContent = (CURRENT_USER.name || "U").trim().charAt(0).toUpperCase();
+    const badge = $("userRoleBadge");
+    badge.textContent = isAdmin ? "ADMIN" : t("PELANGGAN", "CUSTOMER");
+    badge.className = `role-badge ${isAdmin ? "admin" : "user"}`;
+  } else {
+    $("guestAuthControls").classList.remove("hidden");
+    $("userAuthControls").classList.add("hidden");
+    if (MODE === "gov") setMode("import");
+  }
+  updateHsPreview();
+}
+
+function openAuthModal(defaultTab = "login") {
+  $("authErrorBox").classList.add("hidden");
+  switchAuthTab(defaultTab);
+  $("authModal").classList.add("open");
+}
+
+function switchAuthTab(tab) {
+  const isLogin = tab === "login";
+  $("tabLoginBtn").classList.toggle("active", isLogin);
+  $("tabRegisterBtn").classList.toggle("active", !isLogin);
+  $("loginForm").classList.toggle("hidden", !isLogin);
+  $("registerForm").classList.toggle("hidden", isLogin);
+  $("authErrorBox").classList.add("hidden");
+}
+
+async function runDemoLogin(role) {
+  $("authErrorBox").classList.add("hidden");
+  try {
+    const resp = await fetch("/api/v1/auth/demo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ role }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail || "Login gagal");
+    AUTH_TOKEN = data.token;
+    CURRENT_USER = data.user;
+    localStorage.setItem("tradegraph_auth_token", AUTH_TOKEN);
+    $("authModal").classList.remove("open");
+    applyAuthState();
+    if (role === "admin") {
+      setMode("gov");
+    } else if (MODE === "gov") {
+      setMode("import");
+    }
+  } catch (err) {
+    $("authErrorBox").textContent = err.message;
+    $("authErrorBox").classList.remove("hidden");
+  }
+}
+
+async function submitLogin(ev) {
+  ev.preventDefault();
+  $("authErrorBox").classList.add("hidden");
+  try {
+    const resp = await fetch("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: $("loginEmail").value.trim(),
+        password: $("loginPassword").value,
+      }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail || "Email atau kata sandi salah");
+    AUTH_TOKEN = data.token;
+    CURRENT_USER = data.user;
+    localStorage.setItem("tradegraph_auth_token", AUTH_TOKEN);
+    $("authModal").classList.remove("open");
+    applyAuthState();
+    if (CURRENT_USER.role === "admin") setMode("gov");
+  } catch (err) {
+    $("authErrorBox").textContent = err.message;
+    $("authErrorBox").classList.remove("hidden");
+  }
+}
+
+async function submitRegister(ev) {
+  ev.preventDefault();
+  $("authErrorBox").classList.add("hidden");
+  try {
+    const resp = await fetch("/api/v1/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: $("regName").value.trim(),
+        company: $("regCompany").value.trim(),
+        email: $("regEmail").value.trim(),
+        password: $("regPassword").value,
+      }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail || "Pendaftaran gagal");
+    AUTH_TOKEN = data.token;
+    CURRENT_USER = data.user;
+    localStorage.setItem("tradegraph_auth_token", AUTH_TOKEN);
+    $("authModal").classList.remove("open");
+    applyAuthState();
+  } catch (err) {
+    $("authErrorBox").textContent = err.message;
+    $("authErrorBox").classList.remove("hidden");
+  }
+}
+
+async function logoutUser() {
+  try {
+    await fetch("/api/v1/auth/logout", { method: "POST", headers: authHeaders() });
+  } catch (_) {}
+  AUTH_TOKEN = null;
+  CURRENT_USER = null;
+  localStorage.removeItem("tradegraph_auth_token");
+  applyAuthState();
+  if (MODE === "gov") setMode("import");
+}
+
+async function restoreSession() {
+  if (!AUTH_TOKEN) {
+    applyAuthState();
+    return;
+  }
+  try {
+    const resp = await fetch("/api/v1/auth/me", { headers: authHeaders() });
+    if (!resp.ok) throw new Error("expired");
+    const data = await resp.json();
+    CURRENT_USER = data.user;
+  } catch (_) {
+    AUTH_TOKEN = null;
+    CURRENT_USER = null;
+    localStorage.removeItem("tradegraph_auth_token");
+  }
+  applyAuthState();
+}
+
+/* --- ENHANCED UX INPUT HELPERS --- */
+function setQuickValue(inputId, amount) {
+  $(inputId).value = String(amount);
+}
+
+function syncRvcControls(fromSlider = false) {
+  const slider = $("rvcSlider");
+  const num = $("rvcPercent");
+  const pill = $("rvcThresholdPill");
+  if (fromSlider) {
+    num.value = slider.value;
+  } else if (num.value !== "") {
+    slider.value = Math.max(0, Math.min(100, Number(num.value) || 0));
+  }
+  const val = Number(num.value || 0);
+  if (val >= 40) {
+    pill.className = "pill ok";
+    pill.textContent = t(`≥ 40% (Lolos Ambang RVC FTA)`, `≥ 40% (Meets Standard FTA RVC)`);
+  } else {
+    pill.className = "pill warn";
+    pill.textContent = t(`< 40% (Perlu Kriteria CTC)`, `< 40% (Relies on CTC Rule)`);
+  }
+}
+
+function updateRouteVisualizer() {
+  if (!CATALOG) return;
+  const isExport = MODE === "export";
+  const partnerCode = isExport ? ($("exportDestCountry").value || "JP") : ($("dispatchCountry").value || "TH");
+  const partnerObj = (CATALOG.countries || []).find(c => c.code === partnerCode);
+  const partnerLabel = partnerObj ? `${partnerObj.code} — ${partnerObj.label}` : partnerCode;
+  const hubCode = isExport ? ($("transshipmentHub").value || "") : "";
+
+  if (isExport) {
+    $("routeOriginNode").textContent = "ID — Indonesia";
+    $("routeDestNode").textContent = partnerLabel;
+    $("routeShipLabel").textContent = hubCode ? `🚢 Transit ${hubCode}` : t("🚢 Ekspor Langsung", "🚢 Direct Export");
+  } else {
+    $("routeOriginNode").textContent = partnerLabel;
+    $("routeDestNode").textContent = "ID — Indonesia";
+    $("routeShipLabel").textContent = t("🚢 Impor Langsung", "🚢 Direct Import");
+  }
+
+  const ftas = COUNTRY_FTA_MAP[partnerCode] || ["MFN"];
+  $("routeActiveFtas").innerHTML = `
+    <span>${t("Skema Perjanjian Dagang di Rute Ini:", "Active FTA Schemes on This Route:")}</span>
+    ${ftas.map(f => `<span class="fta-mini-badge">${esc(f)}</span>`).join(" ")}
+  `;
+}
+
+function inferHsCategory(code) {
+  if (FRIENDLY_HS_NAMES[code]?.cat) return FRIENDLY_HS_NAMES[code].cat;
+  const hs2 = code.replace(/\./g, "").slice(0, 2);
+  if (["72", "73"].includes(hs2)) return "steel";
+  if (["84", "85"].includes(hs2)) return "machinery";
+  if (["13", "15", "18", "41"].includes(hs2)) return "agro";
+  if (["26", "27", "80"].includes(hs2)) return "mining";
+  return "pharma";
+}
+
+/* Native Separated Commodity Select Dropdown + Keyword/Code Filter */
+function populateHsSelectDropdown() {
+  if (!CATALOG) return;
+  const cat = $("hsCategorySelect").value || "all";
+  const currentCode = ($("hsCode").value || "").trim();
+  const sel = $("hsSelectDropdown");
+  const items = (CATALOG.hs_codes || []).filter(h => cat === "all" || inferHsCategory(h.code) === cat);
+
+  sel.innerHTML = items.map(h => {
+    const desc = cleanHsDescription(h.code, h.label);
+    const shortDesc = desc.length > 52 ? desc.slice(0, 52) + "…" : desc;
+    return `<option value="${esc(h.code)}">${esc(h.code)} — ${esc(shortDesc)}</option>`;
+  }).join("");
+
+  if (items.some(h => h.code === currentCode)) {
+    sel.value = currentCode;
+  } else if (items.length > 0 && cat !== "all") {
+    sel.value = items[0].code;
+    $("hsCode").value = items[0].code;
+    updateHsPreview();
+  }
+}
+
+function cleanHsDescription(code, rawLabel) {
+  const friendly = FRIENDLY_HS_NAMES[code]?.[LANG];
+  if (friendly) return friendly;
+  return String(rawLabel || "")
+    .replace(code, "")
+    .replace(/^[\s\-–—:]+/, "")
+    .trim();
+}
+
+function presetLabel(id, fallbackTitle, fallbackSummary) {
+  const item = FRIENDLY_PRESETS[id];
+  if (item) {
+    const pair = item[LANG] || item.id;
+    return { title: pair[0], summary: pair[1], route: item.route || "" };
+  }
+  return { title: fallbackTitle || id, summary: fallbackSummary || "", route: "" };
+}
+
+function docName(id, fallback) {
+  return FRIENDLY_DOCS[LANG]?.[id]?.[0] || fallback || id;
+}
+
+function docSub(id, fallback) {
+  return FRIENDLY_DOCS[LANG]?.[id]?.[1] || fallback || "";
+}
+
+function statusLabel(code) {
+  if (!code) return "—";
+  return FRIENDLY_STATUS[LANG]?.[code] || code;
+}
+
+function processName(id, fallback) {
+  return FRIENDLY_PROCESS[LANG]?.[id] || fallback || id;
+}
+
+function opName(id, fallback) {
+  return FRIENDLY_OPS[LANG]?.[id] || fallback || id;
+}
+
+function statusTone(status) {
+  if ([
+    "PROHIBITED", "PROHIBITED_EXPORT", "INELIGIBLE", "INELIGIBLE_ROO",
+    "BLOCKED_NO_BACK_TO_BACK", "BLOCKED_NON_PARTY_HUB",
+    "DISALLOWED_BILATERAL", "HUB_NOT_A_PARTY", "ERROR", "BREAKING", "REVOKES",
+    "relRevokes", "CRITICAL", "REVOKED", "MISSING_ARCHIVE", "HASH_MISMATCH",
+    "UNSATISFIED",
+  ].includes(status)) return "danger";
+  if ([
+    "BORDER_BLOCKED", "POST_BORDER_PENDING", "EXCLUDED_TO_MFN",
+    "EXPORT_PERMITS_MISSING", "PEB_PENDING", "RESTRICTED_EXPORT",
+    "APPLICABLE", "REFERENCE_PRICE_REQUIRED", "ACTION_REQUIRED", "BLOCKED",
+    "ADVERSE", "AMENDS", "relAmends", "PARTIALLY_REVOKES", "relPartiallyRevokes",
+    "partiallyRevokesDocument", "HIGH", "ATTENTION", "UPCOMING_REVOCATION",
+    "AMENDED_GAP", "NEW_UNTRACKED", "RELATION_DRIFT", "MISSING",
+  ].includes(status)) return "warn";
+  if ([
+    "CLEAR", "ELIGIBLE", "SATISFIED", "EXPORT_READY", "ALLOWED", "READY",
+    "ZERO_RATE", "NOT_SUBJECT", "FAVORABLE", "HEALTHY", "CURRENT", "UP_TO_DATE", "DIRECT",
+  ].includes(status)) return "ok";
+  if ([
+    "ELIGIBLE_PENDING_DOCS", "PARTIAL", "NOT_REQUESTED", "REGULATORY_UPDATE", "ENACTED",
+    "MEDIUM", "KB_ONLY_UNARCHIVED", "METADATA_DRIFT", "LOW", "INFO", "STALE", "AMENDED",
+  ].includes(status)) return "info";
+  return "";
+}
+
+function setTheme(theme) {
+  THEME = theme === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", THEME);
+  localStorage.setItem("tradegraph_theme", THEME);
+  $("themeToggleBtn").textContent = THEME === "dark" ? "☀️" : "🌙";
+}
+
+function updateHsPreview() {
+  const box = $("hsPreviewBox");
+  if (!box || !CATALOG) return;
+  const val = ($("hsCode").value || "").trim();
+  const match = (CATALOG.hs_codes || []).find(h => h.code === val)
+    || (CATALOG.all_hs_codes_sample || []).find(h => h.code === val);
+  if (!match) {
+    box.classList.add("hidden");
+    return;
+  }
+  const sel = $("hsSelectDropdown");
+  if (sel && Array.from(sel.options).some(o => o.value === match.code)) {
+    sel.value = match.code;
+  }
+  const pills = [];
+  if (match.mfn_duty_percent != null) {
+    pills.push(`<span class="pill accent">${t("Tarif Normal MFN", "Normal MFN Duty")}: ${esc(match.mfn_duty_percent)}%</span>`);
+  }
+  if ((match.lartas_modes || []).length) {
+    pills.push(`<span class="pill warn">${t("Izin Impor", "Import Permit")}: ${esc(match.lartas_modes.map(statusLabel).join(", "))}</span>`);
+  } else if (MODE === "import") {
+    pills.push(`<span class="pill ok">${t("Bebas Izin Lartas Impor", "No Import Permit Required")}</span>`);
+  }
+  if ((match.export_lartas_modes || []).length) {
+    pills.push(`<span class="pill warn">${t("Izin Ekspor", "Export Permit")}: ${esc(match.export_lartas_modes.map(statusLabel).join(", "))}</span>`);
+  }
+  if (match.export_duty_applicable) {
+    pills.push(`<span class="pill info">${t("Wajib Bea Keluar", "Subject to Export Duty")}</span>`);
+  }
+  box.innerHTML = `
+    <div class="hs-preview-title">HS ${esc(match.code)} &mdash; ${esc(cleanHsDescription(match.code, match.label))}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">${pills.join(" ")}</div>
+  `;
+  box.classList.remove("hidden");
+
+  const hs2 = val.replace(/\./g, "").slice(0, 2);
+  const isBpomChapter = ["02","03","04","09","10","11","12","15","16","17","18","19","20","21","22","29","30","33","34"].includes(hs2);
+  const isAdmin = Boolean(CURRENT_USER && CURRENT_USER.role === "admin");
+  document.querySelectorAll('#lartasDocsGrid label.check-chip').forEach(chip => {
+    const cb = chip.querySelector('input[type="checkbox"]');
+    if (!cb) return;
+    const isBpomDoc = cb.value.toLowerCase().includes("bpom");
+    if (!isAdmin && isBpomDoc && !isBpomChapter && !cb.checked) {
+      chip.classList.add("hidden");
+    } else {
+      chip.classList.remove("hidden");
+    }
+  });
+}
+
+function updateOriginDocsSummaryCount() {
+  const count = getCheckedValues("originDocsGrid").length;
+  const base = t("Surat Keterangan Asal (SKA / Form FTA) yang Sudah Dimiliki", "Certificates of Origin (SKA / Form FTA) Already Held");
+  $("lblOriginDocsSummary").textContent = count > 0
+    ? `${base} (${count} ${t("dipilih", "selected")})`
+    : base;
+}
+
+function addMaterialRow(mat = {}) {
+  const row = document.createElement("div");
+  row.className = "bom-row";
+  const countryOpts = [`<option value="">${t("Negara asal bahan", "Material origin")}</option>`]
+    .concat((CATALOG?.countries || []).map(c => `<option value="${esc(c.code)}">${esc(c.code)} - ${esc(c.label)}</option>`))
+    .join("");
+  row.innerHTML = `
+    <input type="text" class="mat-hs" list="allHsList" placeholder="HS8 (mis. 7208.54.10)" value="${esc(mat.hs_code || "")}" />
+    <select class="mat-country">${countryOpts}</select>
+    <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text);white-space:nowrap;">
+      <input type="checkbox" class="mat-nonorig" ${mat.non_originating !== false ? "checked" : ""} /> ${t("Impor", "Imported")}
+    </label>
+    <button type="button" class="btn btn-danger btn-sm mat-del">&times;</button>
+    <div class="checks">
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;">
+        <input type="checkbox" class="mat-proof" ${mat.origin_proof_verified ? "checked" : ""} /> ${t("Bersertifikat SKA Negara Mitra (Kumulasi FTA)", "Verified Partner FTA Certificate (Cumulation)")}
+      </label>
+    </div>
+  `;
+  if (mat.origin_country) {
+    const sel = row.querySelector(".mat-country");
+    const target = mat.origin_country.toUpperCase();
+    for (const opt of sel.options) {
+      if (opt.value.toUpperCase() === target || opt.textContent.toLowerCase().includes(mat.origin_country.toLowerCase())) {
+        sel.value = opt.value; break;
+      }
+    }
+  }
+  row.querySelector(".mat-del").onclick = () => row.remove();
+  $("bomContainer").appendChild(row);
+}
+
+function setCheckedValues(containerId, values) {
+  const set = new Set(values || []);
+  document.querySelectorAll(`#${containerId} input[type="checkbox"]`).forEach(cb => {
+    cb.checked = set.has(cb.value);
+  });
+  if (containerId === "originDocsGrid") {
+    updateOriginDocsSummaryCount();
+    if (set.size > 0) $("originDocsAccordion").open = true;
+  }
+}
+
+function getCheckedValues(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`)).map(cb => cb.value);
+}
+
+function applyPreset(preset) {
+  const p = preset.payload;
+  $("hsCategorySelect").value = "all";
+  populateHsSelectDropdown();
+  $("hsCode").value = p.hs_code || "";
+  $("dispatchCountry").value = p.dispatch_country || "TH";
+  $("asOfDate").value = p.as_of_date || "2025-09-15";
+  $("cifValue").value = p.cif_value || "100000";
+  $("currency").value = p.currency || "USD";
+  $("apiMode").value = p.has_api === false ? "NONE" : (p.api_type || "API-P");
+  $("rvcPercent").value = p.rvc_percent ?? "";
+  syncRvcControls(false);
+  $("dv20Percent").value = p.dv20_percent ?? "";
+  $("highestContrib").value = p.highest_contributor_country || "";
+  $("woConfirmed").value = p.wo_confirmed === true ? "true" : p.wo_confirmed === false ? "false" : "";
+  $("processKind").value = p.process_kind || "";
+  $("processSatisfied").value = p.process_satisfied === true ? "true" : p.process_satisfied === false ? "false" : "";
+  $("dmFobTotal").value = p.de_minimis_fob ? p.de_minimis_fob[0] : "";
+  $("dmFobFailed").value = p.de_minimis_fob ? p.de_minimis_fob[1] : "";
+  $("optPlan").checked = Boolean(p.include_plan);
+  $("optExplain").checked = Boolean(p.include_explain);
+
+  $("bomContainer").innerHTML = "";
+  (p.materials || []).forEach(addMaterialRow);
+  setCheckedValues("originDocsGrid", p.provided_origin_docs);
+  setCheckedValues("lartasDocsGrid", p.provided_lartas_docs);
+  setCheckedValues("minimalOpsGrid", p.performed_operations);
+  updateHsPreview();
+  updateRouteVisualizer();
+}
+
+function collectPayload() {
+  const apiMode = $("apiMode").value;
+  const materials = Array.from(document.querySelectorAll("#bomContainer .bom-row"))
+    .map(row => {
+      const hs = row.querySelector(".mat-hs").value.trim();
+      if (!hs) return null;
+      const country = row.querySelector(".mat-country").value || null;
+      const proof = row.querySelector(".mat-proof").checked;
+      return {
+        hs_code: hs,
+        non_originating: row.querySelector(".mat-nonorig").checked,
+        origin_country: country,
+        origin_proof_verified: country ? proof : null,
+      };
+    }).filter(Boolean);
+
+  const dmTotal = $("dmFobTotal").value.trim();
+  const dmFailed = $("dmFobFailed").value.trim();
+  const minOps = getCheckedValues("minimalOpsGrid");
+  const woVal = $("woConfirmed").value;
+  const procKind = $("processKind").value || null;
+  const procSat = $("processSatisfied").value;
+
+  return {
+    hs_code: $("hsCode").value.trim(),
+    dispatch_country: $("dispatchCountry").value,
+    destination_country: "ID",
+    as_of_date: $("asOfDate").value,
+    cif_value: $("cifValue").value.trim() || null,
+    currency: $("currency").value.trim() || "USD",
+    has_api: apiMode !== "NONE",
+    api_type: apiMode === "NONE" ? null : apiMode,
+    materials,
+    rvc_percent: $("rvcPercent").value.trim() || null,
+    wo_confirmed: woVal === "" ? null : woVal === "true",
+    process_kind: procKind,
+    process_satisfied: procSat === "" ? null : procSat === "true",
+    de_minimis_fob: (dmTotal && dmFailed) ? [dmTotal, dmFailed] : null,
+    performed_operations: minOps.length ? minOps : null,
+    dv20_percent: $("dv20Percent").value.trim() || null,
+    highest_contributor_country: $("highestContrib").value || null,
+    provided_origin_docs: getCheckedValues("originDocsGrid"),
+    provided_lartas_docs: getCheckedValues("lartasDocsGrid"),
+    include_plan: $("optPlan").checked,
+    include_explain: $("optExplain").checked,
+  };
+}
+
+function renderLoadingState(titleText, subText) {
+  $("resultsPane").innerHTML = `
+    <div class="loading-card">
+      <div class="spinner-lg"></div>
+      <h3 style="margin:0 0 6px;font-size:15.5px;color:var(--text);">${esc(titleText)}</h3>
+      <p style="margin:0;color:var(--muted);font-size:12.5px;">${esc(subText)}</p>
+    </div>
+  `;
+}
+
+function switchReportTab(tabName) {
+  ACTIVE_REPORT_TAB = tabName;
+  document.querySelectorAll("#resultsPane .report-tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tabName);
+  });
+  document.querySelectorAll("#resultsPane .report-tab-panel").forEach(panel => {
+    panel.classList.toggle("hidden", panel.dataset.panel !== tabName);
+  });
+}
+
+function renderCitationRow(c) {
+  const link = c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${t("Buka PDF Resmi", "Open Official PDF")} &nearr;</a>` : '<span style="color:var(--muted);">—</span>';
+  return `<tr>
+    <td><strong>${esc(c.regulation_number || c.document_id || c.clause_id)}</strong><br/><span style="color:var(--muted);font-size:11.5px;">${esc(c.document_title || "")}</span></td>
+    <td>${esc(c.clause_locator || c.clause_id)}</td>
+    <td class="mono">${esc(c.effective_from || "—")}</td>
+    <td>${link}</td>
+  </tr>`;
+}
+
+function renderLartasCard(lartas) {
+  const tone = statusTone(lartas.status);
+  const rulesHtml = (lartas.rules || []).length ? `
+    <table>
+      <thead><tr>
+        <th>${t("Kelompok Barang", "Commodity Group")}</th>
+        <th>${t("Titik Pemeriksaan", "Supervision")}</th>
+        <th>${t("Izin yang Wajib Dimiliki", "Required Permits")}</th>
+        <th>${t("Dasar Peraturan", "Regulation")}</th>
+      </tr></thead>
+      <tbody>
+        ${lartas.rules.map(r => `<tr>
+          <td><strong>${esc(r.commodity_group || r.rule_id)}</strong></td>
+          <td><span class="pill ${statusTone(r.supervision_mode === "PROHIBITED" ? "PROHIBITED" : (r.supervision_mode === "BORDER" ? "BORDER_BLOCKED" : "POST_BORDER_PENDING"))}">${esc(statusLabel(r.supervision_mode))}</span></td>
+          <td>${r.prohibited ? `<span class="pill danger">${t("DILARANG IMPOR", "IMPORT BANNED")}</span>` : (r.required_docs || []).map(d => `<span class="pill" title="${esc(docSub(d, r.required_doc_labels?.[d]))}">${esc(docName(d, r.required_doc_labels?.[d]))}</span>`).join(" ")}</td>
+          <td>${r.citation?.url ? `<a href="${esc(r.citation.url)}" target="_blank" rel="noopener">${esc(r.citation.regulation_number || r.source_clause)} &nearr;</a>` : esc(r.citation?.regulation_number || r.source_clause || "—")}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>` : `<p style="color:var(--muted);margin:0;">${t("Barang ini BEBAS Lartas Impor (tidak memerlukan izin PI Kemendag, LS, maupun SKI BPOM).", "No import restriction (Lartas) applies to this commodity.")}</p>`;
+
+  const missingHtml = [
+    ...(lartas.missing_border_docs || []).map(d => `<span class="pill danger">${t("Wajib Sebelum Barang Rilis", "Required Before Release")}: ${esc(docName(d))}</span>`),
+    ...(lartas.missing_post_border_docs || []).map(d => `<span class="pill warn">${t("Wajib Post-Border", "Required Post-Border")}: ${esc(docName(d))}</span>`),
+  ].join(" ");
+
+  return `<div class="card" style="margin-bottom:0;">
+    <h2>
+      <span>${t("Syarat Perizinan Impor (Lartas Kemendag & BPOM)", "Import Permit Requirements (Lartas)")}</span>
+      <span class="pill ${tone}">${esc(statusLabel(lartas.status))}</span>
+    </h2>
+    ${missingHtml ? `<div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;">${missingHtml}</div>` : ""}
+    ${rulesHtml}
+  </div>`;
+}
+
+function buildImportExecutiveSummary(res, winner) {
+  if (res.recommended_agreement === "PROHIBITED" || res.lartas?.prohibited) {
+    return t(
+      `<strong>Kesimpulan:</strong> Komoditas HS <strong>${esc(res.hs_code)}</strong> berstatus <strong>DILARANG IMPOR</strong> berdasarkan peraturan yang berlaku pada ${esc(res.as_of_date)}. Pengiriman ini tidak dapat diproses melalui PIB.`,
+      `<strong>Summary:</strong> Commodity HS <strong>${esc(res.hs_code)}</strong> is <strong>PROHIBITED FROM IMPORT</strong> as of ${esc(res.as_of_date)} and cannot clear customs.`
+    );
+  }
+  const curr = winner?.tax_breakdown?.currency ?? res.mfn_tax_breakdown?.currency ?? "USD";
+  const savings = Number(winner?.total_tax_savings || 0);
+  const missingPermits = [...(res.lartas?.missing_border_docs || []), ...(res.lartas?.missing_post_border_docs || [])].map(d => docName(d));
+  const permitSentence = missingPermits.length
+    ? t(`Sebelum pengeluaran barang, siapkan dokumen izin: <strong>${esc(missingPermits.join(" & "))}</strong>.`, `Before customs clearance, prepare: <strong>${esc(missingPermits.join(" & "))}</strong>.`)
+    : t(`Barang ini telah memenuhi seluruh syarat perizinan Lartas / bebas Lartas.`, `All Lartas permit requirements are satisfied.`);
+
+  if (winner && savings > 0) {
+    return t(
+      `<strong>Rekomendasi Utama:</strong> Klaim skema <strong>${esc(winner.agreement_label)}</strong> (Kode Fasilitas PIB <strong>${esc(winner.facility_code || "—")}</strong>) untuk menurunkan Bea Masuk dari <strong>${esc(res.mfn_duty_percent)}%</strong> menjadi <strong>${esc(winner.applied_duty_percent)}%</strong> dan menghemat pajak sebesar <strong>${esc(curr)} ${esc(winner.total_tax_savings)}</strong>. ${permitSentence}`,
+      `<strong>Recommendation:</strong> Claim <strong>${esc(winner.agreement_label)}</strong> (PIB Facility Code <strong>${esc(winner.facility_code || "—")}</strong>) to cut import duty from <strong>${esc(res.mfn_duty_percent)}%</strong> to <strong>${esc(winner.applied_duty_percent)}%</strong>, saving <strong>${esc(curr)} ${esc(winner.total_tax_savings)}</strong>. ${permitSentence}`
+    );
+  }
+  return t(
+    `<strong>Kesimpulan:</strong> Gunakan tarif umum <strong>MFN (${esc(res.mfn_duty_percent ?? "0")}%)</strong>. ${permitSentence}`,
+    `<strong>Summary:</strong> Standard <strong>MFN (${esc(res.mfn_duty_percent ?? "0")}%)</strong> tariff applies. ${permitSentence}`
+  );
+}
+
+/* ==========================================================================
+   PAGINATED IMPORT RESULT (Strictly ONE focused card per sub-tab, zero scroll!)
+   ========================================================================== */
+function renderOptimizationResult(res) {
+  LAST_RESULT = res;
+  LAST_VIEW_KIND = "optimize";
+  RESULTS_CACHE.import = res;
+  ACTIVE_REPORT_TAB = "tax";
+  const winner = (res.schemes || []).find(s => s.agreement === res.recommended_agreement);
+  const isProhibited = res.recommended_agreement === "PROHIBITED";
+  const heroTone = isProhibited ? "prohibited" : (winner ? "ok" : "warn");
+  const recTitle = isProhibited
+    ? t("DILARANG IMPOR — Barang Tidak Dapat Masuk ke Indonesia", "IMPORT PROHIBITED — Cannot Clear Indonesian Customs")
+    : winner ? `${t("Skema Termurah", "Best Tariff Scheme")}: ${winner.agreement_label} (${t("Kode PIB", "PIB Code")} ${winner.facility_code || "—"})`
+    : t("Tarif Normal MFN Berlaku (Tidak Ada Penghematan FTA)", "Standard MFN Tariff Applies");
+
+  const appliedDuty = winner?.applied_duty_percent ?? res.mfn_duty_percent ?? "—";
+  const taxTotal = winner?.tax_breakdown?.total_import_taxes ?? res.mfn_tax_breakdown?.total_import_taxes ?? "—";
+  const taxCurr = winner?.tax_breakdown?.currency ?? res.mfn_tax_breakdown?.currency ?? "";
+  const savings = winner?.total_tax_savings ?? "0.00";
+  const activeTax = winner?.tax_breakdown || res.mfn_tax_breakdown;
+  const hsTitle = cleanHsDescription(res.hs_code, "");
+
+  const planSteps = winner?.plan_steps || [];
+  const planHtml = planSteps.length ? `
+    <div class="card" style="margin-bottom:0;">
+      <h2>${t("Checklist Dokumen & Langkah yang Harus Anda Siapkan", "Step-by-Step Preparation Checklist")} (${planSteps.length})</h2>
+      ${planSteps.map((st, idx) => `
+        <div class="step-item">
+          <div class="step-num">${idx + 1}</div>
+          <div style="flex:1;"><strong>${esc(st.label)}</strong></div>
+        </div>
+      `).join("")}
+    </div>` : `<div class="card" style="margin-bottom:0;"><p style="margin:0;color:var(--muted);">${t("Seluruh persyaratan dokumen sudah lengkap.", "All document requirements are satisfied.")}</p></div>`;
+
+  const activeTaxCard = activeTax ? `
+    <div class="card" style="margin-bottom:0;">
+      <h2>${t("Rincian Perhitungan Pajak Impor (PDRI)", "Import Tax Calculation Breakdown")} &mdash; ${winner ? esc(winner.agreement_label) : "MFN"}</h2>
+      <table>
+        <thead><tr><th>${t("Komponen Pajak Impor", "Tax Component")}</th><th class="num">${t("Tarif", "Rate")}</th><th class="num">${t("Jumlah", "Amount")} (${esc(activeTax.currency)})</th></tr></thead>
+        <tbody>
+          <tr><td>Bea Masuk (BM)</td><td class="num">${esc(activeTax.duty_percent)}%</td><td class="num">${esc(activeTax.bm_amount)}</td></tr>
+          <tr><td>Nilai Impor (CIF + Bea Masuk)</td><td class="num">—</td><td class="num">${esc(activeTax.nilai_impor)}</td></tr>
+          <tr><td>PPN Impor</td><td class="num">${esc(activeTax.vat_percent)}%</td><td class="num">${esc(activeTax.ppn_amount)}</td></tr>
+          <tr><td>PPh Pasal 22 Impor</td><td class="num">${esc(activeTax.pph22_percent)}%</td><td class="num">${esc(activeTax.pph22_amount)}</td></tr>
+          <tr><td><strong>${t("Total Pajak Impor yang Harus Dibayar", "Total Import Taxes Payable")}</strong></td><td class="num"></td><td class="num"><strong>${esc(activeTax.total_import_taxes)}</strong></td></tr>
+          <tr><td>${t("Total Biaya Barang + Pajak (Landed Cost)", "Total Landed Cost (CIF + Taxes)")}</td><td class="num"></td><td class="num">${esc(activeTax.total_landed_cost)}</td></tr>
+        </tbody>
+      </table>
+    </div>` : `<div class="card" style="margin-bottom:0;"><p style="margin:0;color:var(--muted);">${t("Barang dilarang impor — perhitungan pajak tidak berlaku.", "Import prohibited — tax breakdown not applicable.")}</p></div>`;
+
+  const schemesTableRows = (res.schemes || []).map(s => {
+    const isWin = s.agreement === res.recommended_agreement;
+    const diags = (s.diagnostics || []).length
+      ? `<div style="margin-top:4px;font-size:11.5px;color:var(--amber-text);">${s.diagnostics.map(esc).join(" &middot; ")}</div>` : "";
+    return `<tr style="${isWin ? "background:var(--emerald-soft);" : ""}">
+      <td>
+        <strong>${esc(s.agreement_label)}</strong>
+        ${isWin ? `<span class="pill ok" style="margin-left:6px;">${t("DIREKOMENDASIKAN", "RECOMMENDED")}</span>` : ""}
+        ${s.tariff_revoked_on ? `<span class="pill warn" style="margin-left:6px;">${t("PMK Dicabut", "Revoked")} ${esc(s.tariff_revoked_on)}</span>` : ""}
+        <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">${t("Kode PIB", "PIB Code")}: <strong>${esc(s.facility_code || "—")}</strong> &middot; ${t("Syarat Bahan (PSR)", "Origin Rule")}: <strong>${esc(s.concise_rule || "—")}</strong></div>
+        ${diags}
+      </td>
+      <td class="num"><strong>${s.applied_duty_percent != null ? esc(s.applied_duty_percent) + "%" : "—"}</strong></td>
+      <td class="num">${s.tax_breakdown ? esc(s.tax_breakdown.currency) + " " + esc(s.tax_breakdown.total_import_taxes) : "—"}</td>
+      <td class="num" style="color:var(--emerald);"><strong>${s.total_tax_savings != null ? esc(s.tax_breakdown?.currency || "") + " " + esc(s.total_tax_savings) : "—"}</strong></td>
+      <td><span class="pill ${statusTone(s.eligibility)}">${esc(statusLabel(s.eligibility))}</span></td>
+    </tr>`;
+  }).join("");
+
+  const allCitsMap = new Map();
+  [...(res.lartas.citations || []), ...(res.tax_profile_citations || []), ...(res.schemes || []).flatMap(s => s.citations || [])]
+    .forEach(c => { if (c?.clause_id && !allCitsMap.has(c.clause_id)) allCitsMap.set(c.clause_id, c); });
+  const allCits = Array.from(allCitsMap.values());
+
+  $("resultsPane").innerHTML = `
+    <div class="verdict-hero ${heroTone}">
+      <div class="verdict-top">
+        <div>
+          <div class="verdict-route">
+            <span class="pill mono">HS ${esc(res.hs_code)}</span>
+            <span>${esc(res.dispatch_country.toUpperCase())} &rarr; INDONESIA</span>
+            <span>&middot; ${esc(res.as_of_date)}</span>
+          </div>
+          <h2 class="verdict-title">${esc(recTitle)}</h2>
+          ${hsTitle ? `<div style="font-size:12.5px;color:var(--muted);margin-top:3px;">${esc(hsTitle)}</div>` : ""}
+        </div>
+        <span class="pill ${statusTone(res.lartas.status)}">${esc(statusLabel(res.lartas.status))}</span>
+      </div>
+      <div class="exec-summary-box">${buildImportExecutiveSummary(res, winner)}</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="k-lbl">${t("Penghematan Pajak", "Net Tax Savings")}</div><div class="k-val ${Number(savings) > 0 ? "positive" : ""}">${taxCurr ? esc(taxCurr) + " " : ""}${esc(savings)}</div><div class="k-sub">${t("Dibandingkan tarif MFN", "vs normal MFN tariff")}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Tarif Bea Masuk", "Import Duty Rate")}</div><div class="k-val">${appliedDuty !== "—" ? esc(appliedDuty) + "%" : "—"}</div><div class="k-sub">${t("Tarif normal MFN", "Normal MFN")}: ${res.mfn_duty_percent != null ? esc(res.mfn_duty_percent) + "%" : "—"}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Total Pajak Impor", "Total Import Taxes")}</div><div class="k-val">${taxTotal !== "—" ? esc(taxCurr) + " " + esc(taxTotal) : "—"}</div><div class="k-sub">BM + PPN 11% + PPh 22</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Total Nilai + Pajak", "Total Landed Cost")}</div><div class="k-val">${activeTax?.total_landed_cost ? esc(taxCurr) + " " + esc(activeTax.total_landed_cost) : "—"}</div><div class="k-sub">CIF + ${t("Seluruh Pajak", "All Taxes")}</div></div>
+    </div>
+
+    <!-- 5 Single-Card Paginated Tabs (Zero Vertical Wall of Tables!) -->
+    <div class="report-tabs">
+      <button type="button" class="report-tab-btn active" data-tab="tax" onclick="switchReportTab('tax')">💰 ${t("Rincian Pajak Impor", "Import Tax Breakdown")}</button>
+      <button type="button" class="report-tab-btn" data-tab="lartas" onclick="switchReportTab('lartas')">🛡️ ${t("Syarat Izin Lartas", "Import Permits")} (${(res.lartas?.rules || []).length})</button>
+      <button type="button" class="report-tab-btn" data-tab="checklist" onclick="switchReportTab('checklist')">✅ ${t("Checklist Langkah", "Action Checklist")} (${planSteps.length})</button>
+      <button type="button" class="report-tab-btn" data-tab="schemes" onclick="switchReportTab('schemes')">🏆 ${t("Perbandingan FTA", "FTA Comparison")} (${(res.schemes || []).length})</button>
+      <button type="button" class="report-tab-btn" data-tab="legal" onclick="switchReportTab('legal')">⚖️ ${t("Dasar Hukum & PDF", "Official Regulations")} (${allCits.length})</button>
+      <button type="button" class="report-tab-btn admin-only" data-tab="audit" onclick="switchReportTab('audit')">🔍 JSON</button>
+    </div>
+
+    <div class="report-tab-panel" data-panel="tax">${activeTaxCard}</div>
+    <div class="report-tab-panel hidden" data-panel="lartas">${renderLartasCard(res.lartas)}</div>
+    <div class="report-tab-panel hidden" data-panel="checklist">${planHtml}</div>
+    <div class="report-tab-panel hidden" data-panel="schemes">
+      <div class="card" style="overflow-x:auto;margin-bottom:0;">
+        <h2>${t("Perbandingan Tarif Antar Perjanjian Dagang (FTA)", "FTA Tariff Scheme Comparison")}</h2>
+        <table>
+          <thead><tr>
+            <th>${t("Skema Perjanjian (FTA)", "FTA Scheme")}</th>
+            <th class="num">${t("Tarif BM", "Duty Rate")}</th>
+            <th class="num">${t("Total Pajak", "Total Tax")}</th>
+            <th class="num">${t("Hemat Pajak", "Tax Saved")}</th>
+            <th>${t("Status Kelayakan", "Eligibility")}</th>
+          </tr></thead>
+          <tbody>${schemesTableRows}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="report-tab-panel hidden" data-panel="legal">
+      <div class="card" style="margin-bottom:0;">
+        <h2>${t("Dasar Hukum & Peraturan Resmi yang Berlaku", "Applicable Official Regulations")}</h2>
+        <table>
+          <thead><tr><th>${t("Peraturan Resmi", "Regulation")}</th><th>${t("Pasal / Lampiran", "Clause")}</th><th>${t("Berlaku", "Effective")}</th><th>PDF</th></tr></thead>
+          <tbody>${allCits.map(renderCitationRow).join("")}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="report-tab-panel hidden" data-panel="audit">
+      <div class="card" style="margin-bottom:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h2 style="margin:0;">Raw Audit JSON</h2>
+          <button class="btn btn-secondary btn-sm" onclick="downloadAuditJson()">Unduh JSON</button>
+        </div>
+        <pre class="json-box">${esc(JSON.stringify(res, null, 2))}</pre>
+      </div>
+    </div>
+  `;
+}
+
+function downloadAuditJson() {
+  if (!LAST_RESULT) return;
+  const blob = new Blob([JSON.stringify(LAST_RESULT, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `tradegraph-audit-${(LAST_RESULT.hs_code || "shipment").replace(/\./g, "")}-${LAST_RESULT.as_of_date || "now"}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function runOptimize() {
+  const reqId = ++REQUEST_SEQ;
+  const btn = $("btnOptimize");
+  const prev = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> ${t("Menghitung...", "Calculating...")}`;
+  renderLoadingState(
+    t("Menganalisis Skema FTA Termurah, Pajak Impor & Syarat Izin Lartas...", "Analyzing Lowest FTA Tariffs, Import Taxes & Lartas Permits..."),
+    t("Memeriksa aturan asal barang (RoO), tarif BTKI 2022, serta ketentuan Kemendag & BPOM", "Checking Rules of Origin (RoO), BTKI 2022 tariffs, and Kemendag/BPOM regulations")
+  );
+  try {
+    const resp = await fetch("/api/v1/optimize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(collectPayload()),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail ? JSON.stringify(data.detail) : resp.statusText);
+    RESULTS_CACHE.import = data;
+    if (reqId === REQUEST_SEQ && MODE === "import") {
+      renderOptimizationResult(data);
+    }
+  } catch (err) {
+    if (reqId === REQUEST_SEQ && MODE === "import") {
+      $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><h2 class="verdict-title">Error</h2><p>${esc(err.message)}</p></div>`;
+    }
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = prev;
+  }
+}
+
+async function runQuickLartas() {
+  const reqId = ++REQUEST_SEQ;
+  const p = collectPayload();
+  const params = new URLSearchParams({
+    hs_code: p.hs_code,
+    as_of_date: p.as_of_date,
+    explain: p.include_explain ? "true" : "false",
+  });
+  if (p.api_type) params.set("api_type", p.api_type);
+  if (p.provided_lartas_docs.length) params.set("provided_docs", p.provided_lartas_docs.join(","));
+  try {
+    const resp = await fetch(`/api/v1/lartas?${params.toString()}`);
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail || resp.statusText);
+    if (reqId !== REQUEST_SEQ || MODE !== "import") return;
+    LAST_RESULT = data;
+    LAST_VIEW_KIND = "quick_lartas";
+    $("resultsPane").innerHTML = `
+      <div class="verdict-hero ${data.lartas.prohibited ? "prohibited" : "ok"}">
+        <div class="verdict-route"><span class="pill mono">HS ${esc(data.hs_code)}</span><span>&middot; ${esc(data.as_of_date)}</span></div>
+        <h2 class="verdict-title">${esc(statusLabel(data.lartas.status))}</h2>
+      </div>
+      ${renderLartasCard(data.lartas)}
+    `;
+  } catch (err) {
+    if (reqId === REQUEST_SEQ) {
+      $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Error:</strong> ${esc(err.message)}</div>`;
+    }
+  }
+}
+
+function applyExportPreset(preset) {
+  const p = preset.payload;
+  $("hsCategorySelect").value = "all";
+  populateHsSelectDropdown();
+  $("hsCode").value = p.hs_code || "";
+  $("exportDestCountry").value = p.destination_country || "JP";
+  $("asOfDate").value = p.as_of_date || "2025-09-15";
+  $("fobValue").value = p.fob_value || "250000";
+  $("currency").value = p.currency || "USD";
+  $("quantityMt").value = p.quantity_mt ?? "";
+  $("referencePriceUsd").value = p.reference_price_usd ?? "";
+  $("exportPriceUsdPerMt").value = p.export_price_usd_per_mt ?? "";
+  $("transshipmentHub").value = p.transshipment_hub || "";
+  $("requiresBackToBack").checked = Boolean(p.requires_back_to_back);
+  $("thirdPartyInvoiceCountry").value = p.third_party_invoice_country || "";
+  $("rvcPercent").value = p.rvc_percent ?? "";
+  syncRvcControls(false);
+  $("woConfirmed").value = p.wo_confirmed === true ? "true" : p.wo_confirmed === false ? "false" : "";
+  $("processKind").value = p.process_kind || "";
+  $("processSatisfied").value = p.process_satisfied === true ? "true" : p.process_satisfied === false ? "false" : "";
+  $("dmFobTotal").value = p.de_minimis_fob ? p.de_minimis_fob[0] : "";
+  $("dmFobFailed").value = p.de_minimis_fob ? p.de_minimis_fob[1] : "";
+  $("optExplain").checked = Boolean(p.include_explain);
+
+  $("bomContainer").innerHTML = "";
+  (p.materials || []).forEach(addMaterialRow);
+  setCheckedValues("exportDocsGrid", p.provided_export_docs);
+  setCheckedValues("minimalOpsGrid", p.performed_operations);
+  updateHsPreview();
+  updateRouteVisualizer();
+}
+
+function collectExportPayload() {
+  const materials = Array.from(document.querySelectorAll("#bomContainer .bom-row"))
+    .map(row => {
+      const hs = row.querySelector(".mat-hs").value.trim();
+      if (!hs) return null;
+      const country = row.querySelector(".mat-country").value || null;
+      const proof = row.querySelector(".mat-proof").checked;
+      return {
+        hs_code: hs,
+        non_originating: row.querySelector(".mat-nonorig").checked,
+        origin_country: country,
+        origin_proof_verified: country ? proof : null,
+      };
+    }).filter(Boolean);
+
+  const dmTotal = $("dmFobTotal").value.trim();
+  const dmFailed = $("dmFobFailed").value.trim();
+  const minOps = getCheckedValues("minimalOpsGrid");
+  const woVal = $("woConfirmed").value;
+  const procKind = $("processKind").value || null;
+  const procSat = $("processSatisfied").value;
+
+  return {
+    hs_code: $("hsCode").value.trim(),
+    origin_country: "ID",
+    destination_country: $("exportDestCountry").value,
+    as_of_date: $("asOfDate").value,
+    fob_value: $("fobValue").value.trim() || null,
+    currency: $("currency").value.trim() || "USD",
+    quantity_mt: $("quantityMt").value.trim() || null,
+    reference_price_usd: $("referencePriceUsd").value.trim() || null,
+    export_price_usd_per_mt: $("exportPriceUsdPerMt").value.trim() || null,
+    materials,
+    rvc_percent: $("rvcPercent").value.trim() || null,
+    wo_confirmed: woVal === "" ? null : woVal === "true",
+    process_kind: procKind,
+    process_satisfied: procSat === "" ? null : procSat === "true",
+    de_minimis_fob: (dmTotal && dmFailed) ? [dmTotal, dmFailed] : null,
+    performed_operations: minOps.length ? minOps : null,
+    transshipment_hub: $("transshipmentHub").value || null,
+    requires_back_to_back: $("requiresBackToBack").checked,
+    third_party_invoice_country: $("thirdPartyInvoiceCountry").value.trim() || null,
+    provided_export_docs: getCheckedValues("exportDocsGrid"),
+    include_explain: $("optExplain").checked,
+  };
+}
+
+function renderExportDutyCard(bk) {
+  if (!bk) return "";
+  const tone = statusTone(bk.status);
+  const rateText = bk.duty_basis === "SPECIFIC_USD_PER_MT" && bk.specific_rate_usd_per_mt != null
+    ? `USD ${bk.specific_rate_usd_per_mt} / Ton`
+    : bk.rate_percent != null ? `${bk.rate_percent}%` : "—";
+  const diags = (bk.diagnostics || []).length
+    ? `<ul style="margin:10px 0 0;padding-left:18px;font-size:12px;color:var(--text-secondary);">${bk.diagnostics.map(d => `<li>${esc(d)}</li>`).join("")}</ul>` : "";
+  const bodyHtml = bk.subject_to_export_duty ? `
+    <table>
+      <thead><tr>
+        <th>${t("Kelompok Komoditas", "Commodity Group")}</th>
+        <th>${t("Skema Tarif", "Tariff Type")}</th>
+        <th>${t("Rentang Harga Referensi", "Reference Price Tier")}</th>
+        <th class="num">${t("Tarif Aktif", "Active Rate")}</th>
+        <th class="num">${t("Berat (Ton)", "Volume (MT)")}</th>
+        <th class="num">${t("Total Bea Keluar (USD)", "Total Export Duty (USD)")}</th>
+      </tr></thead>
+      <tbody><tr>
+        <td><strong>${esc(bk.commodity_group || "—")}</strong></td>
+        <td><span class="pill info">${esc(statusLabel(bk.duty_basis))}</span></td>
+        <td>${bk.tier_column ? `<strong>${t("Kolom", "Col.")} ${esc(bk.tier_column)}</strong> (${esc(bk.reference_price_band || "")})` : t("Tarif Tetap", "Flat Rate")}</td>
+        <td class="num"><strong>${esc(rateText)}</strong></td>
+        <td class="num">${esc(bk.quantity_mt ?? "—")}</td>
+        <td class="num"><strong>${bk.estimated_duty_usd != null ? "USD " + esc(bk.estimated_duty_usd) : "—"}</strong></td>
+      </tr></tbody>
+    </table>` : `<p style="color:var(--muted);margin:0;">${t("Barang ini BEBAS Bea Keluar (Tarif Bea Keluar 0%).", "This commodity is FREE of Indonesian Export Duty.")}</p>`;
+
+  return `<div class="card" style="margin-bottom:0;">
+    <h2>
+      <span>${t("Perhitungan Bea Keluar Ekspor (PMK 38/2024 jo. PMK 68/2025)", "Indonesian Export Duty (Bea Keluar)")}</span>
+      <span class="pill ${tone}">${esc(statusLabel(bk.status))}</span>
+    </h2>
+    ${bodyHtml}
+    ${diags}
+  </div>`;
+}
+
+function renderExportLartasCard(el) {
+  const tone = statusTone(el.status);
+  const rulesHtml = (el.rules || []).length ? `
+    <table>
+      <thead><tr>
+        <th>${t("Kelompok Komoditas", "Commodity Group")}</th>
+        <th>${t("Ketentuan Ekspor", "Supervision")}</th>
+        <th>${t("Izin yang Wajib Dimiliki", "Required Permits")}</th>
+        <th>${t("Peraturan", "Regulation")}</th>
+      </tr></thead>
+      <tbody>
+        ${el.rules.map(r => `<tr>
+          <td><strong>${esc(r.commodity_group || r.rule_id)}</strong></td>
+          <td><span class="pill ${statusTone(r.prohibited ? "PROHIBITED_EXPORT" : "RESTRICTED_EXPORT")}">${esc(statusLabel(r.supervision_mode))}</span></td>
+          <td>${r.prohibited ? `<span class="pill danger">${t("DILARANG EKSPOR", "EXPORT BANNED")}</span>` : (r.required_docs || []).map(d => `<span class="pill" title="${esc(docSub(d, r.required_doc_labels?.[d]))}">${esc(docName(d, r.required_doc_labels?.[d]))}</span>`).join(" ")}</td>
+          <td>${r.citation?.url ? `<a href="${esc(r.citation.url)}" target="_blank" rel="noopener">${esc(r.citation.regulation_number || r.source_clause)} &nearr;</a>` : esc(r.citation?.regulation_number || r.source_clause || "—")}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>` : `<p style="color:var(--muted);margin:0;">${t("Bebas Lartas Ekspor Kemendag; cukup ajukan dokumen PEB (BC 3.0) standar.", "No Kemendag Export Lartas permit required; standard PEB declaration applies.")}</p>`;
+
+  const missingHtml = (el.missing_docs || []).map(d =>
+    `<span class="pill ${d === "pebDeclaration" ? "warn" : "danger"}">${t("Wajib Disiapkan", "Required")}: ${esc(docName(d))}</span>`
+  ).join(" ");
+
+  return `<div class="card" style="margin-bottom:0;">
+    <h2>
+      <span>${t("Syarat Perizinan Ekspor (Kemendag & PEB Bea Cukai)", "Export Permit & PEB Requirements")}</span>
+      <span class="pill ${tone}">${esc(statusLabel(el.status))}</span>
+    </h2>
+    ${missingHtml ? `<div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;">${missingHtml}</div>` : ""}
+    ${rulesHtml}
+  </div>`;
+}
+
+/* ==========================================================================
+   PAGINATED EXPORT RESULT (Strictly ONE focused card per sub-tab!)
+   ========================================================================== */
+function renderExportResult(res) {
+  LAST_RESULT = res;
+  LAST_VIEW_KIND = "export";
+  RESULTS_CACHE.export = res;
+  ACTIVE_REPORT_TAB = "duty";
+  const winner = (res.schemes || []).find(s => s.agreement === res.recommended_agreement);
+  const isProhibited = res.recommended_agreement === "PROHIBITED_EXPORT";
+  const heroTone = isProhibited ? "prohibited" : (winner ? "ok" : "warn");
+  const recTitle = isProhibited
+    ? t("DILARANG EKSPOR — Komoditas Tidak Boleh Diekspor dari Indonesia", "EXPORT PROHIBITED — Commodity Banned from Export")
+    : winner ? `${t("Rekomendasi SKA untuk Pembeli", "Recommended FTA Certificate")}: ${docName(winner.origin_proof_doc, winner.origin_proof_label || "SKA")} (${winner.agreement_label})`
+    : t("Ekspor Non-FTA (Sesuaikan Sumber Bahan Baku untuk SKA FTA)", "Non-Preferential Export");
+
+  const routeStr = res.transshipment_hub
+    ? `INDONESIA &rarr; ${res.transshipment_hub.toUpperCase()} (TRANSIT) &rarr; ${res.destination_country.toUpperCase()}`
+    : `INDONESIA &rarr; ${res.destination_country.toUpperCase()}`;
+
+  const b2bKpi = res.requires_back_to_back
+    ? (winner ? winner.back_to_back_status : "BLOCKED")
+    : "DIRECT";
+  const hsTitle = cleanHsDescription(res.hs_code, "");
+
+  const checklistHtml = (res.checklist || []).length ? `
+    <div class="card" style="margin-bottom:0;">
+      <h2>${t("Checklist Dokumen & Langkah Ekspor yang Harus Anda Siapkan", "Step-by-Step Export Preparation Checklist")}</h2>
+      ${res.checklist.map(st => `
+        <div class="step-item">
+          <div class="step-num">${esc(st.step_number)}</div>
+          <div style="flex:1;">
+            <div><strong>${esc(st.title)}</strong></div>
+            <div style="margin-top:3px;font-size:11.5px;color:var(--muted);">
+              ${st.required_doc ? `${t("Dokumen", "Document")}: <strong style="color:var(--text);">${esc(docName(st.required_doc))}</strong> &middot; ` : ""}
+              ${t("Dasar Hukum", "Regulation")}: ${esc(st.legal_basis || "—")}
+            </div>
+          </div>
+        </div>
+      `).join("")}
+    </div>` : `<div class="card" style="margin-bottom:0;"><p style="margin:0;color:var(--muted);">${t("Tidak ada langkah tambahan.", "No additional checklist items.")}</p></div>`;
+
+  const cumHtml = (res.cumulation_opportunities || []).length ? `
+    <div class="card" style="margin-top:12px;margin-bottom:0;">
+      <h2>${t("Saran Pemasok Bahan Baku agar Pembeli Anda Dapat Tarif 0% (Kumulasi FTA)", "Recommended Material Sourcing to Unlock Preferential FTA")}</h2>
+      <table>
+        <thead><tr>
+          <th>${t("Skema FTA", "FTA Scheme")}</th>
+          <th>${t("Bahan Baku Saat Ini", "Current Material")}</th>
+          <th>${t("Negara Mitra Pemasok yang Disarankan", "Recommended Partner Countries")}</th>
+          <th>${t("Penjelasan", "Explanation")}</th>
+        </tr></thead>
+        <tbody>
+          ${res.cumulation_opportunities.map(c => `<tr>
+            <td><span class="pill accent">${esc(c.agreement.toUpperCase())}</span></td>
+            <td class="mono">HS ${esc(c.failing_material_hs)} (${esc(c.current_origin || "Impor")})</td>
+            <td>${(c.recommended_partner_countries || []).slice(0, 6).map(p => `<span class="pill ok">${esc(p)}</span>`).join(" ")}</td>
+            <td>${esc(c.reason)}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>` : "";
+
+  const schemesTableRows = (res.schemes || []).map(s => {
+    const isWin = s.agreement === res.recommended_agreement;
+    const diags = (s.diagnostics || []).length
+      ? `<div style="margin-top:4px;font-size:11.5px;color:var(--amber-text);">${s.diagnostics.map(esc).join(" &middot; ")}</div>` : "";
+    return `<tr style="${isWin ? "background:var(--emerald-soft);" : ""}">
+      <td>
+        <strong>${esc(s.agreement_label)}</strong>
+        ${isWin ? `<span class="pill ok" style="margin-left:6px;">${t("DIREKOMENDASIKAN", "RECOMMENDED")}</span>` : ""}
+        <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">${t("Dokumen SKA", "Certificate")}: <strong>${esc(docName(s.origin_proof_doc, s.origin_proof_label))}</strong> &middot; PSR: ${esc(s.concise_rule || "—")}</div>
+        ${s.third_party_invoice_instruction ? `<div style="font-size:11.5px;color:var(--accent-text);margin-top:3px;"><strong>Third-Party Invoice:</strong> ${esc(s.third_party_invoice_instruction)}</div>` : ""}
+        ${diags}
+      </td>
+      <td><span class="pill ${statusTone(s.origin_status)}">${esc(statusLabel(s.origin_status))}</span></td>
+      <td><span class="pill ${statusTone(s.back_to_back_status)}">${esc(statusLabel(s.back_to_back_status))}</span></td>
+      <td><span class="pill ${s.third_party_invoicing_allowed ? "ok" : "danger"}">${s.third_party_invoicing_allowed ? t("Diizinkan", "Allowed") : t("Tidak", "No")}</span></td>
+      <td><span class="pill ${statusTone(s.eligibility)}">${esc(statusLabel(s.eligibility))}</span></td>
+    </tr>`;
+  }).join("");
+
+  const allCitsMap = new Map();
+  [...(res.export_lartas.citations || []), ...(res.export_duty?.citations || []), ...(res.schemes || []).flatMap(s => s.citations || [])]
+    .forEach(c => { if (c?.clause_id && !allCitsMap.has(c.clause_id)) allCitsMap.set(c.clause_id, c); });
+  const allCits = Array.from(allCitsMap.values());
+
+  $("resultsPane").innerHTML = `
+    <div class="verdict-hero ${heroTone}">
+      <div class="verdict-top">
+        <div>
+          <div class="verdict-route">
+            <span class="pill mono">HS ${esc(res.hs_code)}</span>
+            <span>${routeStr}</span>
+            <span>&middot; ${esc(res.as_of_date)}</span>
+          </div>
+          <h2 class="verdict-title">${esc(recTitle)}</h2>
+          ${hsTitle ? `<div style="font-size:12.5px;color:var(--muted);margin-top:3px;">${esc(hsTitle)}</div>` : ""}
+        </div>
+        <span class="pill ${statusTone(res.export_lartas.status)}">${esc(statusLabel(res.export_lartas.status))}</span>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="k-lbl">${t("Total Bea Keluar", "Estimated Export Duty")}</div><div class="k-val">${res.export_duty?.estimated_duty_usd != null ? "USD " + esc(res.export_duty.estimated_duty_usd) : esc(statusLabel(res.export_duty?.status || "NOT_SUBJECT"))}</div><div class="k-sub">${esc(statusLabel(res.export_duty?.status || "NOT_SUBJECT"))}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Status Izin Ekspor", "Export Permit Status")}</div><div class="k-val" style="font-size:16.5px;">${esc(statusLabel(res.export_lartas.status))}</div><div class="k-sub">${(res.export_lartas.missing_docs || []).length} ${t("dokumen perlu disiapkan", "document(s) required")}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Dokumen SKA Terbaik", "Recommended SKA")}</div><div class="k-val" style="font-size:16.5px;">${winner?.origin_proof_doc ? esc(docName(winner.origin_proof_doc)) : t("Non-FTA", "Non-FTA")}</div><div class="k-sub">${esc(winner ? winner.agreement.toUpperCase() : res.recommended_agreement)}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Rute Transit / Hub", "Transit / Back-to-Back")}</div><div class="k-val" style="font-size:16.5px;">${esc(statusLabel(b2bKpi))}</div><div class="k-sub">${res.transshipment_hub ? `Hub: ${esc(res.transshipment_hub)}` : t("Pengiriman langsung", "Direct shipment")}</div></div>
+    </div>
+
+    <!-- Single-Card Paginated Tabs for Export -->
+    <div class="report-tabs">
+      <button type="button" class="report-tab-btn active" data-tab="duty" onclick="switchReportTab('duty')">💰 ${t("Bea Keluar (PMK 68/2025)", "Export Duty")}</button>
+      <button type="button" class="report-tab-btn" data-tab="lartas" onclick="switchReportTab('lartas')">🛡️ ${t("Syarat Izin Ekspor", "Export Permits")}</button>
+      <button type="button" class="report-tab-btn" data-tab="checklist" onclick="switchReportTab('checklist')">✅ ${t("Checklist Langkah", "Action Checklist")} (${(res.checklist || []).length})</button>
+      <button type="button" class="report-tab-btn" data-tab="schemes" onclick="switchReportTab('schemes')">🏆 ${t("Pilihan SKA FTA", "Outbound FTA Options")} (${(res.schemes || []).length})</button>
+      <button type="button" class="report-tab-btn" data-tab="legal" onclick="switchReportTab('legal')">⚖️ ${t("Dasar Hukum & PDF", "Official Regulations")} (${allCits.length})</button>
+    </div>
+
+    <div class="report-tab-panel" data-panel="duty">${renderExportDutyCard(res.export_duty)}</div>
+    <div class="report-tab-panel hidden" data-panel="lartas">${renderExportLartasCard(res.export_lartas)}</div>
+    <div class="report-tab-panel hidden" data-panel="checklist">${checklistHtml}${cumHtml}</div>
+    <div class="report-tab-panel hidden" data-panel="schemes">
+      <div class="card" style="overflow-x:auto;margin-bottom:0;">
+        <h2>${t("Perbandingan Pilihan SKA FTA untuk Pembeli di Negara Tujuan", "Outbound FTA Certificate Comparison")}</h2>
+        <table>
+          <thead><tr>
+            <th>${t("Skema Perjanjian (FTA)", "FTA Scheme")}</th>
+            <th>${t("Kriteria Bahan (RoO)", "Origin Rule")}</th>
+            <th>Back-to-Back CO</th>
+            <th>Third-Party Invoice</th>
+            <th>${t("Kelayakan", "Eligibility")}</th>
+          </tr></thead>
+          <tbody>${schemesTableRows}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="report-tab-panel hidden" data-panel="legal">
+      <div class="card" style="margin-bottom:0;">
+        <h2>${t("Dasar Hukum & Peraturan Resmi yang Berlaku", "Applicable Official Regulations")}</h2>
+        <table>
+          <thead><tr><th>${t("Peraturan Resmi", "Regulation")}</th><th>${t("Pasal / Lampiran", "Clause")}</th><th>${t("Berlaku", "Effective")}</th><th>PDF</th></tr></thead>
+          <tbody>${allCits.map(renderCitationRow).join("")}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+async function runExportEvaluate() {
+  const reqId = ++REQUEST_SEQ;
+  const btn = $("btnExportEvaluate");
+  const prev = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> ${t("Menghitung...", "Calculating...")}`;
+  renderLoadingState(
+    t("Menghitung Bea Keluar, Syarat Izin Ekspor & Kelayakan SKA FTA...", "Calculating Export Duty, Permits & Outbound FTA Certificates..."),
+    t("Memeriksa tarif PMK 68/2025, ketentuan Permendag Ekspor, dan aturan Back-to-Back CO", "Checking PMK 68/2025 export duties, Kemendag export permits, and FTA rules")
+  );
+  try {
+    const resp = await fetch("/api/v1/export/evaluate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(collectExportPayload()),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail ? JSON.stringify(data.detail) : resp.statusText);
+    RESULTS_CACHE.export = data;
+    if (reqId === REQUEST_SEQ && MODE === "export") {
+      renderExportResult(data);
+    }
+  } catch (err) {
+    if (reqId === REQUEST_SEQ && MODE === "export") {
+      $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Error:</strong> ${esc(err.message)}</div>`;
+    }
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = prev;
+  }
+}
+
+async function runQuickExportLartas() {
+  const reqId = ++REQUEST_SEQ;
+  const p = collectExportPayload();
+  const params = new URLSearchParams({
+    hs_code: p.hs_code,
+    as_of_date: p.as_of_date,
+    explain: p.include_explain ? "true" : "false",
+  });
+  if (p.provided_export_docs.length) params.set("provided_docs", p.provided_export_docs.join(","));
+  try {
+    const resp = await fetch(`/api/v1/export-lartas?${params.toString()}`);
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail || resp.statusText);
+    if (reqId !== REQUEST_SEQ || MODE !== "export") return;
+    LAST_RESULT = data;
+    LAST_VIEW_KIND = "quick_export_lartas";
+    $("resultsPane").innerHTML = `
+      <div class="verdict-hero ${data.export_lartas.prohibited ? "prohibited" : "ok"}">
+        <div class="verdict-route"><span class="pill mono">HS ${esc(data.hs_code)}</span></div>
+        <h2 class="verdict-title">${esc(statusLabel(data.export_lartas.status))}</h2>
+      </div>
+      ${renderExportLartasCard(data.export_lartas)}
+    `;
+  } catch (err) {
+    if (reqId === REQUEST_SEQ) {
+      $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Error:</strong> ${esc(err.message)}</div>`;
+    }
+  }
+}
+
+async function runQuickExportDuty() {
+  const reqId = ++REQUEST_SEQ;
+  const p = collectExportPayload();
+  const params = new URLSearchParams({
+    hs_code: p.hs_code,
+    as_of_date: p.as_of_date,
+    explain: p.include_explain ? "true" : "false",
+  });
+  if (p.quantity_mt) params.set("quantity_mt", p.quantity_mt);
+  if (p.reference_price_usd) params.set("reference_price_usd", p.reference_price_usd);
+  if (p.export_price_usd_per_mt) params.set("export_price_usd_per_mt", p.export_price_usd_per_mt);
+  if (p.fob_value) params.set("fob_value", p.fob_value);
+  try {
+    const resp = await fetch(`/api/v1/export-duty?${params.toString()}`);
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail || resp.statusText);
+    if (reqId !== REQUEST_SEQ || MODE !== "export") return;
+    LAST_RESULT = data;
+    LAST_VIEW_KIND = "quick_export_duty";
+    $("resultsPane").innerHTML = `
+      <div class="verdict-hero ${data.export_duty.status === "PROHIBITED_EXPORT" ? "prohibited" : "ok"}">
+        <div class="verdict-route"><span class="pill mono">HS ${esc(data.hs_code)}</span></div>
+        <h2 class="verdict-title">Bea Keluar: ${esc(statusLabel(data.export_duty.status))}${data.export_duty.estimated_duty_usd != null ? " — USD " + esc(data.export_duty.estimated_duty_usd) : ""}</h2>
+      </div>
+      ${renderExportDutyCard(data.export_duty)}
+    `;
+  } catch (err) {
+    if (reqId === REQUEST_SEQ) {
+      $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Error:</strong> ${esc(err.message)}</div>`;
+    }
+  }
+}
+
+function buildBatchFormData() {
+  const fd = new FormData();
+  const fileEl = $("batchFileInput");
+  if (fileEl.files && fileEl.files.length > 0) {
+    fd.append("file", fileEl.files[0]);
+  } else {
+    const csvText = $("batchCsvText").value.trim();
+    if (!csvText) throw new Error(t("Unggah file .xlsx/.csv atau isi daftar barang terlebih dahulu.", "Upload a file or paste CSV rows first."));
+    const blob = new Blob([csvText], { type: "text/csv;charset=utf-8" });
+    fd.append("file", blob, "workbench-batch.csv");
+  }
+  fd.append("mode", $("batchMode").value);
+  fd.append("screening_depth", $("batchDepth").value);
+  fd.append("include_explain", $("batchExplain").checked ? "true" : "false");
+  return fd;
+}
+
+function renderBatchResult(res) {
+  LAST_RESULT = res;
+  LAST_VIEW_KIND = "batch";
+  RESULTS_CACHE.batch = res;
+  const s = res.summary;
+  const isImp = res.mode === "import";
+  const rowsHtml = (res.rows || []).map(r => `<tr>
+    <td class="mono"><strong>${esc(r.reference_id)}</strong></td>
+    <td class="mono">${esc(r.hs_code || "—")}</td>
+    <td>${esc(r.route || "—")}</td>
+    <td><span class="pill ${statusTone(r.overall_status)}">${esc(statusLabel(r.overall_status))}</span></td>
+    <td><span class="pill ${statusTone(r.lartas_status)}">${esc(statusLabel(r.lartas_status))}</span></td>
+    <td><strong>${esc(r.recommended_agreement || "—")}</strong></td>
+    ${isImp
+      ? `<td class="num">${r.applied_duty_percent != null ? esc(r.applied_duty_percent) + "%" : "—"}</td>
+         <td class="num">${r.total_import_taxes != null ? esc(r.currency) + " " + esc(r.total_import_taxes) : "—"}</td>
+         <td class="num" style="color:var(--emerald);"><strong>${r.net_tax_savings != null ? esc(r.currency) + " " + esc(r.net_tax_savings) : "—"}</strong></td>`
+      : `<td>${esc(r.export_duty_rate_display || "0%")}</td>
+         <td class="num">${r.export_duty_usd != null ? "USD " + esc(r.export_duty_usd) : "—"}</td>
+         <td>${esc(statusLabel(r.back_to_back_status))}</td>`
+    }
+    <td style="font-size:11.5px;">${esc(r.error || r.next_action || "—")}</td>
+  </tr>`).join("");
+
+  $("resultsPane").innerHTML = `
+    <div class="verdict-hero ${s.prohibited_count > 0 ? "prohibited" : "ok"}">
+      <div class="verdict-top">
+        <div>
+          <div class="verdict-route">${t("HASIL PEMERIKSAAN MASSAL", "BATCH SCREENING SUMMARY")}</div>
+          <h2 class="verdict-title">${esc(s.total_rows)} ${t("Barang Diperiksa", "Items Screened")} &mdash; ${esc(s.ready_count)} ${t("Siap Jalan", "Ready")}, ${esc(s.action_required_count)} ${t("Perlu Izin", "Permits Needed")}, ${esc(s.prohibited_count)} ${t("Dilarang", "Prohibited")}</h2>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm" onclick="downloadBatchReport('xlsx')">${t("Unduh Excel (.xlsx)", "Download Excel (.xlsx)")}</button>
+          <button class="btn btn-secondary btn-sm" onclick="downloadBatchReport('csv')">CSV</button>
+        </div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="k-lbl">${t("Total Barang", "Total Items")}</div><div class="k-val">${esc(s.total_rows)}</div><div class="k-sub">${esc(s.ready_count)} ${t("siap jalan", "ready")}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Perlu Urus Izin", "Permits Required")}</div><div class="k-val">${esc(s.action_required_count)}</div><div class="k-sub">${t("Lengkapi sebelum kirim", "Prepare before shipping")}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Tertahan / Dilarang", "Blocked / Prohibited")}</div><div class="k-val ${(s.blocked_count + s.prohibited_count) > 0 ? "negative" : ""}">${esc(s.blocked_count + s.prohibited_count)}</div><div class="k-sub">${esc(s.prohibited_count)} ${t("dilarang", "prohibited")}</div></div>
+      ${isImp
+        ? `<div class="kpi"><div class="k-lbl">${t("Total Pajak Impor", "Total Import Taxes")}</div><div class="k-val" style="font-size:17px;">USD ${esc(s.total_import_taxes)}</div><div class="k-sub">${t("Hemat", "Saved")}: USD ${esc(s.total_net_tax_savings)}</div></div>`
+        : `<div class="kpi"><div class="k-lbl">Total Bea Keluar</div><div class="k-val" style="font-size:17px;">USD ${esc(s.total_export_duty_usd)}</div><div class="k-sub">FOB: USD ${esc(s.total_declared_value)}</div></div>`
+      }
+    </div>
+    <div class="card" style="overflow-x:auto;margin-bottom:0;">
+      <h2>${t("Rincian Status & Biaya Per Barang", "Item-by-Item Status & Cost Breakdown")}</h2>
+      <table>
+        <thead><tr>
+          <th>SKU</th><th>HS8</th><th>${t("Rute", "Route")}</th><th>Status</th><th>${t("Status Izin", "Permit Status")}</th><th>${t("Skema Terbaik", "Best Scheme")}</th>
+          ${isImp ? `<th class="num">${t("Tarif BM", "Duty")}</th><th class="num">${t("Pajak Impor", "Import Tax")}</th><th class="num">${t("Hemat Pajak", "Savings")}</th>` : `<th>${t("Tarif BK", "BK Rate")}</th><th class="num">${t("Bea Keluar", "Export Duty")}</th><th>Transit</th>`}
+          <th>${t("Tindak Lanjut", "Next Step")}</th>
+        </tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+async function runBatchScreen() {
+  const reqId = ++REQUEST_SEQ;
+  const btn = $("btnRunBatch");
+  const prev = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> ${t("Memproses...", "Processing...")}`;
+  renderLoadingState(t("Memeriksa Daftar Barang...", "Screening Commodity Batch..."), "");
+  try {
+    const fd = buildBatchFormData();
+    const resp = await fetch("/api/v1/batch/upload?format=json", { method: "POST", body: fd });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail ? JSON.stringify(data.detail) : resp.statusText);
+    RESULTS_CACHE.batch = data;
+    if (reqId === REQUEST_SEQ && MODE === "batch") {
+      renderBatchResult(data);
+    }
+  } catch (err) {
+    if (reqId === REQUEST_SEQ && MODE === "batch") {
+      $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Error:</strong> ${esc(err.message)}</div>`;
+    }
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = prev;
+  }
+}
+
+async function downloadBatchReport(fmt) {
+  try {
+    const fd = buildBatchFormData();
+    const resp = await fetch(`/api/v1/batch/upload?format=${encodeURIComponent(fmt)}`, { method: "POST", body: fd });
+    if (!resp.ok) throw new Error((await resp.text()) || resp.statusText);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tradegraph-${$("batchMode").value}-audit.${fmt}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Download Error:</strong> ${esc(err.message)}</div>`;
+  }
+}
+
+function buildImpactFormData() {
+  const fd = new FormData();
+  const fileEl = $("impactFileInput");
+  if (fileEl.files && fileEl.files.length > 0) {
+    fd.append("file", fileEl.files[0]);
+  } else {
+    const csvText = $("impactCsvText").value.trim();
+    if (!csvText) throw new Error(t("Unggah file atau isi daftar barang terlebih dahulu.", "Upload a file or paste CSV rows first."));
+    const blob = new Blob([csvText], { type: "text/csv;charset=utf-8" });
+    fd.append("file", blob, "impact-portfolio.csv");
+  }
+  fd.append("mode", $("impactMode").value);
+  fd.append("baseline_date", $("impactFromDate").value);
+  fd.append("target_date", $("impactToDate").value);
+  fd.append("screening_depth", $("impactDepth").value);
+  fd.append("include_explain", $("impactExplain").checked ? "true" : "false");
+  return fd;
+}
+
+function fmtSignedUsd(raw) {
+  if (raw == null) return "—";
+  const n = Number(raw);
+  if (Number.isNaN(n)) return esc(raw);
+  if (n > 0) return `<span style="color:var(--red);">+USD ${esc(raw)}</span>`;
+  if (n < 0) return `<span style="color:var(--emerald);">-USD ${esc(String(Math.abs(n).toFixed(2)))}</span>`;
+  return `USD ${esc(raw)}`;
+}
+
+function renderImpactResult(res) {
+  LAST_RESULT = res;
+  LAST_VIEW_KIND = "impact";
+  RESULTS_CACHE.impact = res;
+  ACTIVE_REPORT_TAB = "sku";
+  const s = res.summary;
+  const isImp = res.mode === "import";
+  const heroTone = s.breaking_count > 0 ? "prohibited" : (s.adverse_count > 0 ? "warn" : "ok");
+  const allEvents = [
+    ...(res.regulatory_diff?.enacted_regulations || []),
+    ...(res.regulatory_diff?.legal_events || []),
+  ].sort((a, b) => (a.effective_date || "").localeCompare(b.effective_date || ""));
+
+  const regHtml = allEvents.length ? `
+    <div class="card" style="overflow-x:auto;margin-bottom:0;">
+      <h2>${t("Peraturan Baru yang Berlaku pada Rentang Tanggal Ini", "New Regulations Taking Effect in This Period")}</h2>
+      <table>
+        <thead><tr>
+          <th>${t("Jenis", "Type")}</th>
+          <th>${t("Mulai Berlaku", "Effective Date")}</th>
+          <th>${t("Peraturan Baru", "New Regulation")}</th>
+          <th>${t("Mengubah / Mencabut", "Affects")}</th>
+          <th>PDF</th>
+        </tr></thead>
+        <tbody>
+          ${allEvents.map(ev => `<tr>
+            <td><span class="pill ${statusTone(ev.change_type)}">${esc(statusLabel(ev.change_type))}</span></td>
+            <td class="mono">${esc(ev.effective_date)}</td>
+            <td><strong>${esc(ev.acting_regulation_number || ev.acting_document_id)}</strong><br/><span style="color:var(--muted);font-size:11.5px;">${esc(ev.acting_title || "")}</span></td>
+            <td>${esc(ev.target_regulation_number || ev.target_document_id || "—")}</td>
+            <td>${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">PDF &nearr;</a>` : "—"}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>` : `<div class="card" style="margin-bottom:0;"><p style="margin:0;color:var(--muted);">${t("Tidak ada perubahan peraturan pada periode ini.", "No regulatory changes in this period.")}</p></div>`;
+
+  const rowsHtml = (res.rows || []).map(r => `<tr>
+    <td class="mono"><strong>${esc(r.reference_id)}</strong></td>
+    <td class="mono">${esc(r.hs_code || "—")}</td>
+    <td>${esc(r.route || "—")}</td>
+    <td><span class="pill ${statusTone(r.impact_level)}">${esc(statusLabel(r.impact_level))}</span></td>
+    <td>${esc(statusLabel(r.baseline_lartas_status))} &rarr; <strong>${esc(statusLabel(r.target_lartas_status))}</strong></td>
+    ${isImp
+      ? `<td class="num">${r.baseline_duty_percent != null ? esc(r.baseline_duty_percent) + "%" : "—"} &rarr; ${r.target_duty_percent != null ? esc(r.target_duty_percent) + "%" : "—"}</td>
+         <td class="num"><strong>${fmtSignedUsd(r.delta_import_taxes)}</strong></td>`
+      : `<td>${esc(r.baseline_export_duty_rate || "0%")} &rarr; <strong>${esc(r.target_export_duty_rate || "0%")}</strong></td>
+         <td class="num"><strong>${fmtSignedUsd(r.delta_export_duty_usd)}</strong></td>`
+    }
+    <td style="font-size:11.5px;">
+      ${esc(r.error || r.impact_summary)}
+      ${r.recommended_mitigation ? `<br/><span style="color:var(--accent-bright);"><strong>${t("Saran", "Advice")}:</strong> ${esc(r.recommended_mitigation)}</span>` : ""}
+    </td>
+  </tr>`).join("");
+
+  $("resultsPane").innerHTML = `
+    <div class="verdict-hero ${heroTone}">
+      <div class="verdict-top">
+        <div>
+          <div class="verdict-route">${esc(res.baseline_date)} &rarr; ${esc(res.target_date)}</div>
+          <h2 class="verdict-title">${esc(s.breaking_count)} ${t("Barang Terblokir", "Blocked")}, ${esc(s.adverse_count)} ${t("Biaya Naik", "Higher Cost")}, ${esc(s.favorable_count)} ${t("Biaya Turun / Hemat", "Lower Cost")}</h2>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm" onclick="downloadImpactReport('xlsx')">${t("Unduh Excel (.xlsx)", "Download Excel (.xlsx)")}</button>
+          <button class="btn btn-secondary btn-sm" onclick="downloadImpactReport('csv')">CSV</button>
+        </div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="k-lbl">${t("Selisih Total Biaya / Pajak", "Net Cost Difference")}</div><div class="k-val" style="font-size:18px;">${fmtSignedUsd(s.net_financial_impact_usd)}</div><div class="k-sub">${t("Negatif (-) = Hemat biaya", "Negative (-) = Cost savings")}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Barang yang Tarifnya Turun", "Lower Duty Items")}</div><div class="k-val positive">${esc(s.favorable_count)}</div><div class="k-sub">${t("Menguntungkan", "Favorable")}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Perlu Perhatian / Terblokir", "Blocked / Higher Cost")}</div><div class="k-val ${(s.breaking_count + s.adverse_count) > 0 ? "negative" : ""}">${esc(s.breaking_count + s.adverse_count)}</div><div class="k-sub">${esc(s.breaking_count)} ${t("kritis", "critical")}</div></div>
+      <div class="kpi"><div class="k-lbl">${t("Peraturan Baru Berlaku", "Regulations Changed")}</div><div class="k-val">${esc(s.enacted_regulations_count + s.legal_events_count)}</div><div class="k-sub">${esc(res.baseline_date)} &rarr; ${esc(res.target_date)}</div></div>
+    </div>
+
+    <div class="report-tabs">
+      <button type="button" class="report-tab-btn active" data-tab="sku" onclick="switchReportTab('sku')">📦 ${t("Dampak Biaya Per Barang", "SKU Cost Impact")} (${(res.rows || []).length})</button>
+      <button type="button" class="report-tab-btn" data-tab="regs" onclick="switchReportTab('regs')">📜 ${t("Peraturan Baru yang Berlaku", "Enacted Regulations")} (${allEvents.length})</button>
+    </div>
+
+    <div class="report-tab-panel" data-panel="sku">
+      <div class="card" style="overflow-x:auto;margin-bottom:0;">
+        <h2>${t("Perbandingan Biaya & Status Per Barang (Sebelum vs Sesudah)", "Item-by-Item Before vs After Comparison")}</h2>
+        <table>
+          <thead><tr>
+            <th>SKU</th><th>HS8</th><th>${t("Rute", "Route")}</th><th>Dampak</th><th>${t("Perubahan Izin", "Permit Change")}</th>
+            ${isImp ? `<th class="num">${t("Perubahan Tarif BM", "Duty Change")}</th><th class="num">${t("Selisih Pajak", "Tax Diff")}</th>` : `<th>${t("Perubahan Tarif BK", "BK Rate Change")}</th><th class="num">${t("Selisih BK", "BK Diff")}</th>`}
+            <th>${t("Penjelasan & Saran", "Summary & Advice")}</th>
+          </tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="report-tab-panel hidden" data-panel="regs">${regHtml}</div>
+  `;
+}
+
+async function runImpactAnalyze() {
+  const reqId = ++REQUEST_SEQ;
+  const btn = $("btnRunImpact");
+  const prev = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> ${t("Menghitung...", "Calculating...")}`;
+  renderLoadingState(t("Menganalisis Dampak Peraturan Baru...", "Analyzing Regulatory Impact..."), "");
+  try {
+    const fd = buildImpactFormData();
+    const resp = await fetch("/api/v1/impact/upload?format=json", { method: "POST", body: fd });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail ? JSON.stringify(data.detail) : resp.statusText);
+    RESULTS_CACHE.impact = data;
+    if (reqId === REQUEST_SEQ && MODE === "impact") {
+      renderImpactResult(data);
+    }
+  } catch (err) {
+    if (reqId === REQUEST_SEQ && MODE === "impact") {
+      $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Error:</strong> ${esc(err.message)}</div>`;
+    }
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = prev;
+  }
+}
+
+async function downloadImpactReport(fmt) {
+  try {
+    const fd = buildImpactFormData();
+    const resp = await fetch(`/api/v1/impact/upload?format=${encodeURIComponent(fmt)}`, { method: "POST", body: fd });
+    if (!resp.ok) throw new Error((await resp.text()) || resp.statusText);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tradegraph-${$("impactMode").value}-impact-${$("impactFromDate").value}-to-${$("impactToDate").value}.${fmt}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    $("resultsPane").innerHTML = `<div class="verdict-hero prohibited"><strong>Download Error:</strong> ${esc(err.message)}</div>`;
+  }
+}
+
+let CURRENT_PRESETS = [];
+
+function getActivePresetList() {
+  if (!CATALOG) return [];
+  if (MODE === "impact") {
+    return (CATALOG.impact_scenarios || []).map(sc => {
+      const loc = presetLabel(sc.id, sc.title, sc.summary);
+      return { id: sc.id, title: loc.title, summary: loc.summary, route: loc.route, raw: sc };
+    });
+  }
+  if (MODE === "batch") {
+    return Object.entries(CATALOG.batch_samples || {}).map(([key, sample]) => {
+      const loc = presetLabel(key, sample.title, "");
+      return { id: key, title: loc.title, summary: loc.summary, route: loc.route, raw: sample };
+    });
+  }
+  return (MODE === "export" ? (CATALOG.export_presets || []) : (CATALOG.presets || [])).map(p => {
+    const loc = presetLabel(p.id, p.title, p.summary);
+    return { id: p.id, title: loc.title, summary: loc.summary, route: loc.route, raw: p };
+  });
+}
+
+function selectAndRunPreset(idx, autoRun = true) {
+  ACTIVE_PRESET_INDEX = idx;
+  $("presetSelect").value = String(idx);
+  const item = CURRENT_PRESETS[idx];
+  if (!item) return;
+
+  if (MODE === "impact") {
+    const sc = item.raw;
+    $("impactMode").value = sc.mode;
+    $("impactFromDate").value = sc.baseline_date;
+    $("impactToDate").value = sc.target_date;
+    $("impactDepth").value = sc.screening_depth || "fast_lartas";
+    $("impactDepthWrap").classList.toggle("hidden", sc.mode !== "import");
+    $("impactFileInput").value = "";
+    $("impactCsvText").value = sc.csv;
+    if (autoRun) runImpactAnalyze();
+  } else if (MODE === "batch") {
+    const sample = item.raw;
+    $("batchMode").value = sample.mode;
+    $("batchDepthWrap").classList.toggle("hidden", sample.mode !== "import");
+    $("batchFileInput").value = "";
+    $("batchCsvText").value = sample.csv;
+    if (autoRun) runBatchScreen();
+  } else if (MODE === "export") {
+    applyExportPreset(item.raw);
+    if (autoRun) runExportEvaluate();
+  } else {
+    applyPreset(item.raw);
+    if (autoRun) runOptimize();
+  }
+}
+
+function renderPresetBar(autoRunFirst = false) {
+  CURRENT_PRESETS = getActivePresetList();
+  if (ACTIVE_PRESET_INDEX >= CURRENT_PRESETS.length) ACTIVE_PRESET_INDEX = 0;
+
+  $("presetSelect").innerHTML = CURRENT_PRESETS.map((item, idx) =>
+    `<option value="${idx}">${esc(item.title)} — ${esc(item.summary)}</option>`
+  ).join("");
+
+  selectAndRunPreset(ACTIVE_PRESET_INDEX, autoRunFirst);
+}
+
+function renderCheckboxGrids() {
+  if (!CATALOG) return;
+  const prevOrigin = getCheckedValues("originDocsGrid");
+  const prevLartas = getCheckedValues("lartasDocsGrid");
+  const prevExport = getCheckedValues("exportDocsGrid");
+  const prevOps = getCheckedValues("minimalOpsGrid");
+
+  $("originDocsGrid").innerHTML = (CATALOG.origin_doc_types || []).map(d => `
+    <label class="check-chip" title="${esc(docSub(d.id, d.label))}">
+      <input type="checkbox" value="${esc(d.id)}" onchange="updateOriginDocsSummaryCount()" />
+      <span><strong>${esc(docName(d.id, d.label))}</strong><span class="chip-sub">${esc(docSub(d.id, d.label))}</span></span>
+    </label>`).join("");
+
+  $("lartasDocsGrid").innerHTML = (CATALOG.lartas_doc_types || []).map(d => `
+    <label class="check-chip" title="${esc(docSub(d.id, d.label))}">
+      <input type="checkbox" value="${esc(d.id)}" />
+      <span><strong>${esc(docName(d.id, d.label))}</strong><span class="chip-sub">${esc(docSub(d.id, d.label))}</span></span>
+    </label>`).join("");
+
+  $("exportDocsGrid").innerHTML = (CATALOG.export_lartas_doc_types || []).map(d => `
+    <label class="check-chip" title="${esc(docSub(d.id, d.label))}">
+      <input type="checkbox" value="${esc(d.id)}" />
+      <span><strong>${esc(docName(d.id, d.label))}</strong><span class="chip-sub">${esc(docSub(d.id, d.label))}</span></span>
+    </label>`).join("");
+
+  $("minimalOpsGrid").innerHTML = (CATALOG.minimal_operations || []).map(op => `
+    <label class="check-chip">
+      <input type="checkbox" value="${esc(op.id)}" />
+      <span>${esc(opName(op.id, op.label))}</span>
+    </label>`).join("");
+
+  const prevProc = $("processKind").value;
+  $("processKind").innerHTML = `<option value="">${t("(Tidak ada)", "(None)")}</option>` +
+    (CATALOG.process_kinds || []).map(pk =>
+      `<option value="${esc(pk.id)}">${esc(processName(pk.id, pk.label))}</option>`
+    ).join("");
+  $("processKind").value = prevProc;
+
+  setCheckedValues("originDocsGrid", prevOrigin);
+  setCheckedValues("lartasDocsGrid", prevLartas);
+  setCheckedValues("exportDocsGrid", prevExport);
+  setCheckedValues("minimalOpsGrid", prevOps);
+}
+
+function applyTranslations() {
+  document.documentElement.lang = LANG;
+  $("langIdBtn").classList.toggle("active", LANG === "id");
+  $("langEnBtn").classList.toggle("active", LANG === "en");
+
+  $("appSubtitle").textContent = t(
+    "Kalkulator Tarif FTA, Pajak Impor-Ekspor, Lartas & Bea Keluar",
+    "FTA Preferential Tariff, Import-Export Tax, Lartas & Export Duty Portal"
+  );
+  $("modeImportBtn").textContent = t("🚢 Impor (PIB)", "🚢 Import (PIB)");
+  $("modeExportBtn").textContent = t("🌍 Ekspor & Bea Keluar", "🌍 Export & Duty");
+  $("modeBatchBtn").textContent = t("📊 Cek Massal (Excel)", "📊 Bulk Check (Excel)");
+  $("modeImpactBtn").textContent = t("⚡ Simulasi Regulasi", "⚡ Regulation Impact");
+  $("modeGovBtn").textContent = t("🛡️ Admin Dashboard", "🛡️ Admin Dashboard");
+  $("btnOpenLogin").textContent = t("Masuk / Daftar", "Sign In / Register");
+  $("presetBarLabel").textContent = t("⚡ Contoh Kasus:", "⚡ Quick Case:");
+  $("btnLoadRunPreset").textContent = t("Muat", "Load");
+  if ($("lblScrollTop")) $("lblScrollTop").textContent = t("Ke Atas", "Top");
+
+  $("formTabStep1Btn").textContent = t("① Barang & Rute", "① Goods & Route");
+  $("formTabStep2Btn").textContent = t("② RVC (%) & Dokumen", "② RVC (%) & Docs");
+
+  $("specHeading").textContent = MODE === "export"
+    ? t("Spesifikasi Pengiriman Ekspor", "Export Shipment Specification")
+    : t("Spesifikasi Pengiriman Impor", "Import Shipment Specification");
+  $("directionBadgePill").textContent = MODE === "export" ? "PEB · Ekspor" : "PIB · Impor";
+  $("lblHsCode").textContent = t("Pilih Komoditas dari Daftar atau Ketik Kode HS (BTKI 2022)", "Select Commodity from List or Type 8-Digit HS Code (BTKI 2022)");
+  $("lblDispatchCountry").textContent = t("Negara Asal Pengiriman", "Origin Country");
+  $("lblCifValue").textContent = t("Nilai Pabean CIF (USD)", "CIF Value (USD)");
+  $("lblApiMode").textContent = t("Jenis Izin Impor (API)", "Importer License (API)");
+
+  $("lblExportDest").textContent = t("Negara Tujuan Ekspor", "Export Destination");
+  $("lblFobValue").textContent = t("Nilai Ekspor FOB (USD)", "Export FOB Value (USD)");
+  $("lblQuantityMt").textContent = t("Berat (Ton / MT)", "Weight (MT)");
+  $("lblRefPrice").textContent = t("HR Kemendag (USD)", "Ref. Price / HR (USD)");
+  $("lblHpePrice").textContent = t("HPE (USD/Ton)", "Export Price / HPE (USD)");
+  $("lblAsOfDate").textContent = t("Tanggal Pengiriman", "Shipment Date");
+  $("lblRvcPercent").textContent = t("Kandungan Nilai Regional / RVC (%)", "Regional Value Content (RVC %)");
+
+  $("btnOptimize").textContent = t("Hitung Tarif Termurah & Pajak", "Calculate Lowest Tariff & Tax");
+  $("btnLartas").textContent = t("Cek Izin Saja", "Permits Only");
+  $("btnExportEvaluate").textContent = t("Hitung Bea Keluar & Syarat Ekspor", "Calculate Export Duty & Permits");
+  $("btnExportDuty").textContent = t("Bea Keluar Saja", "Export Duty Only");
+
+  populateHsSelectDropdown();
+  renderCheckboxGrids();
+  if (CATALOG && MODE !== "gov") renderPresetBar(false);
+  updateHsPreview();
+  updateRouteVisualizer();
+  syncRvcControls(false);
+
+  if (LAST_RESULT && LAST_VIEW_KIND === "optimize") renderOptimizationResult(LAST_RESULT);
+  else if (LAST_RESULT && LAST_VIEW_KIND === "export") renderExportResult(LAST_RESULT);
+  else if (LAST_RESULT && LAST_VIEW_KIND === "batch") renderBatchResult(LAST_RESULT);
+  else if (LAST_RESULT && LAST_VIEW_KIND === "impact") renderImpactResult(LAST_RESULT);
+}
+
+function setLanguage(lang) {
+  LANG = lang === "en" ? "en" : "id";
+  localStorage.setItem("tradegraph_lang", LANG);
+  applyTranslations();
+}
+
+function setMode(mode) {
+  if (mode === "gov" && (!CURRENT_USER || CURRENT_USER.role !== "admin")) {
+    openAuthModal("login");
+    return;
+  }
+  MODE = ["import", "export", "batch", "impact", "gov"].includes(mode) ? mode : "import";
+  ACTIVE_PRESET_INDEX = 0;
+  const isImport = MODE === "import";
+  const isExport = MODE === "export";
+  const isBatch = MODE === "batch";
+  const isImpact = MODE === "impact";
+  const isGov = MODE === "gov";
+
+  $("modeImportBtn").classList.toggle("active", isImport);
+  $("modeExportBtn").classList.toggle("active", isExport);
+  $("modeBatchBtn").classList.toggle("active", isBatch);
+  $("modeImpactBtn").classList.toggle("active", isImpact);
+  $("modeGovBtn").classList.toggle("active", isGov);
+
+  $("calculatorWorkspace").classList.toggle("hidden", isGov);
+  $("govPagePane").classList.toggle("hidden", !isGov);
+
+  if (isGov) {
+    loadAdminOverview();
+    loadRegulations();
+    loadMonitorTargets();
+    loadMonitorFreshness();
+    return;
+  }
+
+  $("singleShipmentPane").classList.toggle("hidden", isBatch || isImpact);
+  $("batchBuilderPane").classList.toggle("hidden", !isBatch);
+  $("impactBuilderPane").classList.toggle("hidden", !isImpact);
+
+  if (!isBatch && !isImpact) {
+    switchFormStep(1);
+    $("specHeading").textContent = isExport
+      ? t("Spesifikasi Pengiriman Ekspor", "Export Shipment Specification")
+      : t("Spesifikasi Pengiriman Impor", "Import Shipment Specification");
+    $("directionBadgePill").textContent = isExport ? "PEB · Ekspor" : "PIB · Impor";
+    $("importRouteFields").classList.toggle("hidden", isExport);
+    $("exportRouteFields").classList.toggle("hidden", !isExport);
+    $("importDv20Fields").classList.toggle("hidden", isExport);
+    $("importDocsSection").classList.toggle("hidden", isExport);
+    $("exportDocsSection").classList.toggle("hidden", !isExport);
+    $("optPlanWrap").classList.toggle("hidden", isExport);
+    $("importActionsRow").classList.toggle("hidden", isExport);
+    $("exportActionsRow").classList.toggle("hidden", !isExport);
+    updateRouteVisualizer();
+  }
+
+  if (CATALOG) {
+    renderPresetBar(true);
+  }
+}
+
+/* --- ADMIN DASHBOARD FUNCTIONS --- */
+async function loadAdminOverview() {
+  if (!AUTH_TOKEN) return;
+  try {
+    const resp = await fetch("/api/v1/admin/overview", { headers: authHeaders() });
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const kb = data.kb_metrics || {};
+    const rd = data.readiness || {};
+    $("adminOverviewKpis").innerHTML = `
+      <div class="kpi">
+        <div class="k-lbl">Status Engine &amp; Fuseki TDB2</div>
+        <div class="k-val positive">${rd.status === "ready" ? "ONLINE / READY" : "DEGRADED"}</div>
+        <div class="k-sub">Java 21 HermiT &middot; Fuseki ${rd.fuseki?.latency_ms ?? "—"} ms</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">Canonical Knowledge Base</div>
+        <div class="k-val">v${esc(kb.version)}</div>
+        <div class="k-sub">${esc(kb.owl_triples)} OWL Triples &middot; ${esc(kb.hs_codes_count)} HS8</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">Katalog Regulasi &amp; Relasi</div>
+        <div class="k-val">${esc(kb.source_documents_count)} Dokumen</div>
+        <div class="k-sub">${esc(kb.legal_relations_count)} Hubungan Pencabutan/Amandemen</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">Pengguna Terdaftar</div>
+        <div class="k-val">${(data.users || []).length} Akun</div>
+        <div class="k-sub">${(data.cases?.count || 0)} Kasus Audit Tersimpan</div>
+      </div>
+    `;
+
+    const userRows = (data.users || []).map(u => `
+      <tr>
+        <td><strong>${esc(u.name)}</strong><br/><span style="font-size:11.5px;color:var(--muted);">${esc(u.email)}</span></td>
+        <td>${esc(u.company)}</td>
+        <td><span class="pill ${u.role === "admin" ? "warn" : "info"}">${esc(u.role.toUpperCase())}</span></td>
+        <td>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="toggleUserRole('${esc(u.user_id)}', '${u.role === "admin" ? "user" : "admin"}')">
+            Ubah ke ${u.role === "admin" ? "USER" : "ADMIN"}
+          </button>
+        </td>
+      </tr>
+    `).join("");
+    $("adminUsersTableWrap").innerHTML = `
+      <table>
+        <thead><tr><th>Nama &amp; Email</th><th>Perusahaan</th><th>Role</th><th>Aksi</th></tr></thead>
+        <tbody>${userRows}</tbody>
+      </table>
+    `;
+  } catch (_) {}
+}
+
+async function toggleUserRole(userId, nextRole) {
+  try {
+    const resp = await fetch(`/api/v1/admin/users/${encodeURIComponent(userId)}/role`, {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ role: nextRole }),
+    });
+    if (resp.ok) loadAdminOverview();
+  } catch (_) {}
+}
+
+async function syncFusekiFromAdmin() {
+  const btn = $("btnAdminSyncFuseki");
+  const prev = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Menyinkronkan...";
+  try {
+    const resp = await fetch("/api/v1/fuseki/sync-kb", { method: "POST", headers: authHeaders() });
+    const data = await resp.json();
+    btn.textContent = resp.ok ? `✓ Tersinkron (${data.status})` : "Gagal Sync";
+    setTimeout(() => { btn.textContent = prev; btn.disabled = false; }, 2500);
+  } catch (_) {
+    btn.textContent = prev;
+    btn.disabled = false;
+  }
+}
+
+async function loadRegulations() {
+  $("regContent").innerHTML = t("Memuat daftar regulasi...", "Loading regulations...");
+  const dt = $("regDate").value || "2026-08-15";
+  const resp = await fetch(`/api/v1/regulations?as_of_date=${encodeURIComponent(dt)}`);
+  const data = await resp.json();
+  const relRows = (data.legal_relations || []).map(r => `<tr>
+    <td><span class="pill ${statusTone(r.kind)}">${esc(statusLabel(r.kind))}</span></td>
+    <td><strong>${esc(r.source_number || r.source_document)}</strong></td>
+    <td>${esc(r.target_number || r.target_document)}</td>
+    <td class="mono">${esc(r.effective_date || "—")}</td>
+    <td>${r.active_on_date ? `<span class="pill danger">${t("BERLAKU", "ACTIVE")}</span>` : `<span class="pill">${t("MENDATANG", "FUTURE")}</span>`}</td>
+  </tr>`).join("");
+  const actRows = (data.active_regulations || []).map(r => `<tr>
+    <td><strong>${esc(r.regulation_number || r.document_id)}</strong></td>
+    <td>${esc(r.title)}</td>
+    <td class="mono">${esc(r.effective_from || "—")}</td>
+    <td>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">PDF &nearr;</a>` : "—"}</td>
+  </tr>`).join("");
+  $("regContent").innerHTML = `
+    <h3 style="margin:0 0 8px;font-size:12.5px;color:var(--muted);">${t("Hubungan Pencabutan & Perubahan Regulasi", "Revocations & Amendments")} (${(data.legal_relations || []).length})</h3>
+    <table style="margin-bottom:16px;"><thead><tr><th>${t("Hubungan", "Relation")}</th><th>${t("Peraturan Baru", "New Regulation")}</th><th>${t("Terdampak", "Affected")}</th><th>${t("Berlaku", "Effective")}</th><th>Status</th></tr></thead><tbody>${relRows}</tbody></table>
+    <h3 style="margin:0 0 8px;font-size:12.5px;color:var(--muted);">${t("Peraturan Resmi Aktif", "Active Regulations")} (${data.active_count})</h3>
+    <table><thead><tr><th>${t("Nomor", "Number")}</th><th>${t("Tentang", "Title")}</th><th>${t("Berlaku", "Effective")}</th><th>PDF</th></tr></thead><tbody>${actRows}</tbody></table>
+  `;
+}
+
+let MONITOR_TARGETS_LOADED = false;
+
+async function loadMonitorTargets() {
+  if (MONITOR_TARGETS_LOADED) return;
+  const resp = await fetch("/api/v1/monitor/targets");
+  const data = await resp.json();
+  const defaults = new Set(["bea-keluar", "lartas-ekspor"]);
+  $("monTargetsGrid").innerHTML = (data.targets || []).map(tg => `
+    <label class="check-chip" title="${esc(tg.description)}">
+      <input type="checkbox" value="${esc(tg.target_id)}" ${defaults.has(tg.target_id) ? "checked" : ""} />
+      <span><strong>${esc(tg.target_id)}</strong> <small style="color:var(--muted);">(${esc(tg.portal.toUpperCase())})</small></span>
+    </label>
+  `).join("");
+  MONITOR_TARGETS_LOADED = true;
+}
+
+async function loadMonitorFreshness() {
+  $("monFreshnessOutput").innerHTML = t("Memeriksa kelengkapan arsip...", "Running freshness audit...");
+  const dt = $("monDate").value || "2026-08-15";
+  const resp = await fetch(`/api/v1/monitor/freshness?as_of_date=${encodeURIComponent(dt)}&check_local_files=false`);
+  const data = await resp.json();
+  if (!resp.ok) {
+    $("monFreshnessOutput").innerHTML = `<div class="verdict-hero prohibited">${esc(data.detail || "Freshness audit failed")}</div>`;
+    return;
+  }
+  const gapRows = (data.unarchived_kb_gaps || []).map(g => `<tr>
+    <td><span class="pill ${statusTone(g.severity)}">${esc(g.severity)}</span></td>
+    <td><span class="pill ${statusTone(g.relation_kind)}">${esc(statusLabel(g.relation_kind))}</span></td>
+    <td><strong>${esc(g.regulation_number || g.reg_ref)}</strong></td>
+    <td>${esc((g.impacts_tracked_keys || []).join(", "))}</td>
+    <td class="mono">${esc(g.effective_from || "—")}</td>
+    <td>${g.url ? `<a href="${esc(g.url)}" target="_blank" rel="noopener">JDIH &nearr;</a>` : "—"}</td>
+  </tr>`).join("");
+
+  $("monFreshnessOutput").innerHTML = `
+    <h3 style="margin:0 0 8px;font-size:12.5px;color:var(--muted);">${t("Peraturan Pengubah/Pencabut yang Belum Diarsipkan PDF-nya", "Unarchived Amending / Revoking Regulations")} (${(data.unarchived_kb_gaps || []).length})</h3>
+    <table><thead><tr><th>Prioritas</th><th>${t("Jenis", "Action")}</th><th>${t("Peraturan Baru", "Regulation")}</th><th>${t("Terdampak", "Impacts")}</th><th>${t("Berlaku", "Effective")}</th><th>Portal</th></tr></thead><tbody>${gapRows}</tbody></table>
+  `;
+}
+
+async function runMonitorScan() {
+  const targets = Array.from(document.querySelectorAll('#monTargetsGrid input[type="checkbox"]:checked')).map(cb => cb.value).slice(0, 5);
+  if (!targets.length) return;
+  const btn = $("btnRunMonitorScan");
+  btn.disabled = true;
+  $("monScanOutput").innerHTML = `<span class="spinner"></span> ${t("Memindai portal JDIH...", "Scanning JDIH...")}`;
+  try {
+    const resp = await fetch("/api/v1/monitor/scan", {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({
+        targets,
+        limit_per_target: Math.max(1, Math.min(5, Number($("monLimit").value || 2))),
+        as_of_date: $("monDate").value || null,
+        generate_staging: true,
+        validate_merge: $("monValidateMerge").checked,
+      }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.detail || "Scan gagal");
+    const rows = (data.findings || []).map(f => `<tr>
+      <td><span class="pill ${statusTone(f.severity)}">${esc(f.severity)}</span></td>
+      <td><span class="pill ${statusTone(f.finding_status)}">${esc(statusLabel(f.finding_status))}</span></td>
+      <td><strong>${esc(f.number)}</strong><br/><small style="color:var(--muted);">${esc(f.title.slice(0, 95))}</small></td>
+      <td class="mono">${esc(f.effective_date || "—")}</td>
+      <td>${f.url ? `<a href="${esc(f.url)}" target="_blank" rel="noopener">JDIH &nearr;</a>` : "—"}</td>
+    </tr>`).join("");
+    $("monScanOutput").innerHTML = `
+      <table><thead><tr><th>Prioritas</th><th>Status</th><th>${t("Peraturan", "Regulation")}</th><th>${t("Berlaku", "Effective")}</th><th>Link</th></tr></thead><tbody>${rows}</tbody></table>
+    `;
+  } catch (err) {
+    $("monScanOutput").innerHTML = `<div style="color:var(--red);">${esc(err.message || err)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function init() {
+  setTheme(THEME);
+  await restoreSession();
+
+  const resp = await fetch("/api/v1/catalog");
+  CATALOG = await resp.json();
+  $("kbVersionPill").textContent = `KB v${CATALOG.kb_version}`;
+  $("kbShaPill").textContent = `sha256: ${CATALOG.kb_sha256.slice(0, 12)}`;
+
+  const featuredDl = $("hsCodeList");
+  CATALOG.hs_codes.forEach(h => {
+    const opt = document.createElement("option");
+    opt.value = h.code;
+    opt.label = `${h.code} — MFN ${h.mfn_duty_percent ?? "—"}% — ${cleanHsDescription(h.code, h.label)}`;
+    featuredDl.appendChild(opt);
+  });
+  const allDl = document.createElement("datalist");
+  allDl.id = "allHsList";
+  [...CATALOG.hs_codes, ...(CATALOG.all_hs_codes_sample || [])].forEach(h => {
+    const opt = document.createElement("option");
+    opt.value = h.code;
+    opt.label = cleanHsDescription(h.code, h.label);
+    allDl.appendChild(opt);
+  });
+  document.body.appendChild(allDl);
+
+  CATALOG.countries.forEach(c => {
+    if (c.code !== "ID") {
+      const opt = document.createElement("option");
+      opt.value = c.code; opt.textContent = `${c.code} — ${c.label}`;
+      $("dispatchCountry").appendChild(opt);
+
+      const expOpt = document.createElement("option");
+      expOpt.value = c.code; expOpt.textContent = `${c.code} — ${c.label}`;
+      $("exportDestCountry").appendChild(expOpt);
+
+      const hubOpt = document.createElement("option");
+      hubOpt.value = c.code; hubOpt.textContent = `${c.code} — ${c.label}`;
+      $("transshipmentHub").appendChild(hubOpt);
+    }
+    const hc = document.createElement("option");
+    hc.value = c.slug; hc.textContent = `${c.code} — ${c.label}`;
+    $("highestContrib").appendChild(hc);
+  });
+
+  populateHsSelectDropdown();
+  $("hsCategorySelect").addEventListener("change", () => populateHsSelectDropdown());
+  $("hsSelectDropdown").addEventListener("change", () => {
+    $("hsCode").value = $("hsSelectDropdown").value;
+    updateHsPreview();
+  });
+  $("hsCode").addEventListener("input", () => {
+    const q = ($("hsCode").value || "").trim().toLowerCase();
+    if (q && CATALOG) {
+      const exactOrKeyword = (CATALOG.hs_codes || []).find(h =>
+        h.code.toLowerCase() === q || cleanHsDescription(h.code, h.label).toLowerCase().includes(q)
+      );
+      if (exactOrKeyword && $("hsSelectDropdown")) {
+        $("hsSelectDropdown").value = exactOrKeyword.code;
+      }
+    }
+    updateHsPreview();
+  });
+  $("hsCode").addEventListener("change", updateHsPreview);
+
+  $("dispatchCountry").addEventListener("change", updateRouteVisualizer);
+  $("exportDestCountry").addEventListener("change", updateRouteVisualizer);
+  $("transshipmentHub").addEventListener("change", updateRouteVisualizer);
+
+  $("rvcSlider").addEventListener("input", () => syncRvcControls(true));
+  $("rvcPercent").addEventListener("input", () => syncRvcControls(false));
+
+  $("themeToggleBtn").onclick = () => setTheme(THEME === "dark" ? "light" : "dark");
+  $("langIdBtn").onclick = () => setLanguage("id");
+  $("langEnBtn").onclick = () => setLanguage("en");
+
+  $("btnOpenLogin").onclick = () => openAuthModal("login");
+  $("btnSwitchAccount").onclick = () => openAuthModal("login");
+  $("btnCloseAuthModal").onclick = () => $("authModal").classList.remove("open");
+  $("btnLogout").onclick = logoutUser;
+
+  $("modeImportBtn").onclick = () => setMode("import");
+  $("modeExportBtn").onclick = () => setMode("export");
+  $("modeBatchBtn").onclick = () => setMode("batch");
+  $("modeImpactBtn").onclick = () => setMode("impact");
+  $("modeGovBtn").onclick = () => setMode("gov");
+  $("batchMode").onchange = () => {
+    $("batchDepthWrap").classList.toggle("hidden", $("batchMode").value !== "import");
+  };
+  $("impactMode").onchange = () => {
+    $("impactDepthWrap").classList.toggle("hidden", $("impactMode").value !== "import");
+  };
+
+  applyTranslations();
+  renderPresetBar(true);
+
+  $("btnAddMat").onclick = () => addMaterialRow();
+  $("btnOptimize").onclick = runOptimize;
+  $("btnLartas").onclick = runQuickLartas;
+  $("btnExportEvaluate").onclick = runExportEvaluate;
+  $("btnExportDuty").onclick = runQuickExportDuty;
+  $("btnExportLartas").onclick = runQuickExportLartas;
+  $("btnRunBatch").onclick = runBatchScreen;
+  $("btnDownloadXlsx").onclick = () => downloadBatchReport("xlsx");
+  $("btnDownloadCsv").onclick = () => downloadBatchReport("csv");
+  $("btnRunImpact").onclick = runImpactAnalyze;
+  $("btnImpactXlsx").onclick = () => downloadImpactReport("xlsx");
+  $("btnImpactCsv").onclick = () => downloadImpactReport("csv");
+  $("btnRefreshRegs").onclick = loadRegulations;
+  $("btnRefreshMonitor").onclick = loadMonitorFreshness;
+  $("btnRunMonitorScan").onclick = runMonitorScan;
+  $("btnAdminSyncFuseki").onclick = syncFusekiFromAdmin;
+  $("btnAdminRefreshOverview").onclick = loadAdminOverview;
+}
+
+init();
+</script>
+</body>
+</html>

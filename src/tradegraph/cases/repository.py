@@ -65,6 +65,7 @@ class RevisionConflict(ValueError):
 class CaseRepository:
     def __init__(self, database: Path):
         self.database = Path(database).resolve()
+        self.database.parent.mkdir(parents=True, exist_ok=True)
         with self._connection() as connection:
             connection.executescript(SCHEMA)
 
@@ -134,6 +135,44 @@ class CaseRepository:
     def load_head(self, case_id: str) -> CaseSnapshot:
         with self._connection() as connection:
             return _load_revision(connection, case_id, _head(connection, case_id))
+
+    def list_revisions(self, case_id: str) -> list[CaseSnapshot]:
+        with self._connection() as connection:
+            _head(connection, case_id)
+            rows = connection.execute(
+                "SELECT revision FROM revisions WHERE case_id = ? ORDER BY revision ASC",
+                (case_id,),
+            ).fetchall()
+            return [_load_revision(connection, case_id, int(row["revision"])) for row in rows]
+
+    def list_cases(self, *, limit: int = 50) -> list[dict[str, object]]:
+        with self._connection() as connection:
+            rows = connection.execute(
+                """
+                SELECT c.case_id, c.head_revision, r.context_json, r.created_at, r.reason
+                FROM cases c
+                JOIN revisions r ON r.case_id = c.case_id AND r.revision = c.head_revision
+                ORDER BY r.created_at DESC
+                LIMIT ?
+                """,
+                (max(1, int(limit)),),
+            ).fetchall()
+            out: list[dict[str, object]] = []
+            for row in rows:
+                ctx = json.loads(row["context_json"])
+                out.append({
+                    "case_id": row["case_id"],
+                    "head_revision": int(row["head_revision"]),
+                    "kb_version": ctx.get("kb_version"),
+                    "kb_sha256": ctx.get("kb_sha256"),
+                    "agreement_iri": ctx.get("agreement_iri"),
+                    "procedure_iri": ctx.get("procedure_iri"),
+                    "product_iri": ctx.get("product_iri"),
+                    "transaction_at": ctx.get("transaction_at"),
+                    "created_at": row["created_at"],
+                    "reason": row["reason"],
+                })
+            return out
 
 
 def _validate_context(context):

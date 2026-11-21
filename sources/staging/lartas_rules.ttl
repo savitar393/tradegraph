@@ -1,0 +1,132 @@
+@prefix : <urn:tradegraph:kb#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:lartas-id-lartas-elektronik-84137011 a owl:NamedIndividual,
+        :ImportRestrictionRule ;
+    :hasSourceClause :staged-lartas-id-lartas-elektronik-84137011 ;
+    :lartasAllowedApi :apiP,
+        :apiU ;
+    :lartasCommodityGroup "Barang Elektronik (Pompa Air Sentrifugal)" ;
+    :lartasEffectiveFrom "2025-08-29" ;
+    :lartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :lartasRequiresDocumentType :laporanSurveyor ;
+    :lartasSupervisionMode :supervisionBorder ;
+    :lartasTargetCode :hs-84137011 .
+
+:lartas-id-lartas-industri-72092610 a owl:NamedIndividual,
+        :ImportRestrictionRule ;
+    :hasSourceClause :staged-lartas-id-lartas-industri-72092610 ;
+    :lartasAllowedApi :apiP,
+        :apiU ;
+    :lartasCommodityGroup "Besi atau Baja, Baja Paduan, dan Produk Turunannya" ;
+    :lartasEffectiveFrom "2025-08-29" ;
+    :lartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :lartasRequiresDocumentType :laporanSurveyor,
+        :persetujuanImpor ;
+    :lartasSupervisionMode :supervisionBorder ;
+    :lartasTargetCode :hs-72092610 .
+
+:lartas-id-lartas-larangan-63090000 a owl:NamedIndividual,
+        :ImportRestrictionRule ;
+    :hasSourceClause :staged-lartas-id-lartas-larangan-63090000 ;
+    :lartasCommodityGroup "Kantong Bekas, Karung Bekas, dan Pakaian Bekas" ;
+    :lartasEffectiveFrom "2026-01-01" ;
+    :lartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :lartasProhibited true ;
+    :lartasSupervisionMode :supervisionProhibited ;
+    :lartasTargetCode :hs-63090000 .
+
+:lartas-id-lartas-pertanian-01012100 a owl:NamedIndividual,
+        :ImportRestrictionRule ;
+    :hasSourceClause :staged-lartas-id-lartas-pertanian-01012100 ;
+    :lartasAllowedApi :apiP,
+        :apiU ;
+    :lartasCommodityGroup "Hewan Lainnya (Bibit Kuda)" ;
+    :lartasEffectiveFrom "2025-08-29" ;
+    :lartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :lartasRequiresDocumentType :persetujuanImpor ;
+    :lartasSupervisionMode :supervisionPostBorder ;
+    :lartasTargetCode :hs-01012100 .
+
+:lartas-id-lartas-tekstil-58013610 a owl:NamedIndividual,
+        :ImportRestrictionRule ;
+    :hasSourceClause :staged-lartas-id-lartas-tekstil-58013610 ;
+    :lartasAllowedApi :apiP,
+        :apiU ;
+    :lartasCommodityGroup "Tekstil, Karpet, dan Penutup Lantai Tekstil Lainnya" ;
+    :lartasEffectiveFrom "2025-08-29" ;
+    :lartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :lartasRequiresDocumentType :laporanSurveyor,
+        :persetujuanImpor ;
+    :lartasSupervisionMode :supervisionBorder ;
+    :lartasTargetCode :hs-58013610 .
+
+:lartas-id-lartas-tekstil-61012000 a owl:NamedIndividual,
+        :ImportRestrictionRule ;
+    :hasSourceClause :staged-lartas-id-lartas-tekstil-61012000 ;
+    :lartasAllowedApi :apiP,
+        :apiU ;
+    :lartasCommodityGroup "Pakaian Jadi dan Aksesori Pakaian Jadi" ;
+    :lartasEffectiveFrom "2025-08-29" ;
+    :lartasJurisdiction :jurisdictionIndonesiaCustoms ;
+    :lartasRequiresDocumentType :laporanSurveyor,
+        :persetujuanImpor ;
+    :lartasSupervisionMode :supervisionBorder ;
+    :lartasTargetCode :hs-61012000 .
+
+:hs-01012100 :hasSourceClause :staged-lartas-id-lartas-pertanian-01012100 .
+
+:hs-58013610 :hasSourceClause :staged-lartas-id-lartas-tekstil-58013610 .
+
+:hs-61012000 :hasSourceClause :staged-lartas-id-lartas-tekstil-61012000 .
+
+:hs-63090000 a owl:NamedIndividual,
+        :HSCode ;
+    rdfs:label "6309.00.00 Pakaian bekas dan barang bekas lainnya"@id ;
+    :codeValue "6309.00.00" ;
+    :hasSourceClause :staged-lartas-id-lartas-larangan-63090000 ;
+    :nomenclature "AHTN 2022" ;
+    :tariffSubheading :hs6-630900 .
+
+:hs-72092610 :hasSourceClause :staged-lartas-id-lartas-industri-72092610 .
+
+:hs-84137011 :hasSourceClause :staged-lartas-id-lartas-elektronik-84137011 .
+
+:staged-lartas-id-lartas-elektronik-84137011 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Lartas 8413.70.11: Barang Elektronik (Pompa Air Sentrifugal)" ;
+    :clauseInDocument :source-id-lartas-elektronik ;
+    :clauseLocator "Lampiran I, baris 83 (8413.70.11, Barang Elektronik (Pompa Air Sentrifugal))" .
+
+:staged-lartas-id-lartas-industri-72092610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Lartas 7209.26.10: Besi atau Baja, Baja Paduan, dan Produk Turunannya" ;
+    :clauseInDocument :source-id-lartas-industri ;
+    :clauseLocator "Lampiran I, baris 33 (7209.26.10, Besi atau Baja, Baja Paduan, dan Produk Turunannya)" .
+
+:staged-lartas-id-lartas-larangan-63090000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Lartas 6309.00.00: Kantong Bekas, Karung Bekas, dan Pakaian Bekas" ;
+    :clauseInDocument :source-id-lartas-larangan ;
+    :clauseLocator "Lampiran, baris 23 (6309.00.00, Kantong Bekas, Karung Bekas, dan Pakaian Bekas)" .
+
+:staged-lartas-id-lartas-pertanian-01012100 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Lartas 0101.21.00: Hewan Lainnya (Bibit Kuda)" ;
+    :clauseInDocument :staged-source-ref-18-tahun-2025-15fd7c43 ;
+    :clauseLocator "Lampiran I, baris 7 (0101.21.00, Hewan Lainnya (Bibit Kuda))" .
+
+:staged-lartas-id-lartas-tekstil-58013610 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Lartas 5801.36.10: Tekstil, Karpet, dan Penutup Lantai Tekstil Lainnya" ;
+    :clauseInDocument :source-id-lartas-tekstil ;
+    :clauseLocator "Lampiran I, baris 296 (5801.36.10, Tekstil, Karpet, dan Penutup Lantai Tekstil Lainnya)" .
+
+:staged-lartas-id-lartas-tekstil-61012000 a owl:NamedIndividual,
+        :SourceClause ;
+    rdfs:comment "Lartas 6101.20.00: Pakaian Jadi dan Aksesori Pakaian Jadi" ;
+    :clauseInDocument :source-id-lartas-tekstil ;
+    :clauseLocator "Lampiran I, baris 683 (6101.20.00, Pakaian Jadi dan Aksesori Pakaian Jadi)" .
+

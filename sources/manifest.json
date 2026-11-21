@@ -187,6 +187,454 @@
       "local_ref": "sources/raw/0751d897b43f9681b116a44a2b2bd7caf4b9b863f661fbaddffe07a6ecef4699",
       "status": "ACQUIRED",
       "effective_period": null
+    },
+    {
+      "key": "RCEP-PSR22",
+      "title": "RCEP Annex 3A: Product-Specific Rules (HS 2022)",
+      "publisher": "Australian Border Force",
+      "id": "source-3b489be4b0c0c4b0178e82ef740be88acffc58d436329aad1c9adbdb7c7f8f1f",
+      "url": "https://www.abf.gov.au/free-trade-agreements/files/rcep-chapter-3-annex-3a-HS2022.pdf",
+      "authority": "Para Pihak Regional Comprehensive Economic Partnership",
+      "acquired_at": "2026-11-20T05:55:39.179464+00:00",
+      "content_hash": "0a244b142f36a19e08f6fdf6ec840490d672c3fa40edeeb0505186fa02f67d3f",
+      "local_ref": "sources/raw/0a244b142f36a19e08f6fdf6ec840490d672c3fa40edeeb0505186fa02f67d3f.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-ASAL-RCEP",
+      "title": "PMK 209/PMK.04/2022, tata cara tarif preferensi RCEP",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-7143bf626565d9ca299451d1133385d2ab529080ddd661bfbc41d21fd84522ab",
+      "url": "https://jdih.kemenkeu.go.id/api/download/0c7677d0-e896-401a-abeb-23dca1491b4a/209~PMK.04~2022.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T05:55:39.961544+00:00",
+      "content_hash": "78ad6fb3f5098e3c8b92aad486dbc3ac81090ef0eee81413b7237e31293809b9",
+      "local_ref": "sources/raw/78ad6fb3f5098e3c8b92aad486dbc3ac81090ef0eee81413b7237e31293809b9.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-02",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-ASAL-ACFTA",
+      "title": "PMK 171/PMK.04/2020, tata cara tarif preferensi ACFTA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-305df3897581565796c084cc393ad3731880972d08eb2f25ae1d897121c2c9f6",
+      "url": "https://jdih.kemenkeu.go.id/api/download/ce854826-7c4a-4bab-984a-2cd737724e93/171~PMK.04~2020Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T05:55:43.147015+00:00",
+      "content_hash": "b91125c126a355d682a332f69ea286592774bb59753372ee05664c0c38232c62",
+      "local_ref": "sources/raw/b91125c126a355d682a332f69ea286592774bb59753372ee05664c0c38232c62.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2020-11-03",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-ASAL-IJEPA",
+      "title": "PMK 73/PMK.04/2021, tata cara tarif preferensi IJEPA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-e3fefe434c817d1918ac003b2e39e367264af61242d51b72e2ecdbb86ff681d9",
+      "url": "https://jdih.kemenkeu.go.id/api/download/5ee855f9-d70e-48da-945e-4fd7d774d56a/73~PMK.04~2021Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T05:55:44.474189+00:00",
+      "content_hash": "f7e5335ffc25a2da82f9efc292540c58e09001c4458f2342f3a1c491e90783f9",
+      "local_ref": "sources/raw/f7e5335ffc25a2da82f9efc292540c58e09001c4458f2342f3a1c491e90783f9.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2021-07-24",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-MFN",
+      "title": "PMK 26/PMK.010/2022, penetapan sistem klasifikasi barang dan pembebanan tarif bea masuk atas barang impor (BTKI 2022 MFN)",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-400e754379e870201b2c7e82288a207e194b349af88c73e97d4b2250e6919f37",
+      "url": "https://jdih.kemenkeu.go.id/api/download/04d90736-33d5-4b72-92a3-0d2b7c6bb8bd/26~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T08:39:02.514549+00:00",
+      "content_hash": "ae0caa3d9f49fbdd3378af0ff4cbf84350cfe29f28ef767d07e2a063bf5e1fd6",
+      "local_ref": "sources/raw/ae0caa3d9f49fbdd3378af0ff4cbf84350cfe29f28ef767d07e2a063bf5e1fd6.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2022-04-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-ACFTA",
+      "title": "PMK 46/PMK.010/2022, penetapan tarif bea masuk dalam rangka ACFTA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-89f3b75191f34e9bf42808649a1d9bfa9b4ed7a5654b2b1ccb4b2225fbf13945",
+      "url": "https://jdih.kemenkeu.go.id/api/download/ebf77dc1-1293-4f63-9add-8051813844bf/46~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T08:39:08.252969+00:00",
+      "content_hash": "1d4ac159cc52174d6a6689a7b8fd39e8819f617fb3f47f6bc0a4208f68787d66",
+      "local_ref": "sources/raw/1d4ac159cc52174d6a6689a7b8fd39e8819f617fb3f47f6bc0a4208f68787d66.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2022-04-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-IJEPA",
+      "title": "PMK 50/PMK.010/2022, penetapan tarif bea masuk dalam rangka IJEPA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-c9b2e3558fc47266a88b15502bfb6ec9dffba2988cee552f323059d46aebcfcd",
+      "url": "https://jdih.kemenkeu.go.id/api/download/d337230e-3a42-46a6-8c42-338690a62ebc/50~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T08:39:11.199942+00:00",
+      "content_hash": "c3706e6da64df69df8a213b3e050d7d7520e4536f373641ad038d1d9585c4b44",
+      "local_ref": "sources/raw/c3706e6da64df69df8a213b3e050d7d7520e4536f373641ad038d1d9585c4b44.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2022-04-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-RCEP-ASEAN",
+      "title": "PMK 221/PMK.010/2022, penetapan tarif bea masuk dalam rangka RCEP untuk ASEAN",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-29e683f7f5cce8d2b5eb907474c7284dba2654d2d3f49a51203ee8d7b04df80a",
+      "url": "https://jdih.kemenkeu.go.id/api/download/3adbfb3a-c6fe-44f0-af60-0b1eadbd9262/221~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T08:39:25.595408+00:00",
+      "content_hash": "f284d52bb785f73c85f3ce28d453dba8879b9c3e13ca72a56d279064dcfb5ebf",
+      "local_ref": "sources/raw/f284d52bb785f73c85f3ce28d453dba8879b9c3e13ca72a56d279064dcfb5ebf.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-02",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-RCEP-CN",
+      "title": "PMK 224/PMK.010/2022, penetapan tarif bea masuk dalam rangka RCEP untuk Republik Rakyat Tiongkok",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-d905ce2a7b3cf2e25a16774298d87c3f9a0ac8a6a245e824b8cf9ab93d3a9d3b",
+      "url": "https://jdih.kemenkeu.go.id/api/download/bfe22a4c-6d3d-44d2-8544-c2ad4d9bf930/224~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T08:39:38.814943+00:00",
+      "content_hash": "81f2d4bf99fe531445fcf149defe35d5a141ebf5109e141d5027ff392936ce87",
+      "local_ref": "sources/raw/81f2d4bf99fe531445fcf149defe35d5a141ebf5109e141d5027ff392936ce87.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-02",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-RCEP-JP",
+      "title": "PMK 225/PMK.010/2022, penetapan tarif bea masuk dalam rangka RCEP untuk Jepang",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-f743ff38bffe5d7f61b375d9b255ab9a075c65332bf7db03b02f63544cdc25d8",
+      "url": "https://jdih.kemenkeu.go.id/api/download/e71e2ec0-dd4d-4d98-b101-6c2eab675da7/225~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T08:39:48.344855+00:00",
+      "content_hash": "dab20e34750afb7de04d92df9d9d8b57b3caa65f06b067637aa9bf64d75cfcb5",
+      "local_ref": "sources/raw/dab20e34750afb7de04d92df9d9d8b57b3caa65f06b067637aa9bf64d75cfcb5.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-02",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-TEKSTIL",
+      "title": "Permendag 17 Tahun 2025, kebijakan dan pengaturan impor tekstil dan produk tekstil",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-a9fe6fc835d0993d5b61cc936f2105c73952f01593f7a3bf74bd1c74d4b9d513",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/6181915f-71e6-402b-9948-5e167a0cc905/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T11:57:11.843184+00:00",
+      "content_hash": "f8b734b116db9e46b8b4191e7ebd7c648715ae175fa2f1972eb6ace8736aa3cf",
+      "local_ref": "sources/raw/f8b734b116db9e46b8b4191e7ebd7c648715ae175fa2f1972eb6ace8736aa3cf.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-08-29",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-PERTANIAN",
+      "title": "Permendag 18 Tahun 2025, kebijakan dan pengaturan impor barang pertanian dan peternakan",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-9088832f8c678d5fce443b622a3be06a80cfe0933f1f15178b695cc894312d56",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/bfe118ab-dab7-45cf-9693-9d37f1b39bf6/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T11:57:11.843184+00:00",
+      "content_hash": "4e454a45217bf7785ffb5d4f085ab826a6fa222e1d42afb750992022103d0ecb",
+      "local_ref": "sources/raw/4e454a45217bf7785ffb5d4f085ab826a6fa222e1d42afb750992022103d0ecb.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-08-29",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-ELEKTRONIK",
+      "title": "Permendag 21 Tahun 2025, kebijakan dan pengaturan impor barang elektronik dan telematika",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-02584eae9d05da5462f0ffeae17df0ceaa8e6fc27947efe2f8be362ca7c4f50b",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/8dd071bf-c5c9-41ed-bd70-2f4b7fe5bf0f/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T11:57:11.843184+00:00",
+      "content_hash": "e7fe46b5fea0ed2feb3c2de2e01e253acb67401fb5e51a748e06f63cf8e5b399",
+      "local_ref": "sources/raw/e7fe46b5fea0ed2feb3c2de2e01e253acb67401fb5e51a748e06f63cf8e5b399.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-08-29",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-INDUSTRI",
+      "title": "Permendag 22 Tahun 2025, kebijakan dan pengaturan impor barang industri tertentu",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-0c604baba9189ea74f30ad3ed5d7a37c27f91cc37491d82d874c13c52b6ba884",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/b23185c0-71c9-4c6b-aa38-0c221077c101/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T11:57:11.843184+00:00",
+      "content_hash": "199e50d6efe0b6abe1bae55ca023f28a6d1ec1613dc05ded38297da07f6054ca",
+      "local_ref": "sources/raw/199e50d6efe0b6abe1bae55ca023f28a6d1ec1613dc05ded38297da07f6054ca.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-08-29",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-LARANGAN",
+      "title": "Permendag 47 Tahun 2025, barang yang dilarang untuk diimpor",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-244187d6020ff7a17de03180b50cfc04aeefebf899b9de9f549eac5fcf5d9b63",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/9724cad4-0255-4e0a-b065-4f07d3538720/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T11:57:11.843184+00:00",
+      "content_hash": "5fbc467e499d52d890e4c02b13115941e717d2ab17188028bfa06dbcfab2dcda",
+      "local_ref": "sources/raw/5fbc467e499d52d890e4c02b13115941e717d2ab17188028bfa06dbcfab2dcda.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2026-01-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-BPOM",
+      "title": "Peraturan BPOM 28 Tahun 2023, perubahan atas Peraturan BPOM 27 Tahun 2022 tentang pengawasan pemasukan obat dan makanan ke dalam wilayah Indonesia",
+      "publisher": "Badan Pengawas Obat dan Makanan Republik Indonesia",
+      "id": "source-e7c213dccab77886b2a4d035584849ef25105944aa4980768e773ba6b6c45fd7",
+      "url": "https://peraturan.go.id/files/peraturan-bpom-no-28-tahun-2023.pdf",
+      "authority": "Badan Pengawas Obat dan Makanan Republik Indonesia",
+      "acquired_at": "2026-11-20T11:57:11.843184+00:00",
+      "content_hash": "29fc600a646f49de18ddda715af5af3aba8da367097241a7381805c71576ec18",
+      "local_ref": "sources/raw/29fc600a646f49de18ddda715af5af3aba8da367097241a7381805c71576ec18.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-12-08",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-IKCEPA",
+      "title": "PMK 227/PMK.010/2022, penetapan tarif bea masuk dalam rangka IK-CEPA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-8605695ae7e013959da620fe1322c686c80bb2f5dbbcc556313dac48ae6085e2",
+      "url": "https://jdih.kemenkeu.go.id/api/download/e31d3fe1-2df6-40fb-88c5-d049898a9e71/227~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T14:36:06.406841+00:00",
+      "content_hash": "fba2ccc9eb572da39177290397bb4dfad9dedbb2c9db599f539f5ee90f9cef31",
+      "local_ref": "sources/raw/fba2ccc9eb572da39177290397bb4dfad9dedbb2c9db599f539f5ee90f9cef31.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-ASAL-IKCEPA",
+      "title": "PMK 219/PMK.04/2022, tata cara pengenaan tarif bea masuk dalam rangka IK-CEPA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-0d05e10247a9006ec1db3c57031590cbb2e96d5ad260d3ab052a2e28dcfa48e2",
+      "url": "https://jdih.kemenkeu.go.id/api/download/708de12c-ba71-4c8d-a6f4-18f8b33ce4f5/219~PMK.04~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T14:36:07.080252+00:00",
+      "content_hash": "13b9500b6754ebc157f79159a0de6095a6556dc70230f920065c841170f64500",
+      "local_ref": "sources/raw/13b9500b6754ebc157f79159a0de6095a6556dc70230f920065c841170f64500.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-IACEPA",
+      "title": "PMK 54/PMK.010/2022, penetapan tarif bea masuk dalam rangka IA-CEPA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-b47251178c2ea76b47f982e6ae422022e66342b6f2e2d1ee5d7b18847652bfde",
+      "url": "https://jdih.kemenkeu.go.id/api/download/214e665c-ca66-486f-a0da-bc06c00d2494/54~PMK.010~2022.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T14:36:15.712839+00:00",
+      "content_hash": "f41d8ce86b62f82188c77a6fa8b345a010f3276198f2c5135e7dc56ad08540ce",
+      "local_ref": "sources/raw/f41d8ce86b62f82188c77a6fa8b345a010f3276198f2c5135e7dc56ad08540ce.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2022-04-01",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-ASAL-IACEPA",
+      "title": "PMK 82/PMK.04/2020, tata cara pengenaan tarif bea masuk berdasarkan IA-CEPA",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-af039a3f778dc3d321eec369070246ce6fe189bcd2120ae6e895e5525ee899b6",
+      "url": "https://jdih.kemenkeu.go.id/api/download/55b0c51a-9b28-4704-be4d-62f42e6aef1d/82~PMK.04~2020Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T14:36:16.411621+00:00",
+      "content_hash": "1a6afa554d7536a62e385c0f17f2e2e5ea694fd424b6948d3d7b7323754d54aa",
+      "local_ref": "sources/raw/1a6afa554d7536a62e385c0f17f2e2e5ea694fd424b6948d3d7b7323754d54aa.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2020-07-03",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-RCEP-AU",
+      "title": "PMK 222/PMK.010/2022, penetapan tarif bea masuk dalam rangka RCEP untuk Australia",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-47abda64c1b585f166350db1b75cc250ff7f98a7360fae31138d887e8bf31b9f",
+      "url": "https://jdih.kemenkeu.go.id/api/download/4837635e-2340-4a1b-b23e-defa11a4a36a/222~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T14:36:27.991096+00:00",
+      "content_hash": "d80342cba8bf2522f5484e85e0f9a92ecba940657738d499e93132c352d49835",
+      "local_ref": "sources/raw/d80342cba8bf2522f5484e85e0f9a92ecba940657738d499e93132c352d49835.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-02",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-TARIF-RCEP-KR",
+      "title": "PMK 223/PMK.010/2022, penetapan tarif bea masuk dalam rangka RCEP untuk Republik Korea",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-ba60975b7ca2ed5953ac916d1f852e04453096b688487b2fb92ba37f01a82818",
+      "url": "https://jdih.kemenkeu.go.id/api/download/6e1273a3-e2af-49fe-a954-15c9be644331/223~PMK.010~2022Per.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T14:36:43.519912+00:00",
+      "content_hash": "09a4205e151d9cebd9b23c7f0924d3d636579ba3621de9aa3d02b3ed828e0ce2",
+      "local_ref": "sources/raw/09a4205e151d9cebd9b23c7f0924d3d636579ba3621de9aa3d02b3ed828e0ce2.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-01-02",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-EKSPOR",
+      "title": "Permendag 23 Tahun 2023, kebijakan dan pengaturan ekspor",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-e6fa1e44df3c8de383b034ccba7171e6c5e965b6c672a665afb089958e99f516",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/da167e38-7dae-4e8e-83f5-be47d5cc6687/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T15:53:28.474313+00:00",
+      "content_hash": "c8f69f4975a6cc8292ebe90f126893830bed0d73559d4c98e7285d2d303336ef",
+      "local_ref": "sources/raw/c8f69f4975a6cc8292ebe90f126893830bed0d73559d4c98e7285d2d303336ef.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-07-19",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-EKSPOR-AMEND25",
+      "title": "Permendag 9 Tahun 2025, perubahan ketiga atas Permendag 23 Tahun 2023 tentang kebijakan dan pengaturan ekspor",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-af39ced36c10d477bafabed585a7d5e10f84c7ac93dfbaa70d185accd3955dff",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/05244b34-4375-4325-b326-70d66cdd9176/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T15:53:31.563207+00:00",
+      "content_hash": "aa957ab45dea9fdedc337b2b55540767701b8184b49c368499d437d060798450",
+      "local_ref": "sources/raw/aa957ab45dea9fdedc337b2b55540767701b8184b49c368499d437d060798450.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-03-13",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-EKSPOR-LARANGAN",
+      "title": "Permendag 22 Tahun 2023, barang yang dilarang untuk diekspor",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-15cc908ac2156984c46c40c5b052133a85de904ddba87644f4e3cb856a87415d",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/73414ca1-2225-45e9-80fc-c1c8c4ccb760/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T15:53:33.111612+00:00",
+      "content_hash": "b97f2ae2eb93faa0b2aab760f772a6a6df8c9628e95d8f9594ea557decc35c51",
+      "local_ref": "sources/raw/b97f2ae2eb93faa0b2aab760f772a6a6df8c9628e95d8f9594ea557decc35c51.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2023-07-19",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-LARTAS-EKSPOR-LARANGAN-AMEND25",
+      "title": "Permendag 8 Tahun 2025, perubahan ketiga atas Permendag 22 Tahun 2023 tentang barang yang dilarang untuk diekspor",
+      "publisher": "Kementerian Perdagangan Republik Indonesia",
+      "id": "source-51abca2b944016180965699c8e61e7fb4b27b980f2d2c7ed0cfefa12270a6e35",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/a3f41fe9-ab5d-41fd-b069-fc77aa448abe/file_peraturan",
+      "authority": "Kementerian Perdagangan Republik Indonesia",
+      "acquired_at": "2026-11-20T15:53:36.813459+00:00",
+      "content_hash": "60fe4f258fa7af54158c00bca3b5fa95bc88ee1b508df88de9d8e5ee7b8d1aee",
+      "local_ref": "sources/raw/60fe4f258fa7af54158c00bca3b5fa95bc88ee1b508df88de9d8e5ee7b8d1aee.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-03-13",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-BEA-KELUAR",
+      "title": "PMK 38 Tahun 2024, penetapan barang ekspor yang dikenakan bea keluar dan tarif bea keluar",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-c440fb0bff3e02c442db62d4f9eeace7d978112d3cbf36c7460c4ef55187213f",
+      "url": "https://jdih.kemenkeu.go.id/api/download/014e3646-7fd0-45d5-ad9a-8bf067e6f1ea/2024pmkeuangan038.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T18:56:12.595979+00:00",
+      "content_hash": "1aae39738025e45c5a2020417f54e36eff0b936b4d1ef92f18aefa42a23479aa",
+      "local_ref": "sources/raw/1aae39738025e45c5a2020417f54e36eff0b936b4d1ef92f18aefa42a23479aa.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2024-06-03",
+        "end_exclusive": null
+      }
+    },
+    {
+      "key": "ID-BEA-KELUAR-AMEND25",
+      "title": "PMK 68 Tahun 2025, perubahan atas PMK 38 Tahun 2024 tentang penetapan barang ekspor yang dikenakan bea keluar dan tarif bea keluar",
+      "publisher": "Kementerian Keuangan Republik Indonesia",
+      "id": "source-7dd06e9c1c753662abf70732c12182cdcd8176a1f52e073ad2f4d76ca38f08d6",
+      "url": "https://jdih.kemenkeu.go.id/api/download/dfc692b6-6a37-4d83-aae1-49555a59c372/2025pmkeuangan068.pdf",
+      "authority": "Kementerian Keuangan Republik Indonesia",
+      "acquired_at": "2026-11-20T18:56:13.032450+00:00",
+      "content_hash": "8ce0423fc9fc0b00d50ec713f64f2c7b4fc8fbbbc1f7cbc133d9e230d9da73d0",
+      "local_ref": "sources/raw/8ce0423fc9fc0b00d50ec713f64f2c7b4fc8fbbbc1f7cbc133d9e230d9da73d0.pdf",
+      "status": "ACQUIRED",
+      "effective_period": {
+        "start": "2025-10-22",
+        "end_exclusive": null
+      }
     }
   ],
   "references_without_snapshot": [

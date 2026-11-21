@@ -12,6 +12,7 @@ from tradegraph.contracts import (
 )
 from tradegraph.graph.store import project_case_graphs
 from tradegraph.kb.queries import prepare_local_query
+from tradegraph.reasoning.slicing import slice_owl_for_case
 from tradegraph.validation.service import exact_decimal_context
 
 
@@ -38,28 +39,40 @@ def evaluate_policies(
 
 def assessment_graph(
     kb: CompiledKB, case: CaseSnapshot, inferred: Iterable[tuple[NamedFact, FactSupport]],
-    evidence: ValidationReport | None,
+    evidence: ValidationReport | None, *, extra_triples: Iterable[NamedFact] = (),
 ) -> tuple[Graph, Graph]:
     """Combine one assessed revision with the documents admitted by its validation run."""
     graphs = project_case_graphs(case)
     context = graphs.context.identifier
-    data = kb.dataset.graph(kb.owl_projection_ref) + kb.dataset.graph(kb.definitions_graph_ref)
-    data += graphs.facts + graphs.context
+    owl = kb.dataset.graph(kb.owl_projection_ref)
+    defs = kb.dataset.graph(kb.definitions_graph_ref)
+    case_delta = Graph()
+    for source_graph in (graphs.facts, graphs.context):
+        for triple in source_graph:
+            case_delta.add(triple)
     pinned = set(graphs.context.predicates(context)) | {TG.usesEvidenceSet}
     for triple, support in inferred:
         subject, predicate, value = triple
         if subject != context or predicate not in pinned:
-            data.add(triple)
+            case_delta.add(triple)
             if support.kind == "RULE_DERIVED" and predicate == RDF.type:
-                data.add((subject, CASE_DATA.ruleDerivedType, value))
+                case_delta.add((subject, CASE_DATA.ruleDerivedType, value))
 
     if evidence is not None:
         for finding in evidence.evidence_findings:
             if finding.status == "SATISFIED" and kb.evidence_catalog[finding.definition_id].admit:
                 source = graphs.evidence.value(URIRef(finding.focus_iri), CASE_DATA.sourceReference)
                 if isinstance(source, URIRef):
-                    data.add((context, CASE_DATA.admittedDocument, source))
+                    case_delta.add((context, CASE_DATA.admittedDocument, source))
 
+    for triple in extra_triples:
+        case_delta.add(triple)
+
+    sliced_owl = slice_owl_for_case(owl, case_delta, graphs.context, Graph())
+    data = Graph()
+    for source_graph in (sliced_owl, defs, case_delta):
+        for triple in source_graph:
+            data.add(triple)
     return data, graphs.context
 
 
