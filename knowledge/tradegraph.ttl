@@ -5332,7 +5332,7 @@ WHERE {
     catalog:parameters ( "code" "origin" "destination" ) ;
     catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT DISTINCT ?agreement ?agreementLabel ?facilityCode ?primaryOriginDoc ?primaryOriginDocLabel
+SELECT DISTINCT ?agreement ?agreementLabel ?facilityCode ?exportPreferencePriority ?primaryOriginDoc ?primaryOriginDocLabel
     ?backToBackAllowed ?backToBackClause ?thirdPartyAllowed ?thirdPartyReq ?thirdPartyClause
     ?psr ?psrLevel ?conciseRule
 WHERE {
@@ -5345,6 +5345,8 @@ WHERE {
     FILTER (?origin != ?destination)
     OPTIONAL { ?agreement rdfs:label ?agreementLabel . }
     OPTIONAL { ?agreement tg:pibFacilityCode ?facilityCode . }
+    OPTIONAL { ?agreement tg:exportPreferencePriority ?expPrio . }
+    BIND(COALESCE(?expPrio, 99) AS ?exportPreferencePriority)
     OPTIONAL {
         ?agreement tg:primaryOriginDocumentType ?primaryOriginDoc .
         OPTIONAL { ?primaryOriginDoc rdfs:label ?primaryOriginDocLabel . }
@@ -35371,3 +35373,419 @@ WHERE {
         :staged-bk-id-bea-keluar-c-15119036-col9 ;
     :nomenclature "AHTN 2022" ;
     :tariffSubheading :hs6-151190 .
+
+# Declarative Export Preference Priority, Back-to-Back CO Policies, Cumulation Query, Checklist Templates & Export Planning (0.15.0)
+
+:exportPreferencePriority a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "export preference ranking priority" ;
+    rdfs:domain :TradeAgreement ;
+    rdfs:range xsd:integer .
+
+:atiga :exportPreferencePriority 0 .
+:ikcepa :exportPreferencePriority 1 .
+:iacepa :exportPreferencePriority 1 .
+:ijepa :exportPreferencePriority 1 .
+:acfta :exportPreferencePriority 2 .
+:rcep :exportPreferencePriority 3 .
+
+:requiresBackToBackCoo a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "requires Back-to-Back CO" ;
+    rdfs:domain :Shipment ;
+    rdfs:range xsd:boolean .
+
+:transshipmentHubCountry a owl:ObjectProperty ;
+    rdfs:label "transshipment hub country" ;
+    rdfs:domain :Shipment ;
+    rdfs:range :Country .
+
+:materialDeclaredOriginCode a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "declared material origin country code" ;
+    rdfs:domain :ComponentEntry ;
+    rdfs:range xsd:string .
+
+:backToBackCooDocument a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Surat Keterangan Asal Back-to-Back (Movement Certificate)"@id .
+
+:q-export-b2b-pass a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "export-b2b-pass" ;
+    rdfs:label "Penerbitan SKA Back-to-Back pada hub transshipment diizinkan oleh perjanjian"@id ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?agreement (?shipment AS ?supportSubject)
+    (tg:requiresBackToBackCoo AS ?supportPredicate)
+    (true AS ?supportObject) WHERE {
+    ?context tg:selectedAgreement ?agreement ; tg:assessmentShipment ?shipment .
+    ?shipment tg:requiresBackToBackCoo true .
+    ?agreement tg:allowsBackToBackCoo true .
+    FILTER NOT EXISTS {
+        ?shipment tg:transshipmentHubCountry ?hub .
+        FILTER NOT EXISTS { ?agreement tg:agreementParty ?hub . }
+    }
+}""" .
+
+:q-export-b2b-fail a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "export-b2b-fail" ;
+    rdfs:label "Penerbitan SKA Back-to-Back ditolak (perjanjian bilateral atau hub bukan Negara Anggota)"@id ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?agreement ?reason ?supportSubject ?supportPredicate ?supportObject WHERE {
+    ?context tg:selectedAgreement ?agreement ; tg:assessmentShipment ?shipment .
+    ?shipment tg:requiresBackToBackCoo true .
+    {
+        ?agreement tg:allowsBackToBackCoo false .
+        BIND("DISALLOWED_BILATERAL" AS ?reason)
+        BIND(?shipment AS ?supportSubject)
+        BIND(tg:requiresBackToBackCoo AS ?supportPredicate)
+        BIND(true AS ?supportObject)
+    } UNION {
+        ?agreement tg:allowsBackToBackCoo true .
+        ?shipment tg:transshipmentHubCountry ?hub .
+        FILTER NOT EXISTS { ?agreement tg:agreementParty ?hub . }
+        BIND("HUB_NOT_A_PARTY" AS ?reason)
+        BIND(?shipment AS ?supportSubject)
+        BIND(tg:transshipmentHubCountry AS ?supportPredicate)
+        BIND(?hub AS ?supportObject)
+    }
+}""" .
+
+:q-export-b2b-na a owl:NamedIndividual, catalog:DecisionQuery ;
+    catalog:id "export-b2b-na" ;
+    rdfs:label "SKA Back-to-Back tidak diminta pada pengiriman ini"@id ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?shipment WHERE {
+    ?context tg:assessmentShipment ?shipment .
+    FILTER NOT EXISTS { ?shipment tg:requiresBackToBackCoo true . }
+}""" .
+
+:policy-atiga-export-back-to-back a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "atiga-export-back-to-back" ;
+    rdfs:label "Kelayakan SKA Back-to-Back ATIGA pada hub transshipment"@id ;
+    catalog:coverageScope :scope-atiga-psr-generic ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk131-pasal-9-b2b ;
+    catalog:satisfiedQuery :q-export-b2b-pass ;
+    catalog:failedQuery :q-export-b2b-fail ;
+    catalog:exceptionQuery :q-export-b2b-na .
+
+:policy-rcep-export-back-to-back a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "rcep-export-back-to-back" ;
+    rdfs:label "Kelayakan SKA Back-to-Back RCEP pada hub transshipment"@id ;
+    catalog:coverageScope :scope-rcep-psr-generic ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk209-pasal-10-b2b ;
+    catalog:satisfiedQuery :q-export-b2b-pass ;
+    catalog:failedQuery :q-export-b2b-fail ;
+    catalog:exceptionQuery :q-export-b2b-na .
+
+:policy-acfta-export-back-to-back a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "acfta-export-back-to-back" ;
+    rdfs:label "Kelayakan Movement Certificate / Back-to-Back ACFTA pada hub transshipment"@id ;
+    catalog:coverageScope :scope-acfta-psr-generic ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk171-pasal-8-mc ;
+    catalog:satisfiedQuery :q-export-b2b-pass ;
+    catalog:failedQuery :q-export-b2b-fail ;
+    catalog:exceptionQuery :q-export-b2b-na .
+
+:policy-ijepa-export-back-to-back a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "ijepa-export-back-to-back" ;
+    rdfs:label "Kelayakan SKA Back-to-Back IJEPA pada hub transshipment"@id ;
+    catalog:coverageScope :scope-ijepa-psr-generic ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk73-lampiran-a-nob2b ;
+    catalog:satisfiedQuery :q-export-b2b-pass ;
+    catalog:failedQuery :q-export-b2b-fail ;
+    catalog:exceptionQuery :q-export-b2b-na .
+
+:policy-ikcepa-export-back-to-back a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "ikcepa-export-back-to-back" ;
+    rdfs:label "Kelayakan SKA Back-to-Back IK-CEPA pada hub transshipment"@id ;
+    catalog:coverageScope :scope-ikcepa-psr-generic ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk219-pasal-9 ;
+    catalog:satisfiedQuery :q-export-b2b-pass ;
+    catalog:failedQuery :q-export-b2b-fail ;
+    catalog:exceptionQuery :q-export-b2b-na .
+
+:policy-iacepa-export-back-to-back a owl:NamedIndividual, catalog:PolicyDefinition ;
+    catalog:id "iacepa-export-back-to-back" ;
+    rdfs:label "Kelayakan SKA Back-to-Back IA-CEPA pada hub transshipment"@id ;
+    catalog:coverageScope :scope-iacepa-psr-generic ;
+    catalog:policyKind "CRITERION" ;
+    :hasSourceClause :pmk82-lampiran-a-nob2b ;
+    catalog:satisfiedQuery :q-export-b2b-pass ;
+    catalog:failedQuery :q-export-b2b-fail ;
+    catalog:exceptionQuery :q-export-b2b-na .
+
+:query-export-back-to-back-check a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "export-back-to-back-check" ;
+    rdfs:label "Evaluasi deklaratif kelayakan SKA Back-to-Back dan keanggotaan hub transshipment"@id ;
+    catalog:parameters ( "agreement" "requested" "hasHub" "hub" ) ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?status ?allowed WHERE {
+    ?agreement a tg:TradeAgreement .
+    OPTIONAL { ?agreement tg:allowsBackToBackCoo ?b2b . }
+    BIND(COALESCE(?b2b, false) AS ?allowed)
+    BIND(
+        IF(!?requested, "NOT_REQUESTED",
+            IF(!?allowed, "DISALLOWED_BILATERAL",
+                IF(?hasHub && !EXISTS { ?agreement tg:agreementParty ?hub . }, "HUB_NOT_A_PARTY", "ALLOWED")
+            )
+        ) AS ?status
+    )
+}""" .
+
+:query-cumulation-candidates a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "cumulation-candidates" ;
+    rdfs:label "Diagnosis bahan penghambat CTC dan kandidat negara mitra kumulasi regional berbasis graf inferensi HermiT"@id ;
+    catalog:parameters ( "agreement" "product" "origin" ) ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?materialHs ?currentOrigin ?criterionKind ?partner WHERE {
+    ?agreement a tg:TradeAgreement ; tg:agreementParty ?partner .
+    FILTER (?partner != ?origin)
+    ?product tg:hasBatch ?batch ;
+        tg:classifiedSubheading ?targetSub ;
+        tg:classifiedHeading ?targetHead ;
+        tg:classifiedChapter ?targetChap .
+    OPTIONAL { ?subPsr tg:psrForSubheading ?targetSub ; tg:psrAgreement ?agreement . }
+    OPTIONAL { ?headPsr tg:psrForHeading ?targetHead ; tg:psrAgreement ?agreement . }
+    OPTIONAL { ?chapPsr tg:psrForChapter ?targetChap ; tg:psrAgreement ?agreement . }
+    OPTIONAL { ?agreement tg:generalOriginRule ?genPsr . }
+    BIND(COALESCE(?subPsr, ?headPsr, ?chapPsr, ?genPsr) AS ?psr)
+    FILTER (BOUND(?psr))
+    ?psr tg:hasPsrAlternative ?alt .
+    ?alt tg:requiresCriterionKind ?criterionKind .
+    VALUES ?criterionKind { tg:criterionCC tg:criterionCTH tg:criterionCTSH }
+    ?bom a tg:ComponentList ; tg:componentListForBatch ?batch ; tg:componentEntry ?entry .
+    ?entry tg:entryMaterial ?material ; tg:nonOriginatingInput true .
+    OPTIONAL { ?entry tg:materialOriginCountry ?matCountry . }
+    OPTIONAL { ?entry tg:materialDeclaredOriginCode ?declOrigin . }
+    BIND(COALESCE(?declOrigin, STRAFTER(STR(?matCountry), "#")) AS ?currentOrigin)
+    FILTER NOT EXISTS {
+        ?entry tg:materialOriginCountry ?partyCountry ; tg:materialOriginProofVerified true .
+        ?agreement tg:agreementParty ?partyCountry .
+    }
+    ?material tg:hasTariffClassification ?matCode ;
+        tg:classifiedSubheading ?matSub ;
+        tg:classifiedHeading ?matHead ;
+        tg:classifiedChapter ?matChap .
+    ?matCode tg:codeValue ?materialHs .
+    FILTER (
+        (?criterionKind = tg:criterionCC && ?matChap = ?targetChap) ||
+        (?criterionKind = tg:criterionCTH && ?matHead = ?targetHead) ||
+        (?criterionKind = tg:criterionCTSH && ?matSub = ?targetSub) ||
+        EXISTS { ?alt tg:excludesChapter ?matChap . } ||
+        EXISTS { ?alt tg:excludesHeading ?matHead . } ||
+        EXISTS { ?alt tg:excludesSubheading ?matSub . }
+    )
+}
+ORDER BY ?materialHs ?partner""" .
+
+:ExportChecklistTemplate a owl:Class ;
+    rdfs:label "Template langkah daftar periksa kepatuhan ekspor"@id .
+
+:checklistCode a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain :ExportChecklistTemplate ; rdfs:range xsd:string .
+:checklistCategory a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain :ExportChecklistTemplate ; rdfs:range xsd:string .
+:checklistOrder a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain :ExportChecklistTemplate ; rdfs:range xsd:integer .
+:checklistTitleTemplate a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain :ExportChecklistTemplate ; rdfs:range xsd:string .
+:checklistLegalBasisTemplate a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain :ExportChecklistTemplate ; rdfs:range xsd:string .
+
+:export-step-lartas a owl:NamedIndividual, :ExportChecklistTemplate ;
+    :checklistCode "LARTAS_MISSING" ;
+    :checklistCategory "LARTAS" ;
+    :checklistOrder 10 ;
+    :checklistTitleTemplate "Urus dan penuhi perizinan Lartas Ekspor wajib: {doc_label}" ;
+    :checklistLegalBasisTemplate "Permendag 23 Tahun 2023 jo. Permendag 9 Tahun 2025" ;
+    :hasSourceClause :permendag23-ekspor-umum .
+
+:export-step-duty-applicable a owl:NamedIndividual, :ExportChecklistTemplate ;
+    :checklistCode "EXPORT_DUTY_APPLICABLE" ;
+    :checklistCategory "CUSTOMS_EXPORT_DUTY" ;
+    :checklistOrder 20 ;
+    :checklistTitleTemplate "Hitung dan lunasi Bea Keluar ({rate_desc}{amt_note}) sebelum pemuatan barang ekspor" ;
+    :checklistLegalBasisTemplate "PMK 38 Tahun 2024 jo. PMK 68 Tahun 2025 Pasal 13" ;
+    :hasSourceClause :pmk38-pasal-13-formula, :pmk68-pasal-i-perubahan .
+
+:export-step-duty-hr-required a owl:NamedIndividual, :ExportChecklistTemplate ;
+    :checklistCode "EXPORT_DUTY_HR_REQUIRED" ;
+    :checklistCategory "CUSTOMS_EXPORT_DUTY" ;
+    :checklistOrder 21 ;
+    :checklistTitleTemplate "Verifikasi Harga Referensi (HR) Kemendag periode berjalan untuk menetapkan kolom tarif & pelunasan Bea Keluar" ;
+    :checklistLegalBasisTemplate "PMK 38 Tahun 2024 jo. PMK 68 Tahun 2025 Pasal 4-5 & Pasal 13" ;
+    :hasSourceClause :pmk38-pasal-2-objek, :pmk38-pasal-13-formula, :pmk68-pasal-i-perubahan .
+
+:export-step-peb a owl:NamedIndividual, :ExportChecklistTemplate ;
+    :checklistCode "PEB_PENDING" ;
+    :checklistCategory "CUSTOMS_PEB" ;
+    :checklistOrder 30 ;
+    :checklistTitleTemplate "Ajukan Pemberitahuan Ekspor Barang (PEB / BC 3.0) ke SKP DJBC dan peroleh Nota Pelayanan Ekspor (NPE)" ;
+    :checklistLegalBasisTemplate "PMK 155/PMK.04/2022 Pasal 2 & Pasal 4" ;
+    :hasSourceClause :pmk155-pasal-2-peb, :pmk155-pasal-4-ekspor .
+
+:export-step-origin-proof a owl:NamedIndividual, :ExportChecklistTemplate ;
+    :checklistCode "ORIGIN_PROOF" ;
+    :checklistCategory "ORIGIN_PROOF" ;
+    :checklistOrder 40 ;
+    :checklistTitleTemplate "Terbitkan bukti asal preferensi {origin_proof_label} melalui e-SKA Kemendag untuk skema {agreement_upper}" ;
+    :checklistLegalBasisTemplate "{agreement_label} (Kode Fasilitas {facility_code})" ;
+    :hasSourceClause :pmk35-submission .
+
+:export-step-back-to-back a owl:NamedIndividual, :ExportChecklistTemplate ;
+    :checklistCode "BACK_TO_BACK" ;
+    :checklistCategory "TRANSSHIPMENT" ;
+    :checklistOrder 50 ;
+    :checklistTitleTemplate "Ajukan penerbitan Back-to-Back CO / Movement Certificate di hub transshipment ({hub_label}) dengan melampirkan SKA asal Indonesia" ;
+    :checklistLegalBasisTemplate "Ketentuan Back-to-Back {agreement_upper}" ;
+    :hasSourceClause :pmk209-pasal-10-b2b, :pmk131-pasal-9-b2b, :pmk171-pasal-8-mc .
+
+:export-step-third-party-invoice a owl:NamedIndividual, :ExportChecklistTemplate ;
+    :checklistCode "THIRD_PARTY_INVOICE" ;
+    :checklistCategory "INVOICING" ;
+    :checklistOrder 60 ;
+    :checklistTitleTemplate "{tpi_instruction}" ;
+    :checklistLegalBasisTemplate "Third-Party Invoicing ({tpi_country}) — {agreement_upper}" ;
+    :hasSourceClause :pmk209-pasal-8, :pmk131-article-5 .
+
+:query-export-checklist-templates a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "export-checklist-templates" ;
+    rdfs:label "Daftar template langkah kepatuhan ekspor terurut dari basis pengetahuan"@id ;
+    catalog:parameters ( ) ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?code ?category ?order ?titleTemplate ?legalBasisTemplate WHERE {
+    ?tpl a tg:ExportChecklistTemplate ;
+        tg:checklistCode ?code ;
+        tg:checklistCategory ?category ;
+        tg:checklistOrder ?order ;
+        tg:checklistTitleTemplate ?titleTemplate ;
+        tg:checklistLegalBasisTemplate ?legalBasisTemplate .
+}
+ORDER BY ?order""" .
+
+:goal-export-clearance-ready a owl:NamedIndividual, catalog:GoalDefinition ;
+    catalog:id "export-clearance-ready" ;
+    rdfs:label "Paket persiapan kepatuhan ekspor (PEB, bukti asal preferensi, dan Back-to-Back CO bila diminta) siap"@id ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
+ASK {
+    FILTER (
+        EXISTS { ?revision tg:hasDraftDocumentType tg:pebDeclaration . } ||
+        EXISTS { ?context cd:admittedDocument ?peb . ?peb tg:documentType tg:pebDeclaration . }
+    )
+    FILTER (
+        EXISTS {
+            ?agreement tg:primaryOriginDocumentType ?docType .
+            ?revision tg:hasDraftDocumentType ?docType .
+        } || EXISTS {
+            ?agreement tg:agreementOriginDocumentType ?docType .
+            ?context cd:admittedDocument ?doc .
+            ?doc tg:documentType ?docType ; tg:submittedForPreference true .
+        }
+    )
+    FILTER (
+        !EXISTS { ?revision tg:revisionShipment/tg:requiresBackToBackCoo true . } ||
+        EXISTS { ?revision tg:hasDraftDocumentType tg:backToBackCooDocument . }
+    )
+}""" .
+
+:action-prepare-export-peb a owl:NamedIndividual, :ActionTemplate, catalog:ActionDefinition ;
+    catalog:id "prepare-export-peb" ;
+    rdfs:label "Ajukan Pemberitahuan Ekspor Barang (PEB / BC 3.0) ke SKP DJBC dan peroleh NPE"@id ;
+    :hasSourceClause :pmk155-pasal-2-peb, :pmk155-pasal-4-ekspor ;
+    catalog:goals ( :goal-export-clearance-ready ) ;
+    catalog:typedParameters (
+        [ catalog:name "revision" ; catalog:valueType catalog:IRI ; catalog:fromContext "revision" ]
+    ) ;
+    catalog:preconditions ( [
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
+ASK {
+    ?revision tg:revisionShipment ?shipment .
+    FILTER NOT EXISTS { ?revision tg:hasDraftDocumentType tg:pebDeclaration . }
+    FILTER NOT EXISTS { ?context cd:admittedDocument ?peb . ?peb tg:documentType tg:pebDeclaration . }
+}"""
+    ] ) ;
+    catalog:effects ( [
+        catalog:operation "ADD" ;
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+CONSTRUCT { ?revision tg:hasDraftDocumentType tg:pebDeclaration . } WHERE {}"""
+    ] ) .
+
+:action-prepare-export-origin-proof a owl:NamedIndividual, :ActionTemplate, catalog:ActionDefinition ;
+    catalog:id "prepare-export-origin-proof" ;
+    rdfs:label "Terbitkan bukti asal preferensi melalui e-SKA Kemendag sesuai skema FTA terpilih"@id ;
+    :hasSourceClause :pmk35-submission ;
+    catalog:goals ( :goal-export-clearance-ready ) ;
+    catalog:typedParameters (
+        [ catalog:name "revision" ; catalog:valueType catalog:IRI ; catalog:fromContext "revision" ]
+        [ catalog:name "agreement" ; catalog:valueType catalog:IRI ; catalog:fromContext "agreement" ]
+    ) ;
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+ASK {
+    ?agreement a tg:TradeAgreement ; tg:primaryOriginDocumentType ?docType .
+}""" ;
+    catalog:preconditions ( [
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX cd: <http://www.semanticweb.org/tradegraph/case-data#>
+ASK {
+    ?revision tg:revisionShipment ?shipment .
+    FILTER (
+        EXISTS { ?revision tg:hasDraftDocumentType tg:pebDeclaration . } ||
+        EXISTS { ?context cd:admittedDocument ?peb . ?peb tg:documentType tg:pebDeclaration . }
+    )
+    FILTER NOT EXISTS {
+        ?agreement tg:primaryOriginDocumentType ?docType .
+        ?revision tg:hasDraftDocumentType ?docType .
+    }
+    FILTER NOT EXISTS {
+        ?agreement tg:agreementOriginDocumentType ?docType .
+        ?context cd:admittedDocument ?doc .
+        ?doc tg:documentType ?docType ; tg:submittedForPreference true .
+    }
+}"""
+    ] ) ;
+    catalog:effects ( [
+        catalog:operation "ADD" ;
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+CONSTRUCT { ?revision tg:hasDraftDocumentType ?docType . }
+WHERE { ?agreement tg:primaryOriginDocumentType ?docType . }"""
+    ] ) .
+
+:action-prepare-export-back-to-back-co a owl:NamedIndividual, :ActionTemplate, catalog:ActionDefinition ;
+    catalog:id "prepare-export-back-to-back-co" ;
+    rdfs:label "Ajukan penerbitan Back-to-Back CO / Movement Certificate di hub transshipment"@id ;
+    :hasSourceClause :pmk209-pasal-10-b2b, :pmk131-pasal-9-b2b, :pmk171-pasal-8-mc ;
+    catalog:goals ( :goal-export-clearance-ready ) ;
+    catalog:typedParameters (
+        [ catalog:name "revision" ; catalog:valueType catalog:IRI ; catalog:fromContext "revision" ]
+        [ catalog:name "agreement" ; catalog:valueType catalog:IRI ; catalog:fromContext "agreement" ]
+    ) ;
+    catalog:applicabilitySparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+ASK {
+    ?agreement tg:allowsBackToBackCoo true .
+}""" ;
+    catalog:preconditions ( [
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+ASK {
+    ?revision tg:revisionShipment ?shipment .
+    ?shipment tg:requiresBackToBackCoo true .
+    FILTER NOT EXISTS {
+        ?shipment tg:transshipmentHubCountry ?hub .
+        FILTER NOT EXISTS { ?agreement tg:agreementParty ?hub . }
+    }
+    FILTER (
+        EXISTS {
+            ?agreement tg:primaryOriginDocumentType ?docType .
+            ?revision tg:hasDraftDocumentType ?docType .
+        }
+    )
+    FILTER NOT EXISTS { ?revision tg:hasDraftDocumentType tg:backToBackCooDocument . }
+}"""
+    ] ) ;
+    catalog:effects ( [
+        catalog:operation "ADD" ;
+        catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+CONSTRUCT { ?revision tg:hasDraftDocumentType tg:backToBackCooDocument . } WHERE {}"""
+    ] ) .

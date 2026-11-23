@@ -735,6 +735,17 @@ class MultiFtaOptimizer:
             else f"ex:importerAssignment tg:roleActor ex:importer ; tg:hasActorRole tg:roleImporter ; tg:assignedInRevision {rev} ."
         )
 
+        b2b_extra = ""
+        if getattr(spec, "requires_back_to_back", False):
+            b2b_extra += " ; tg:requiresBackToBackCoo true"
+        raw_hub = getattr(spec, "transshipment_hub", None)
+        if raw_hub:
+            try:
+                hub_local = str(self.resolve_country_iri(raw_hub)).split("#")[-1]
+                b2b_extra += f" ; tg:transshipmentHubCountry tg:{hub_local}"
+            except ValueError:
+                pass
+
         prefixes = f"@prefix ex: <{OPT_EX}> .\n@prefix tg: <{TG}> .\n@prefix xsd: <{XSD}> .\n"
         facts = [f"""
 ex:usd a tg:Currency .
@@ -743,7 +754,7 @@ ex:batch tg:producedAt ex:facility ; tg:producedBy ex:producer .
 ex:facility tg:withinLocation tg:{disp_local} .
 ex:shipment tg:containsGoods ex:product ; tg:shipmentDispatchCountry tg:{disp_local} ;
     tg:shipmentDestinationCountry tg:{dest_local} ; tg:cargoCategory tg:regularCargo ;
-    tg:routeKind tg:directRoute ; tg:shipmentRouteClosed true .
+    tg:routeKind tg:directRoute ; tg:shipmentRouteClosed true {b2b_extra} .
 {rev} tg:revisionShipment ex:shipment .
 {role_stmt}
 """]
@@ -787,6 +798,8 @@ ex:{name} a tg:Document ; tg:documentType tg:{doc_type} ;
                 mat_hs_local = str(self.resolve_hs_iri(mat.hs_code)).split("#")[-1]
                 cumul = ""
                 if mat.origin_country:
+                    escaped_origin = mat.origin_country.strip().replace("\\", "\\\\").replace('"', '\\"')
+                    cumul += f' ; tg:materialDeclaredOriginCode "{escaped_origin}"'
                     try:
                         c_local = str(self.resolve_country_iri(mat.origin_country)).split("#")[-1]
                         cumul += f" ; tg:materialOriginCountry tg:{c_local}"
@@ -874,6 +887,7 @@ ex:entry{idx} tg:entryMaterial ex:material{idx} ; tg:nonOriginatingInput {'true'
             f"{agr}-psr-origin-evidence",
             f"{agr}-psr-de-minimis",
             f"{agr}-psr-minimal-ops",
+            f"{agr}-export-back-to-back",
             "rcep-tariff-differential-dv20",
             "atiga-rvc",
             "atiga-ctsh",

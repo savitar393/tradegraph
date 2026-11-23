@@ -120,11 +120,15 @@ def test_back_to_back_co_transshipment_hub_and_third_party_invoicing(advisor):
     assert by_agr["rcep"].third_party_invoicing_allowed is True
     assert "Box 14" in (by_agr["rcep"].third_party_invoice_instruction or "")
     assert "Box 13" in (by_agr["rcep"].third_party_invoice_instruction or "")
-    # Unified semantic export evaluation emits real SWRL_RULE provenance witnesses for RVC
+    # Unified semantic export evaluation emits real SWRL_RULE & Back-to-Back DECISION_QUERY provenance witnesses
     rcep_exp = {e.policy_id: e for e in by_agr["rcep"].explanations}
     assert "rcep-psr-rvc" in rcep_exp
     assert "SWRL_RULE" in rcep_exp["rcep-psr-rvc"].node_kinds
     assert rcep_exp["rcep-psr-rvc"].reaches_asserted_facts is True
+    assert "rcep-export-back-to-back" in rcep_exp
+    assert rcep_exp["rcep-export-back-to-back"].status == "SATISFIED"
+    assert "DECISION_QUERY" in rcep_exp["rcep-export-back-to-back"].node_kinds
+    assert rcep_exp["rcep-export-back-to-back"].reaches_asserted_facts is True
 
     assert [s.category for s in res.checklist] == [
         "LARTAS", "LARTAS", "LARTAS", "CUSTOMS_PEB", "ORIGIN_PROOF", "TRANSSHIPMENT", "INVOICING",
@@ -155,6 +159,52 @@ def test_back_to_back_co_transshipment_hub_and_third_party_invoicing(advisor):
     assert hub_by_agr["rcep"].back_to_back_status == "ALLOWED"
     assert hub_by_agr["rcep"].eligibility == "ELIGIBLE"
     assert hub_res.recommended_agreement == "rcep"
+
+    # 2b. Full semantic B2B failure provenance witness on PSR-covered HS (7209.26.10 ID -> SG via JP hub):
+    b2b_fail_res = advisor.evaluate(ExportSpec(
+        hs_code="7209.26.10",
+        destination_country="SG",
+        as_of_date="2025-09-15",
+        rvc_percent=Decimal("65.00"),
+        transshipment_hub="JP",
+        requires_back_to_back=True,
+        include_explain=True,
+    ))
+    b2b_fail_by_agr = {s.agreement: s for s in b2b_fail_res.schemes}
+    assert b2b_fail_by_agr["atiga"].back_to_back_status == "HUB_NOT_A_PARTY"
+    atiga_exp = {e.policy_id: e for e in b2b_fail_by_agr["atiga"].explanations}
+    assert "atiga-export-back-to-back" in atiga_exp
+    assert atiga_exp["atiga-export-back-to-back"].status == "NOT_SATISFIED"
+    assert "DECISION_QUERY" in atiga_exp["atiga-export-back-to-back"].node_kinds
+    assert atiga_exp["atiga-export-back-to-back"].reaches_asserted_facts is True
+
+    # 3. Declarative PlanningEngine export clearance plan (goal-export-clearance-ready)
+    from tempfile import TemporaryDirectory
+    from tradegraph.cases.repository import CaseRepository
+    from tradegraph.kb.loader import TG
+
+    tin_spec = ExportSpec(
+        hs_code="8001.10.00",
+        destination_country="JP",
+        as_of_date="2025-09-15",
+        rvc_percent=Decimal("65.00"),
+        transshipment_hub="SG",
+        requires_back_to_back=True,
+    )
+    with TemporaryDirectory(prefix="tradegraph-exp-plan-") as tmp:
+        repo = CaseRepository(Path(tmp) / "plan.sqlite3")
+        report, service = advisor._opt._build_and_assess(
+            repo, tin_spec, "rcep",
+            advisor._opt.resolve_hs_iri("8001.10.00"),
+            TG.indonesia, TG.japan, TG.jurisdictionIndonesiaCustoms,
+            procedure_iri=TG.commercialExport,
+        )
+        plan_steps = advisor.plan_export_clearance(service, report.run_id)
+        assert [s.action_id for s in plan_steps] == [
+            "prepare-export-peb",
+            "prepare-export-origin-proof",
+            "prepare-export-back-to-back-co",
+        ]
 
 
 def test_regional_cumulation_sourcing_optimizer_before_and_after(advisor):

@@ -6,22 +6,26 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
-import re
 from tempfile import TemporaryDirectory
 
-from rdflib import Literal as RDFLiteral, RDF, RDFS, URIRef
+from rdflib import Literal as RDFLiteral, RDFS, URIRef, XSD
 
+from tradegraph.assessment.policies import assessment_graph
+from tradegraph.assessment.service import AssessmentService
 from tradegraph.cases.repository import CaseRepository
-from tradegraph.contracts import CompiledKB
+from tradegraph.contracts import AssessmentReport, CompiledKB, PlanRequest, PlanningLimits
 from tradegraph.kb.loader import TG
 from tradegraph.kb.queries import prepare_local_query
 from tradegraph.optimization.service import (
     FindingExplanationSummary,
     MaterialInput,
     MultiFtaOptimizer,
+    OPT_EX,
+    PlanStepSummary,
     ProvenanceCitation,
     _to_decimal,
 )
+from tradegraph.planning.engine import PlanningEngine
 
 
 @dataclass(frozen=True, slots=True)
@@ -614,76 +618,128 @@ class ExportComplianceAdvisor:
             or spec.performed_operations is not None
         )
 
+    def _check_back_to_back(
+        self,
+        agr_iri: URIRef,
+        *,
+        requested: bool,
+        hub_iri: URIRef | None,
+    ) -> tuple[bool, str]:
+        """Evaluate Back-to-Back CO eligibility & hub party membership declaratively via KB SPARQL query."""
+        qdef = self.kb.query_catalog["export-back-to-back-check"]
+        query = prepare_local_query(qdef.sparql, "SelectQuery")
+        rows = list(self._owl.query(query, initBindings={
+            "agreement": agr_iri,
+            "requested": RDFLiteral(requested, datatype=XSD.boolean),
+            "hasHub": RDFLiteral(hub_iri is not None, datatype=XSD.boolean),
+            "hub": hub_iri if hub_iri is not None else agr_iri,
+        }))
+        if not rows:
+            return False, "NOT_REQUESTED" if not requested else "DISALLOWED_BILATERAL"
+        d = rows[0].asdict()
+        return str(d.get("allowed")).lower() == "true", str(d["status"])
+
     def _suggest_cumulation(
         self,
         agr_iri: URIRef,
         agr_slug: str,
-        psr_iri: URIRef | None,
-        target_digits: str,
         origin_iri: URIRef,
-        spec: ExportSpec,
+        service: AssessmentService,
+        report: AssessmentReport,
     ) -> tuple[CumulationSuggestion, ...]:
-        """Emit counterfactual partner-sourcing recommendations when CTC materials fail under this FTA."""
-        if psr_iri is None or not spec.materials:
+        """Diagnose CTC-failing materials and partner cumulation countries declaratively on the HermiT-materialized graph."""
+        if report.execution_status != "CONVERGED":
             return ()
-        parties = {p for p in self._owl.objects(agr_iri, TG.agreementParty) if isinstance(p, URIRef)}
-        partner_slugs = tuple(sorted(str(p).split("#")[-1] for p in parties if p != origin_iri))
-        if not partner_slugs:
+        qdef = self.kb.query_catalog.get("cumulation-candidates")
+        if qdef is None:
             return ()
+        _, case = service.provenance.load_run(report.run_id)
+        data, _ = assessment_graph(
+            self.kb,
+            case,
+            ((f.triple, f.support) for f in report.findings),
+            report.validation_report,
+        )
+        query = prepare_local_query(qdef.sparql, "SelectQuery")
+        rows = list(data.query(query, initBindings={
+            "agreement": agr_iri,
+            "product": OPT_EX.product,
+            "origin": origin_iri,
+        }))
+        grouped: dict[str, dict[str, object]] = {}
+        for row in rows:
+            d = row.asdict()
+            mat_hs = str(d["materialHs"])
+            entry = grouped.setdefault(mat_hs, {
+                "origin": str(d["currentOrigin"]) if d.get("currentOrigin") is not None else None,
+                "kind": str(d["criterionKind"]).split("#")[-1],
+                "partners": set(),
+            })
+            entry["partners"].add(str(d["partner"]).split("#")[-1])
 
         suggestions: list[CumulationSuggestion] = []
-        seen_sugg: set[tuple[str, str]] = set()
-        for alt in self._owl.objects(psr_iri, TG.hasPsrAlternative):
-            excl_ch = {
-                str(self._owl.value(node, TG.chapterCode) or "").zfill(2)
-                for node in self._owl.objects(alt, TG.excludesChapter)
-            }
-            excl_hd = {
-                str(self._owl.value(node, TG.headingCode) or "").replace(".", "")
-                for node in self._owl.objects(alt, TG.excludesHeading)
-            }
-            excl_sh = {
-                str(self._owl.value(node, TG.subheadingCode) or "").replace(".", "")
-                for node in self._owl.objects(alt, TG.excludesSubheading)
-            }
-            for kind in self._owl.objects(alt, TG.requiresCriterionKind):
-                if kind not in (TG.criterionCC, TG.criterionCTH, TG.criterionCTSH):
-                    continue
-                for mat in spec.materials:
-                    if not mat.non_originating:
-                        continue
-                    if mat.origin_country and mat.origin_proof_verified is True:
-                        try:
-                            if self._opt.resolve_country_iri(mat.origin_country) in parties:
-                                continue
-                        except ValueError:
-                            pass
-                    m_digits = re.sub(r"\D+", "", mat.hs_code)
-                    if len(m_digits) < 6:
-                        continue
-                    m_ch, m_hd, m_sh = m_digits[:2], m_digits[:4], m_digits[:6]
-                    changed = (
-                        (kind == TG.criterionCC and m_ch != target_digits[:2])
-                        or (kind == TG.criterionCTH and m_hd != target_digits[:4])
-                        or (kind == TG.criterionCTSH and m_sh != target_digits[:6])
-                    )
-                    excluded = (m_ch in excl_ch) or (m_hd in excl_hd) or (m_sh in excl_sh)
-                    if not changed or excluded:
-                        key = (agr_slug, mat.hs_code)
-                        if key not in seen_sugg:
-                            seen_sugg.add(key)
-                            suggestions.append(CumulationSuggestion(
-                                agreement=agr_slug,
-                                failing_material_hs=mat.hs_code,
-                                current_origin=mat.origin_country,
-                                recommended_partner_countries=partner_slugs,
-                                reason=(
-                                    f"Bahan {mat.hs_code} gagal kriteria {str(kind).split('#')[-1]} untuk {agr_slug.upper()}; "
-                                    f"pengadaan dari negara mitra ({', '.join(partner_slugs[:5])}{'...' if len(partner_slugs) > 5 else ''}) "
-                                    f"dengan bukti asal terverifikasi mengaktifkan akumulasi regional."
-                                ),
-                            ))
+        for mat_hs in sorted(grouped):
+            info = grouped[mat_hs]
+            partner_slugs = tuple(sorted(info["partners"]))
+            kind_name = str(info["kind"])
+            suggestions.append(CumulationSuggestion(
+                agreement=agr_slug,
+                failing_material_hs=mat_hs,
+                current_origin=info["origin"] if isinstance(info["origin"], str) else None,
+                recommended_partner_countries=partner_slugs,
+                reason=(
+                    f"Bahan {mat_hs} gagal kriteria {kind_name} untuk {agr_slug.upper()}; "
+                    f"pengadaan dari negara mitra ({', '.join(partner_slugs[:5])}{'...' if len(partner_slugs) > 5 else ''}) "
+                    f"dengan bukti asal terverifikasi mengaktifkan akumulasi regional."
+                ),
+            ))
         return tuple(suggestions)
+
+    def _load_checklist_templates(self) -> dict[str, dict[str, object]]:
+        """Load ordered export checklist step templates & legal bases declaratively from the KB."""
+        qdef = self.kb.query_catalog["export-checklist-templates"]
+        query = prepare_local_query(qdef.sparql, "SelectQuery")
+        templates: dict[str, dict[str, object]] = {}
+        for row in self._owl.query(query):
+            d = row.asdict()
+            templates[str(d["code"])] = {
+                "category": str(d["category"]),
+                "order": int(str(d["order"])),
+                "title": str(d["titleTemplate"]),
+                "legal_basis": str(d["legalBasisTemplate"]),
+            }
+        return templates
+
+    def plan_export_clearance(
+        self,
+        service: AssessmentService,
+        run_id: str,
+    ) -> tuple[PlanStepSummary, ...]:
+        """Run BFS PlanningEngine over KB export actions toward goal-export-clearance-ready."""
+        goal_iri = str(TG["goal-export-clearance-ready"])
+        if goal_iri not in self.kb.goal_catalog:
+            return ()
+        planner = PlanningEngine(service)
+        candidates = planner.search_plans(PlanRequest(
+            base_run_id=run_id,
+            goal_iri=goal_iri,
+            allowed_action_ids=(),
+            limits=PlanningLimits(max_depth=5, max_states=16, timeout_ms=60000),
+            objective_id="fewest-actions",
+        ))
+        if not candidates:
+            return ()
+        steps: list[PlanStepSummary] = []
+        for step in candidates[0].steps:
+            action = self.kb.action_catalog.get(step.action_id)
+            label = action.label if action else step.action_id
+            added = tuple(
+                f"{str(p).split('#')[-1]} -> {str(o).split('#')[-1]}"
+                for _, p, o in step.effects.added
+            )
+            clauses = tuple(str(c).split("#")[-1] for c in step.source_clauses)
+            steps.append(PlanStepSummary(step.action_id, label, added, clauses))
+        return tuple(steps)
 
     def evaluate(self, spec: ExportSpec) -> ExportEvaluationResult:
         hs_iri = self._opt.resolve_hs_iri(spec.hs_code)
@@ -699,7 +755,6 @@ class ExportComplianceAdvisor:
         tpi_country = spec.third_party_invoice_country.strip() if spec.third_party_invoice_country else None
 
         hs_code_val = str(self._owl.value(hs_iri, TG.codeValue) or spec.hs_code)
-        target_digits = re.sub(r"\D+", "", hs_code_val)
         origin_slug = str(origin_iri).split("#")[-1]
         dest_slug = str(dest_iri).split("#")[-1]
 
@@ -715,6 +770,7 @@ class ExportComplianceAdvisor:
         }))
 
         schemes: list[ExportSchemeOption] = []
+        scheme_priorities: dict[str, int] = {}
         all_cumul: list[CumulationSuggestion] = []
         seen_agr: set[str] = set()
         run_semantic_roo = (not export_lartas.prohibited) and self._has_roo_inputs(spec)
@@ -728,9 +784,15 @@ class ExportComplianceAdvisor:
                 if agr_slug in seen_agr:
                     continue
                 seen_agr.add(agr_slug)
+                scheme_priorities[agr_slug] = (
+                    int(str(d["exportPreferencePriority"]))
+                    if d.get("exportPreferencePriority") is not None else 99
+                )
 
                 psr_iri = d.get("psr") if isinstance(d.get("psr"), URIRef) else None
-                b2b_allowed = str(d.get("backToBackAllowed")).lower() == "true"
+                b2b_allowed, b2b_status = self._check_back_to_back(
+                    agr_iri, requested=spec.requires_back_to_back, hub_iri=hub_iri,
+                )
                 tpi_allowed = str(d.get("thirdPartyAllowed")).lower() == "true"
                 tpi_req = str(d["thirdPartyReq"]) if d.get("thirdPartyReq") else None
 
@@ -773,31 +835,21 @@ class ExportComplianceAdvisor:
                     if spec.include_explain and report.execution_status == "CONVERGED":
                         explanations = self._opt._explain_key_findings(service, report, agr_slug)
                     if origin_status != "SATISFIED" and statuses.get(f"{agr_slug}-psr-minimal-ops") != "NOT_SATISFIED":
-                        suggs = self._suggest_cumulation(agr_iri, agr_slug, psr_iri, target_digits, origin_iri, spec)
+                        suggs = self._suggest_cumulation(agr_iri, agr_slug, origin_iri, service, report)
                         all_cumul.extend(suggs)
 
-                # Back-to-Back CO & transshipment hub validation
-                b2b_status = "NOT_REQUESTED"
-                if spec.requires_back_to_back:
-                    if not b2b_allowed:
-                        b2b_status = "DISALLOWED_BILATERAL"
-                        diags.append(
-                            f"SKA Back-to-Back tidak berlaku pada skema bilateral {agr_slug.upper()}; gunakan pengiriman langsung/transit atau skema multilateral."
-                        )
-                    elif hub_iri is not None:
-                        parties = set(self._owl.objects(agr_iri, TG.agreementParty))
-                        if hub_iri not in parties:
-                            b2b_status = "HUB_NOT_A_PARTY"
-                            diags.append(
-                                f"Hub transshipment ({hub_slug}) bukan Negara Anggota {agr_slug.upper()}, sehingga tidak dapat menerbitkan Back-to-Back CO."
-                            )
-                        else:
-                            b2b_status = "ALLOWED"
-                            diags.append(
-                                f"Hub transshipment ({hub_slug}) adalah Negara Anggota {agr_slug.upper()} dan berwenang menerbitkan Back-to-Back CO."
-                            )
-                    else:
-                        b2b_status = "ALLOWED"
+                if b2b_status == "DISALLOWED_BILATERAL":
+                    diags.append(
+                        f"SKA Back-to-Back tidak berlaku pada skema bilateral {agr_slug.upper()}; gunakan pengiriman langsung/transit atau skema multilateral."
+                    )
+                elif b2b_status == "HUB_NOT_A_PARTY":
+                    diags.append(
+                        f"Hub transshipment ({hub_slug}) bukan Negara Anggota {agr_slug.upper()}, sehingga tidak dapat menerbitkan Back-to-Back CO."
+                    )
+                elif b2b_status == "ALLOWED" and hub_slug:
+                    diags.append(
+                        f"Hub transshipment ({hub_slug}) adalah Negara Anggota {agr_slug.upper()} dan berwenang menerbitkan Back-to-Back CO."
+                    )
 
                 if tpi_country and tpi_allowed and tpi_req:
                     diags.append(f"Third-Party Invoicing ({tpi_country}): {tpi_req}")
@@ -835,12 +887,11 @@ class ExportComplianceAdvisor:
                     diagnostics=tuple(diags),
                 ))
 
-        # Rank: ELIGIBLE + SATISFIED first, then ELIGIBLE + UNDETERMINED, then bilateral/specific over broad fallback
+        # Rank using eligibility, origin status, and KB-declared exportPreferencePriority
         def rank_key(opt: ExportSchemeOption):
             elig_rank = {"ELIGIBLE": 0, "INELIGIBLE_ROO": 1, "BLOCKED_NON_PARTY_HUB": 2, "BLOCKED_NO_BACK_TO_BACK": 3, "PROHIBITED_EXPORT": 4}.get(opt.eligibility, 5)
             orig_rank = {"SATISFIED": 0, "UNDETERMINED": 1, "NOT_SATISFIED": 2}.get(opt.origin_status, 3)
-            # Prefer bilateral/ATIGA when both eligible (typically deeper tariff elimination), unless Back-to-Back requested
-            agr_pref = {"atiga": 0, "ikcepa": 1, "iacepa": 1, "ijepa": 1, "acfta": 2, "rcep": 3}.get(opt.agreement, 4)
+            agr_pref = scheme_priorities.get(opt.agreement, 99)
             return (elig_rank, orig_rank, agr_pref, opt.agreement)
 
         schemes.sort(key=rank_key)
@@ -852,22 +903,33 @@ class ExportComplianceAdvisor:
         else:
             recommended = "NON_PREFERENTIAL"
 
-        # Build ordered outbound compliance checklist
+        # Render ordered outbound compliance checklist from KB ExportChecklistTemplate definitions
         checklist: list[ExportChecklistStep] = []
         if not export_lartas.prohibited:
-            step_no = 1
-            for doc in export_lartas.missing_docs:
+            templates = self._load_checklist_templates()
+            rendered_entries: list[tuple[int, str, str, str, str | None, str]] = []
+
+            def add_from_template(code: str, *, required_doc: str | None, params: Mapping[str, str], sort_tie: str = "") -> None:
+                tpl = templates[code]
+                rendered_entries.append((
+                    int(tpl["order"]),
+                    sort_tie,
+                    str(tpl["category"]),
+                    str(tpl["title"]).format(**params),
+                    required_doc,
+                    str(tpl["legal_basis"]).format(**params),
+                ))
+
+            for idx, doc in enumerate(export_lartas.missing_docs):
                 if doc == "pebDeclaration":
                     continue
                 doc_label = str(self._owl.value(TG[doc], RDFS.label) or doc)
-                checklist.append(ExportChecklistStep(
-                    step_number=step_no,
-                    category="LARTAS",
-                    title=f"Urus dan penuhi perizinan Lartas Ekspor wajib: {doc_label}",
+                add_from_template(
+                    "LARTAS_MISSING",
                     required_doc=doc,
-                    legal_basis="Permendag 23 Tahun 2023 jo. Permendag 9 Tahun 2025",
-                ))
-                step_no += 1
+                    params={"doc_label": doc_label},
+                    sort_tie=f"{idx:03d}-{doc}",
+                )
             if export_duty.status == "APPLICABLE":
                 if export_duty.duty_basis == "SPECIFIC_USD_PER_MT":
                     rate_desc = f"USD {export_duty.specific_rate_usd_per_mt:.2f}/MT"
@@ -877,59 +939,51 @@ class ExportComplianceAdvisor:
                     f" (estimasi USD {export_duty.estimated_duty_usd:,.2f})"
                     if export_duty.estimated_duty_usd is not None else ""
                 )
-                checklist.append(ExportChecklistStep(
-                    step_number=step_no,
-                    category="CUSTOMS_EXPORT_DUTY",
-                    title=f"Hitung dan lunasi Bea Keluar ({rate_desc}{amt_note}) sebelum pemuatan barang ekspor",
+                add_from_template(
+                    "EXPORT_DUTY_APPLICABLE",
                     required_doc="pebDeclaration",
-                    legal_basis="PMK 38 Tahun 2024 jo. PMK 68 Tahun 2025 Pasal 13",
-                ))
-                step_no += 1
+                    params={"rate_desc": rate_desc, "amt_note": amt_note},
+                )
             elif export_duty.status == "REFERENCE_PRICE_REQUIRED":
-                checklist.append(ExportChecklistStep(
-                    step_number=step_no,
-                    category="CUSTOMS_EXPORT_DUTY",
-                    title="Verifikasi Harga Referensi (HR) Kemendag periode berjalan untuk menetapkan kolom tarif & pelunasan Bea Keluar",
+                add_from_template(
+                    "EXPORT_DUTY_HR_REQUIRED",
                     required_doc="pebDeclaration",
-                    legal_basis="PMK 38 Tahun 2024 jo. PMK 68 Tahun 2025 Pasal 4-5 & Pasal 13",
-                ))
-                step_no += 1
+                    params={},
+                )
             if not export_lartas.peb_filed:
-                checklist.append(ExportChecklistStep(
-                    step_number=step_no,
-                    category="CUSTOMS_PEB",
-                    title="Ajukan Pemberitahuan Ekspor Barang (PEB / BC 3.0) ke SKP DJBC dan peroleh Nota Pelayanan Ekspor (NPE)",
+                add_from_template(
+                    "PEB_PENDING",
                     required_doc="pebDeclaration",
-                    legal_basis="PMK 155/PMK.04/2022 Pasal 2 & Pasal 4",
-                ))
-                step_no += 1
+                    params={},
+                )
             win = next((s for s in schemes if s.agreement == recommended), None)
             if win is not None:
-                checklist.append(ExportChecklistStep(
-                    step_number=step_no,
-                    category="ORIGIN_PROOF",
-                    title=f"Terbitkan bukti asal preferensi {win.origin_proof_label or win.origin_proof_doc} melalui e-SKA Kemendag untuk skema {win.agreement.upper()}",
-                    required_doc=win.origin_proof_doc,
-                    legal_basis=f"{win.agreement_label} (Kode Fasilitas {win.facility_code or '-'})",
-                ))
-                step_no += 1
+                win_params = {
+                    "origin_proof_label": win.origin_proof_label or win.origin_proof_doc or "SKA",
+                    "agreement_upper": win.agreement.upper(),
+                    "agreement_label": win.agreement_label,
+                    "facility_code": win.facility_code or "-",
+                    "hub_label": hub_slug or "Negara Anggota",
+                    "tpi_instruction": win.third_party_invoice_instruction or "",
+                    "tpi_country": tpi_country or "",
+                }
+                add_from_template("ORIGIN_PROOF", required_doc=win.origin_proof_doc, params=win_params)
                 if spec.requires_back_to_back and win.back_to_back_status == "ALLOWED":
-                    checklist.append(ExportChecklistStep(
-                        step_number=step_no,
-                        category="TRANSSHIPMENT",
-                        title=f"Ajukan penerbitan Back-to-Back CO / Movement Certificate di hub transshipment ({hub_slug or 'Negara Anggota'}) dengan melampirkan SKA asal Indonesia",
-                        required_doc=win.origin_proof_doc,
-                        legal_basis=f"Ketentuan Back-to-Back {win.agreement.upper()}",
-                    ))
-                    step_no += 1
+                    add_from_template("BACK_TO_BACK", required_doc=win.origin_proof_doc, params=win_params)
                 if tpi_country and win.third_party_invoice_instruction:
-                    checklist.append(ExportChecklistStep(
-                        step_number=step_no,
-                        category="INVOICING",
-                        title=win.third_party_invoice_instruction,
-                        required_doc=win.origin_proof_doc,
-                        legal_basis=f"Third-Party Invoicing ({tpi_country}) — {win.agreement.upper()}",
-                    ))
+                    add_from_template("THIRD_PARTY_INVOICE", required_doc=win.origin_proof_doc, params=win_params)
+
+            rendered_entries.sort(key=lambda item: (item[0], item[1]))
+            checklist = [
+                ExportChecklistStep(
+                    step_number=step_no,
+                    category=cat,
+                    title=title,
+                    required_doc=req_doc,
+                    legal_basis=basis,
+                )
+                for step_no, (_, _, cat, title, req_doc, basis) in enumerate(rendered_entries, 1)
+            ]
 
         return ExportEvaluationResult(
             kb_version=self.kb.snapshot.version,
