@@ -25,6 +25,11 @@ BULK_REFERENCE_CLASSES: frozenset[URIRef] = frozenset({
     TG.SourceClause,
     TG.SourceDocument,
     TG.LegalRelationEvent,
+    TG.ExportChecklistTemplate,
+    TG.DocumentDraftTemplate,
+    TG.TemplateFieldSpec,
+    TG.CommodityClassificationProfile,
+    TG.CustomsRegimeSpec,
 })
 
 REVERSE_REFERENCE_PREDICATES: frozenset[URIRef] = frozenset({
@@ -59,6 +64,11 @@ _NON_REASONING_BULK_CLASSES: frozenset[URIRef] = frozenset({
     TG.SourceClause,
     TG.SourceDocument,
     TG.LegalRelationEvent,
+    TG.ExportChecklistTemplate,
+    TG.DocumentDraftTemplate,
+    TG.TemplateFieldSpec,
+    TG.CommodityClassificationProfile,
+    TG.CustomsRegimeSpec,
 })
 
 

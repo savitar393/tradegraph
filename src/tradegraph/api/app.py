@@ -12,21 +12,30 @@ import re
 from typing import Literal
 
 from fastapi import FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, Response
 from rdflib import Literal as RDFLiteral, RDF, RDFS, URIRef
 
 from tradegraph.api.schemas import (
     AssessRequest,
     BatchScreenRequest,
+    CounterfactualRequest,
     DemoLoginRequest,
+    DocumentBundleRequest,
+    DocumentGenerateRequest,
+    DocumentPrepareRequest,
     ExportRequest,
+    HsClassifyRequest,
     ImpactAnalyzeRequest,
     LoginRequest,
     MonitorScanRequest,
     OptimizeRequest,
     PersistCaseRequest,
+    RegimeConfigureRequest,
     RegisterRequest,
     RoleUpdateRequest,
+    RooDiagnoseRequest,
+    TemporaryImportRequest,
 )
 from tradegraph.auth.service import (
     AuthError,
@@ -38,6 +47,7 @@ from tradegraph.auth.service import (
     UserProfile,
 )
 from tradegraph.cases.repository import CaseNotFound
+from tradegraph.documents.service import DocumentGeneratorService
 from tradegraph.graph.persistence import CasePersistenceService
 from tradegraph.kb.loader import ENGINE_PROFILE_ID, TG, compile_kb
 from tradegraph.kb.queries import prepare_local_query
@@ -47,9 +57,13 @@ from tradegraph.optimization.batch_service import (
     load_batch_rows_from_csv,
     load_batch_rows_from_xlsx,
 )
+from tradegraph.optimization.counterfactual_service import CounterfactualOptimizerService
 from tradegraph.optimization.export_service import ExportComplianceAdvisor, ExportSpec
+from tradegraph.optimization.hs_classifier_service import HsClassifierService
 from tradegraph.optimization.impact_service import RegulatoryImpactAnalyzer
+from tradegraph.optimization.regime_advisor_service import CustomsRegimeAdvisor
 from tradegraph.optimization.service import MultiFtaOptimizer, ShipmentSpec
+from tradegraph.optimization.temporary_import_service import TemporaryImportAdvisor
 from tradegraph.reasoning.client import ReasoningClient
 from tradegraph.sources.monitor import DEFAULT_WATCHLIST, RegulatoryMonitor
 
@@ -409,6 +423,441 @@ _IMPACT_SCENARIOS: tuple[dict[str, object], ...] = (
     },
 )
 
+_SCREENING_PRESETS: tuple[dict[str, object], ...] = (
+    {
+        "id": "screen-export-nickel-prohibited",
+        "title": "Ekspor Bijih Nikel (2604.00.00) — DILARANG EKSPOR (Permendag 8/2025)",
+        "direction": "export",
+        "payload": {"hs_code": "2604.00.00", "as_of_date": "2025-09-15", "provided_docs": []},
+    },
+    {
+        "id": "screen-export-tin-permits",
+        "title": "Ekspor Timah Murni (8001.10.00) — Boleh dengan Izin ET + PE + LS + PEB",
+        "direction": "export",
+        "payload": {"hs_code": "8001.10.00", "as_of_date": "2025-09-15", "provided_docs": []},
+    },
+    {
+        "id": "screen-import-worn-clothing-prohibited",
+        "title": "Impor Pakaian Bekas (6309.00.00, 2026) — DILARANG IMPOR (Permendag 47/2025)",
+        "direction": "import",
+        "payload": {"hs_code": "6309.00.00", "as_of_date": "2026-06-15", "api_type": "API-U", "provided_docs": []},
+    },
+    {
+        "id": "screen-import-steel-border",
+        "title": "Impor Baja Canai Dingin (7209.26.10) — Wajib Izin PI + LS Border (Permendag 22/2025)",
+        "direction": "import",
+        "payload": {"hs_code": "7209.26.10", "as_of_date": "2025-09-15", "api_type": "API-P", "provided_docs": []},
+    },
+    {
+        "id": "screen-import-dishwasher-clear",
+        "title": "Impor Mesin Pencuci Piring (8422.11.00) — BEBAS LARTAS (Langsung Boleh)",
+        "direction": "import",
+        "payload": {"hs_code": "8422.11.00", "as_of_date": "2025-09-15", "api_type": "API-U", "provided_docs": []},
+    },
+)
+
+_ROO_PRESETS: tuple[dict[str, object], ...] = (
+    {
+        "id": "roo-ev-battery-kr-switch",
+        "title": "Baterai EV (KR → ID) — RVC 30% Gagal IK-CEPA (CTH/RVC40), Lolos RCEP (CTSH)",
+        "payload": {
+            "direction": "import",
+            "hs_code": "8507.60.33",
+            "partner_country": "KR",
+            "as_of_date": "2025-09-15",
+            "materials": [{"hs_code": "8507.90.92", "non_originating": True, "origin_country": "CN", "origin_proof_verified": False}],
+            "rvc_percent": "30.00",
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "roo-steel-th-cumulation-dv20",
+        "title": "Baja Canai Dingin (TH → ID) — Kumulasi JP RCEP + Uji DV20 Lampiran II",
+        "payload": {
+            "direction": "import",
+            "hs_code": "7209.26.10",
+            "partner_country": "TH",
+            "as_of_date": "2025-09-15",
+            "materials": [{"hs_code": "7208.54.10", "non_originating": True, "origin_country": "JP", "origin_proof_verified": True}],
+            "rvc_percent": "30.00",
+            "highest_contributor_country": "japan",
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "roo-dishwasher-cn-ctsh",
+        "title": "Mesin Cuci Piring (CN → ID) — RVC 30% Gagal ACFTA, Lolos RCEP via CTSH",
+        "payload": {
+            "direction": "import",
+            "hs_code": "8422.11.00",
+            "partner_country": "CN",
+            "as_of_date": "2025-09-15",
+            "materials": [{"hs_code": "8422.90.10", "non_originating": True}],
+            "rvc_percent": "30.00",
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "roo-export-ev-battery-kr-cumulation",
+        "title": "Ekspor Baterai EV (ID → KR) — Diagnostik Kumulasi Bahan Baku Separator",
+        "payload": {
+            "direction": "export",
+            "hs_code": "8507.60.33",
+            "partner_country": "KR",
+            "as_of_date": "2025-09-15",
+            "materials": [{"hs_code": "8507.90.92", "non_originating": True, "origin_country": "CN", "origin_proof_verified": False}],
+            "rvc_percent": "30.00",
+            "third_party_invoice_country": "SG",
+            "include_explain": True,
+        },
+    },
+)
+
+_TEMPORARY_IMPORT_PRESETS: tuple[dict[str, object], ...] = (
+    {
+        "id": "temp-exhibition-complete",
+        "title": "Pameran Pompa Sentrifugal (TH → ID) — Lengkap & Bebas Lartas Umum (Pasal 47)",
+        "summary": "HS 8413.70.11 untuk pameran dengan izin, jaminan & rencana ekspor kembali; pengecualian kendali impor umum aktif.",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "dispatch_country": "TH",
+            "destination_country": "ID",
+            "as_of_date": "2025-09-15",
+            "procedure": "reExportTemporaryImport",
+            "intended_use": "exhibitionUse",
+            "proposed_use": "exhibitionUse",
+            "requested_settlement": "reexportSettlement",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": False,
+            "essential_change_in_use": False,
+            "permit_end_date": "2025-10-15",
+            "provided_docs": [
+                "temporaryImportPermit",
+                "temporaryImportGuarantee",
+                "reexportPlan",
+                "temporaryReexportNotice",
+                "temporaryReexportRealization",
+            ],
+            "notice_date": "2025-10-10",
+            "realization_date": "2025-11-02",
+            "include_plan": True,
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "temp-exhibition-plan-needed",
+        "title": "Pameran Pompa — Belum Ajukan Pemberitahuan Ekspor Kembali (Planning 2 Langkah)",
+        "summary": "Izin & jaminan sudah ada, sistem menyusun rencana 2 langkah persiapan ekspor kembali (PMK 178/2017 Pasal 17).",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "dispatch_country": "TH",
+            "destination_country": "ID",
+            "as_of_date": "2025-09-15",
+            "procedure": "temporaryImport",
+            "intended_use": "exhibitionUse",
+            "proposed_use": "exhibitionUse",
+            "requested_settlement": "reexportSettlement",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": False,
+            "essential_change_in_use": False,
+            "permit_end_date": "2025-10-15",
+            "provided_docs": ["temporaryImportPermit", "temporaryImportGuarantee", "reexportPlan"],
+            "include_plan": True,
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "temp-exhibition-change-conference",
+        "title": "Perubahan Tujuan Pameran → Konferensi (Disetujui Sebelum Izin Berakhir)",
+        "summary": "Menunjukkan penalaran temporal PMK 178/2017 Pasal 16 atas persetujuan perubahan tujuan dalam periode izin.",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "dispatch_country": "TH",
+            "destination_country": "ID",
+            "as_of_date": "2025-09-15",
+            "procedure": "temporaryImport",
+            "intended_use": "exhibitionUse",
+            "proposed_use": "conferenceUse",
+            "requested_settlement": "reexportSettlement",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": False,
+            "essential_change_in_use": False,
+            "permit_end_date": "2025-10-15",
+            "provided_docs": [
+                "temporaryImportPermit",
+                "temporaryImportGuarantee",
+                "reexportPlan",
+                "changeOfUseApproval",
+            ],
+            "change_approval_date": "2025-10-01",
+            "include_plan": True,
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "temp-exhibition-commercial-sale-blocked",
+        "title": "Penjualan Komersial Biasa — DITOLAK (Melanggar Syarat Penyelesaian Domestik)",
+        "summary": "Barang pameran tidak boleh dialihkan untuk penjualan komersial biasa tanpa dasar penyelesaian sah.",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "dispatch_country": "TH",
+            "destination_country": "ID",
+            "as_of_date": "2025-09-15",
+            "procedure": "temporaryImport",
+            "intended_use": "exhibitionUse",
+            "proposed_use": "commercialResaleUse",
+            "requested_settlement": "domesticSettlement",
+            "settlement_ground": "ordinaryCommercialTransfer",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": False,
+            "essential_change_in_use": False,
+            "permit_end_date": "2025-10-15",
+            "provided_docs": ["temporaryImportPermit", "temporaryImportGuarantee", "reexportPlan"],
+            "include_plan": False,
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "temp-reexport-late-violation",
+        "title": "Ekspor Kembali Terlambat (> H+30) — Melanggar Tenggat PMK 178/2017 Pasal 17",
+        "summary": "Pemberitahuan lewat tanggal akhir izin (2025-10-20) & realisasi lewat H+30 (2025-11-30) -> NOT_SATISFIED.",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "dispatch_country": "TH",
+            "destination_country": "ID",
+            "as_of_date": "2025-09-15",
+            "procedure": "reExportTemporaryImport",
+            "intended_use": "exhibitionUse",
+            "proposed_use": "exhibitionUse",
+            "requested_settlement": "reexportSettlement",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": False,
+            "essential_change_in_use": False,
+            "permit_end_date": "2025-10-15",
+            "provided_docs": [
+                "temporaryImportPermit",
+                "temporaryImportGuarantee",
+                "reexportPlan",
+                "temporaryReexportNotice",
+                "temporaryReexportRealization",
+            ],
+            "notice_date": "2025-10-20",
+            "realization_date": "2025-11-30",
+            "include_plan": False,
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "temp-consumable-fail",
+        "title": "Barang Habis Pakai — Gagal Syarat Fisik Impor Sementara (PMK 178 Pasal 2)",
+        "summary": "Barang yang habis dipakai selama penggunaan tidak memenuhi kriteria fisik Impor Sementara.",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "dispatch_country": "TH",
+            "destination_country": "ID",
+            "as_of_date": "2025-09-15",
+            "procedure": "temporaryImport",
+            "intended_use": "exhibitionUse",
+            "proposed_use": "exhibitionUse",
+            "requested_settlement": "reexportSettlement",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": True,
+            "essential_change_in_use": False,
+            "permit_end_date": "2025-10-15",
+            "provided_docs": ["temporaryImportPermit", "temporaryImportGuarantee", "reexportPlan"],
+            "include_plan": False,
+            "include_explain": True,
+        },
+    },
+    {
+        "id": "temp-outside-coverage",
+        "title": "Uji Batas Cakupan KB (Tanggal 2025-09-16) — OUT_OF_COVERAGE (Open-World)",
+        "summary": "Menunjukkan kejujuran sistem KBS: di luar cakupan regulasi terverifikasi, sistem melapor OUT_OF_COVERAGE.",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "dispatch_country": "TH",
+            "destination_country": "ID",
+            "as_of_date": "2025-09-16",
+            "procedure": "temporaryImport",
+            "intended_use": "exhibitionUse",
+            "proposed_use": "exhibitionUse",
+            "requested_settlement": "reexportSettlement",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": False,
+            "essential_change_in_use": False,
+            "permit_end_date": "2025-10-15",
+            "provided_docs": ["temporaryImportPermit", "temporaryImportGuarantee", "reexportPlan"],
+            "include_plan": False,
+            "include_explain": True,
+        },
+    },
+)
+
+_HS_CLASSIFIER_PRESETS: tuple[dict[str, object], ...] = (
+    {
+        "id": "hs-steel-cold-rolled",
+        "title": "Baja Gulungan Canai Dingin Industri — Bedakan HRC vs CRC vs Tinplate",
+        "payload": {"query_text": "baja gulungan", "sector": "steel", "processing_state": "cold_rolled"},
+    },
+    {
+        "id": "hs-ev-battery-disambig",
+        "title": "Baterai Lithium-Ion — Bedakan Baterai EV vs Non-EV vs Separator",
+        "payload": {"query_text": "baterai lithium", "sector": "electronics"},
+    },
+    {
+        "id": "hs-palm-oil-disambig",
+        "title": "Produk Minyak Sawit — Bedakan CPO Mentah vs RBD Palm Olein",
+        "payload": {"query_text": "sawit", "sector": "agro"},
+    },
+    {
+        "id": "hs-secondhand-prohibited",
+        "title": "Pakaian Bekas / Thrifting — Klasifikasi & Deteksi Larangan Impor",
+        "payload": {"query_text": "pakaian bekas", "sector": "textile", "processing_state": "used_secondhand", "as_of_date": "2026-06-15"},
+    },
+)
+
+_COUNTERFACTUAL_PRESETS: tuple[dict[str, object], ...] = (
+    {
+        "id": "cf-ev-battery-kr-unlock-ikcepa",
+        "title": "Baterai EV (KR → ID, RVC 30%) — Simulasi Buka IK-CEPA 0% vs RCEP 6%",
+        "summary": "HermiT memverifikasi intervensi kumulasi KR & kenaikan RVC +10% untuk memangkas BM dari 6% menjadi 0%.",
+        "payload": {
+            "direction": "import",
+            "hs_code": "8507.60.33",
+            "partner_country": "KR",
+            "as_of_date": "2025-09-15",
+            "cif_or_fob_value": "100000",
+            "api_type": "API-P",
+            "materials": [{"hs_code": "8507.90.92", "non_originating": True, "origin_country": "CN", "origin_proof_verified": False}],
+            "rvc_percent": "30.00",
+        },
+    },
+    {
+        "id": "cf-dishwasher-cn-unlock-acfta",
+        "title": "Mesin Cuci Piring (CN → ID, RVC 30%) — Simulasi Buka ACFTA 0% vs RCEP 6%",
+        "summary": "HermiT menguji peningkatan RVC +10% untuk membuka tarif ACFTA 0% dan menghitung penghematan USD bersih.",
+        "payload": {
+            "direction": "import",
+            "hs_code": "8422.11.00",
+            "partner_country": "CN",
+            "as_of_date": "2025-09-15",
+            "cif_or_fob_value": "100000",
+            "api_type": "API-U",
+            "materials": [{"hs_code": "8422.90.10", "non_originating": True}],
+            "rvc_percent": "30.00",
+        },
+    },
+    {
+        "id": "cf-steel-th-dv20-repair",
+        "title": "Baja Canai Dingin (TH → ID) — Simulasi Perbaikan RCEP DV20 ≥ 20% FOB",
+        "summary": "Saat DV20 awal hanya 12% FOB (tarif beralih ke JP), HermiT menguji pemenuhan DV20 ≥ 20% FOB.",
+        "payload": {
+            "direction": "import",
+            "hs_code": "7209.26.10",
+            "partner_country": "TH",
+            "as_of_date": "2025-09-15",
+            "cif_or_fob_value": "100000",
+            "api_type": "API-P",
+            "materials": [{"hs_code": "7208.54.10", "non_originating": True, "origin_country": "JP", "origin_proof_verified": True}],
+            "rvc_percent": "30.00",
+            "dv20_percent": "12.00",
+            "highest_contributor_country": "japan",
+        },
+    },
+    {
+        "id": "cf-export-tin-direct-vs-b2b",
+        "title": "Ekspor Timah (ID → JP via SG Back-to-Back) — Simulasi Buka IJEPA Langsung",
+        "summary": "HermiT memverifikasi pengalihan dari Back-to-Back transit ke pengiriman langsung untuk membuka Form JIEPA.",
+        "payload": {
+            "direction": "export",
+            "hs_code": "8001.10.00",
+            "partner_country": "JP",
+            "as_of_date": "2025-09-15",
+            "cif_or_fob_value": "250000",
+            "rvc_percent": "65.00",
+            "transshipment_hub": "SG",
+            "requires_back_to_back": True,
+            "third_party_invoice_country": "HK",
+        },
+    },
+)
+
+_REGIME_PRESETS: tuple[dict[str, object], ...] = (
+    {
+        "id": "regime-steel-kite-export-mfg",
+        "title": "Baja Bahan Baku Olah-Ekspor (API-P / KITE) — KITE Pembebasan vs Kawasan Berikat vs PIB",
+        "payload": {
+            "hs_code": "7209.26.10",
+            "as_of_date": "2025-09-15",
+            "direction": "import",
+            "trade_purpose": "manufacturing_for_export",
+            "reexport_plan": "PROCESSED_EXPORT",
+            "company_license": "KITE_HOLDER",
+            "customs_value_usd": "100000",
+            "has_fta_partner": True,
+        },
+    },
+    {
+        "id": "regime-pump-exhibition-temp",
+        "title": "Pompa Sentrifugal untuk Pameran (Ekspor Kembali Utuh) — Impor Sementara Bebas Lartas Pasal 47",
+        "payload": {
+            "hs_code": "8413.70.11",
+            "as_of_date": "2025-09-15",
+            "direction": "import",
+            "trade_purpose": "exhibition_event",
+            "reexport_plan": "SAME_CONDITION_REEXPORT",
+            "company_license": "API-U",
+            "identifiable_for_reexport": True,
+            "consumed_in_use": False,
+            "essential_change_in_use": False,
+            "customs_value_usd": "40000",
+            "has_fta_partner": True,
+        },
+    },
+    {
+        "id": "regime-ev-battery-bonded-zone",
+        "title": "Komponen Baterai EV di Kawasan Berikat (PKB) — Penangguhan BM & Penundaan Lartas BC 2.3",
+        "payload": {
+            "hs_code": "8507.90.92",
+            "as_of_date": "2025-09-15",
+            "direction": "import",
+            "trade_purpose": "industrial_bonded_zone",
+            "reexport_plan": "PROCESSED_EXPORT",
+            "company_license": "KB_OPERATOR",
+            "customs_value_usd": "150000",
+            "has_fta_partner": True,
+        },
+    },
+    {
+        "id": "regime-dishwasher-local-fta",
+        "title": "Mesin Cuci Piring untuk Distribusi Lokal — Impor Umum PIB BC 2.0 + Preferensi FTA",
+        "payload": {
+            "hs_code": "8422.11.00",
+            "as_of_date": "2025-09-15",
+            "direction": "import",
+            "trade_purpose": "commercial_trading",
+            "reexport_plan": "NO_REEXPORT",
+            "company_license": "API-U",
+            "customs_value_usd": "100000",
+            "has_fta_partner": True,
+        },
+    },
+    {
+        "id": "regime-prohibited-hard-block",
+        "title": "Pakaian Bekas (6309.00.00, 2026) — Seluruh Rezim Fasilitas Impor Diblokir",
+        "payload": {
+            "hs_code": "6309.00.00",
+            "as_of_date": "2026-06-15",
+            "direction": "import",
+            "trade_purpose": "exhibition_event",
+            "reexport_plan": "SAME_CONDITION_REEXPORT",
+            "company_license": "API-U",
+            "customs_value_usd": "20000",
+            "has_fta_partner": True,
+        },
+    },
+)
+
 
 def _build_catalog(optimizer: MultiFtaOptimizer) -> dict[str, object]:
     owl = optimizer.kb.dataset.graph(optimizer.kb.owl_projection_ref)
@@ -562,6 +1011,12 @@ def _build_catalog(optimizer: MultiFtaOptimizer) -> dict[str, object]:
         "minimal_operations": sorted(minimal_ops_map.values(), key=lambda item: item["id"]),
         "presets": list(_PRESETS),
         "export_presets": list(_EXPORT_PRESETS),
+        "screening_presets": list(_SCREENING_PRESETS),
+        "roo_presets": list(_ROO_PRESETS),
+        "temporary_import_presets": list(_TEMPORARY_IMPORT_PRESETS),
+        "hs_classifier_presets": list(_HS_CLASSIFIER_PRESETS),
+        "counterfactual_presets": list(_COUNTERFACTUAL_PRESETS),
+        "regime_presets": list(_REGIME_PRESETS),
         "batch_samples": _BATCH_SAMPLES,
         "impact_scenarios": list(_IMPACT_SCENARIOS),
     }
@@ -690,7 +1145,31 @@ def create_app(
         ReasoningClient.shutdown_workers()
 
     catalog_snapshot = _build_catalog(optimizer)
-    workbench_html = WORKBENCH_HTML_PATH.read_text(encoding="utf-8")
+    kb_sha_tag = optimizer.kb.snapshot.sha256[:16]
+    catalog_etag = f'W/"catalog-{kb_sha_tag}"'
+    hs_facets_etag = f'W/"hs-facets-{kb_sha_tag}"'
+    doc_templates_etag = f'W/"doc-templates-{kb_sha_tag}"'
+    workbench_cache: dict[str, object] = {"sig": None, "html": "", "etag": ""}
+    _FAVICON_SVG = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28">'
+        '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
+        '<stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#10b981"/>'
+        '</linearGradient></defs>'
+        '<rect width="28" height="28" rx="7" fill="url(#g)"/>'
+        '<path d="M14 4L23 9V19L14 24L5 19V9L14 4Z" fill="none" stroke="#fff" stroke-width="2"/>'
+        '<path d="M8 16.5L14 11.5L20 16.5" fill="none" stroke="#a7f3d0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<circle cx="14" cy="11.5" r="2.2" fill="#fff"/>'
+        '</svg>'
+    )
+
+    def _load_workbench_cached() -> tuple[str, str]:
+        st = WORKBENCH_HTML_PATH.stat()
+        sig = (st.st_mtime_ns, st.st_size)
+        if workbench_cache["sig"] != sig:
+            workbench_cache["html"] = WORKBENCH_HTML_PATH.read_text(encoding="utf-8")
+            workbench_cache["etag"] = f'W/"wb-{st.st_mtime_ns:x}-{st.st_size:x}"'
+            workbench_cache["sig"] = sig
+        return str(workbench_cache["html"]), str(workbench_cache["etag"])
 
     app = FastAPI(
         title="TradeGraph Semantic Trade Compliance API",
@@ -702,6 +1181,7 @@ def create_app(
             "Regulatory Impact Diff, and SQLite/Fuseki persistence."
         ),
     )
+    app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
     app.state.optimizer = optimizer
     export_advisor = ExportComplianceAdvisor(optimizer)
     app.state.export_advisor = export_advisor
@@ -709,6 +1189,16 @@ def create_app(
     app.state.batch_screener = batch_screener
     impact_analyzer = RegulatoryImpactAnalyzer(optimizer, batch_screener)
     app.state.impact_analyzer = impact_analyzer
+    doc_generator = DocumentGeneratorService(optimizer)
+    app.state.doc_generator = doc_generator
+    temp_import_advisor = TemporaryImportAdvisor(optimizer)
+    app.state.temp_import_advisor = temp_import_advisor
+    hs_classifier = HsClassifierService(optimizer, export_advisor)
+    app.state.hs_classifier = hs_classifier
+    counterfactual_optimizer = CounterfactualOptimizerService(optimizer, export_advisor)
+    app.state.counterfactual_optimizer = counterfactual_optimizer
+    regime_advisor = CustomsRegimeAdvisor(optimizer, export_advisor)
+    app.state.regime_advisor = regime_advisor
     app.state.persistence = persistence
     app.state.regulatory_monitor = monitor
     app.state.auth_service = auth_service
@@ -744,9 +1234,35 @@ def create_app(
         if user.role != "admin":
             raise HTTPException(status_code=403, detail="Akses ditolak: Hanya Administrator yang dapat menjalankan operasi ini.")
 
+    hs_facets_snapshot = hs_classifier.get_facets()
+    doc_templates_snapshot = {
+        "kb_version": optimizer.kb.snapshot.version,
+        "count": len(doc_generator.list_templates()),
+        "templates": [tpl.to_dict() for tpl in doc_generator.list_templates()],
+    }
+
+    def _etag_matches(if_none_match: str | None, etag: str) -> bool:
+        if not if_none_match:
+            return False
+        return any(part.strip() in {etag, "*"} for part in if_none_match.split(","))
+
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon() -> Response:
+        return Response(
+            content=_FAVICON_SVG,
+            media_type="image/svg+xml",
+            headers={"Cache-Control": "public, max-age=86400"},
+        )
+
     @app.get("/", response_class=HTMLResponse, include_in_schema=False)
-    def workbench() -> HTMLResponse:
-        return HTMLResponse(content=WORKBENCH_HTML_PATH.read_text(encoding="utf-8"))
+    def workbench(
+        if_none_match: str | None = Header(default=None, alias="If-None-Match"),
+    ) -> Response:
+        html_content, etag = _load_workbench_cached()
+        headers = {"ETag": etag, "Cache-Control": "no-cache"}
+        if _etag_matches(if_none_match, etag):
+            return Response(status_code=304, headers=headers)
+        return HTMLResponse(content=html_content, headers=headers)
 
     @app.get("/api/v1/health")
     def health() -> dict[str, object]:
@@ -771,8 +1287,13 @@ def create_app(
         return JSONResponse(content=payload, status_code=200 if is_ready else 503)
 
     @app.get("/api/v1/catalog")
-    def catalog() -> dict[str, object]:
-        return catalog_snapshot
+    def catalog(
+        if_none_match: str | None = Header(default=None, alias="If-None-Match"),
+    ) -> Response:
+        headers = {"ETag": catalog_etag, "Cache-Control": "public, max-age=300"}
+        if _etag_matches(if_none_match, catalog_etag):
+            return Response(status_code=304, headers=headers)
+        return JSONResponse(content=catalog_snapshot, headers=headers)
 
     @app.get("/api/v1/lartas")
     def check_lartas(
@@ -1206,6 +1727,277 @@ def create_app(
             return payload
         except ValueError as err:
             raise HTTPException(status_code=422, detail=str(err)) from err
+
+    @app.post("/api/v1/temporary-import/evaluate")
+    def evaluate_temporary_import(request: TemporaryImportRequest) -> dict[str, object]:
+        try:
+            result = temp_import_advisor.evaluate(request.to_spec())
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+        return result.to_dict()
+
+    @app.post("/api/v1/roo/diagnose")
+    def diagnose_roo(request: RooDiagnoseRequest) -> dict[str, object]:
+        owl = optimizer._owl
+        try:
+            if request.direction == "export":
+                spec_exp = ExportSpec(
+                    hs_code=request.hs_code.strip(),
+                    origin_country="ID",
+                    destination_country=request.partner_country.strip(),
+                    as_of_date=request.as_of_date,
+                    materials=tuple(m.to_domain() for m in request.materials),
+                    rvc_percent=request.rvc_percent,
+                    wo_confirmed=request.wo_confirmed,
+                    process_kind=request.process_kind.strip() if request.process_kind else None,
+                    process_satisfied=request.process_satisfied,
+                    de_minimis_fob=request.de_minimis_fob,
+                    de_minimis_weight=request.de_minimis_weight,
+                    performed_operations=(
+                        tuple(request.performed_operations) if request.performed_operations is not None else None
+                    ),
+                    transshipment_hub=request.transshipment_hub.strip() if request.transshipment_hub else None,
+                    requires_back_to_back=request.requires_back_to_back,
+                    third_party_invoice_country=(
+                        request.third_party_invoice_country.strip() if request.third_party_invoice_country else None
+                    ),
+                    include_explain=request.include_explain,
+                )
+                exp_res = export_advisor.evaluate(spec_exp)
+                exp_dict = exp_res.to_dict()
+                repairs: list[dict[str, object]] = []
+                for c in exp_res.cumulation_opportunities:
+                    repairs.append({
+                        "kind": "CUMULATION_SOURCING",
+                        "agreement": c.agreement,
+                        "failing_material_hs": c.failing_material_hs,
+                        "current_origin": c.current_origin,
+                        "recommended_partner_countries": list(c.recommended_partner_countries),
+                        "recommendation": c.reason,
+                    })
+                for s in exp_res.schemes:
+                    if s.origin_status != "SATISFIED" and request.rvc_percent is not None and request.rvc_percent < Decimal("40") and "RVC" in (s.concise_rule or "").upper():
+                        gap = Decimal("40.00") - request.rvc_percent
+                        repairs.append({
+                            "kind": "RVC_INCREASE",
+                            "agreement": s.agreement,
+                            "failing_material_hs": None,
+                            "current_origin": None,
+                            "recommended_partner_countries": [],
+                            "recommendation": (
+                                f"Tingkatkan RVC pada {s.agreement_label} minimal +{gap:.2f}% (dari {request.rvc_percent:.2f}% ke ≥ 40.00%) "
+                                f"agar memenuhi syarat RVC40 ({s.concise_rule})."
+                            ),
+                        })
+                return {
+                    "direction": "export",
+                    "kb_version": exp_res.kb_version,
+                    "hs_code": exp_res.hs_code,
+                    "origin_country": exp_res.origin_country,
+                    "destination_country": exp_res.destination_country,
+                    "as_of_date": exp_res.as_of_date,
+                    "recommended_agreement": exp_res.recommended_agreement,
+                    "lartas_status": exp_res.export_lartas.status,
+                    "schemes": exp_dict["schemes"],
+                    "cumulation_opportunities": exp_dict["cumulation_opportunities"],
+                    "repair_suggestions": repairs,
+                }
+
+            spec_imp = ShipmentSpec(
+                hs_code=request.hs_code.strip(),
+                dispatch_country=request.partner_country.strip(),
+                destination_country="ID",
+                as_of_date=request.as_of_date,
+                cif_value=Decimal("100000"),
+                currency="USD",
+                materials=tuple(m.to_domain() for m in request.materials),
+                rvc_percent=request.rvc_percent,
+                wo_confirmed=request.wo_confirmed,
+                process_kind=request.process_kind.strip() if request.process_kind else None,
+                process_satisfied=request.process_satisfied,
+                de_minimis_fob=request.de_minimis_fob,
+                de_minimis_weight=request.de_minimis_weight,
+                performed_operations=(
+                    tuple(request.performed_operations) if request.performed_operations is not None else None
+                ),
+                dv20_percent=request.dv20_percent,
+                highest_contributor_country=(
+                    request.highest_contributor_country.strip() if request.highest_contributor_country else None
+                ),
+                include_plan=False,
+                include_explain=request.include_explain,
+            )
+            agreements = (
+                tuple(item.strip().lower() for item in request.agreements if item.strip())
+                if request.agreements else None
+            )
+            opt_res = optimizer.optimize(spec_imp, agreements=agreements)
+            opt_dict = opt_res.to_dict()
+            target_hs4 = opt_res.hs_code.replace(".", "")[:4]
+            target_hs6 = opt_res.hs_code.replace(".", "")[:6]
+            repairs = []
+            for s in opt_res.schemes:
+                if s.origin_status != "SATISFIED" and s.minimal_ops_status != "NOT_SATISFIED":
+                    agr_iri = TG[s.agreement]
+                    partners = sorted({
+                        str(p).split("#")[-1]
+                        for p in owl.objects(agr_iri, TG.agreementParty)
+                        if isinstance(p, URIRef)
+                    })
+                    for mat in request.materials:
+                        m_clean = mat.hs_code.replace(".", "")
+                        rule_up = (s.concise_rule or "").upper()
+                        same_heading = m_clean[:4] == target_hs4
+                        same_sub = m_clean[:6] == target_hs6
+                        if mat.non_originating and (
+                            ("CTH" in rule_up and same_heading)
+                            or ("CTSH" in rule_up and same_sub)
+                            or ("CC" in rule_up and m_clean[:2] == target_hs4[:2])
+                        ):
+                            repairs.append({
+                                "kind": "CUMULATION_SOURCING",
+                                "agreement": s.agreement,
+                                "failing_material_hs": mat.hs_code,
+                                "current_origin": mat.origin_country,
+                                "recommended_partner_countries": partners,
+                                "recommendation": (
+                                    f"Bahan {mat.hs_code} menghambat kriteria CTC ({s.concise_rule}) pada {s.agreement_label}. "
+                                    f"Ganti pemasok bahan ke negara anggota {s.agreement.upper()} ({', '.join(partners[:6])}) "
+                                    f"dengan bukti asal terverifikasi untuk mengaktifkan akumulasi regional."
+                                ),
+                            })
+                    if request.rvc_percent is not None and request.rvc_percent < Decimal("40") and "RVC" in (s.concise_rule or "").upper():
+                        gap = Decimal("40.00") - request.rvc_percent
+                        repairs.append({
+                            "kind": "RVC_INCREASE",
+                            "agreement": s.agreement,
+                            "failing_material_hs": None,
+                            "current_origin": None,
+                            "recommended_partner_countries": [],
+                            "recommendation": (
+                                f"Tingkatkan RVC pada {s.agreement_label} minimal +{gap:.2f}% (dari {request.rvc_percent:.2f}% ke ≥ 40.00%) "
+                                f"untuk memenuhi alternatif RVC40 ({s.concise_rule}) dan membuka potensi tarif {s.schedule_duty_percent}%."
+                            ),
+                        })
+            return {
+                "direction": "import",
+                "kb_version": opt_res.kb_version,
+                "hs_code": opt_res.hs_code,
+                "origin_country": opt_res.dispatch_country,
+                "destination_country": opt_res.destination_country,
+                "as_of_date": opt_res.as_of_date,
+                "recommended_agreement": opt_res.recommended_agreement,
+                "lartas_status": opt_res.lartas.status,
+                "schemes": opt_dict["schemes"],
+                "cumulation_opportunities": [r for r in repairs if r["kind"] == "CUMULATION_SOURCING"],
+                "repair_suggestions": repairs,
+            }
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+
+    @app.get("/api/v1/hs-classifier/facets")
+    def list_hs_classifier_facets(
+        if_none_match: str | None = Header(default=None, alias="If-None-Match"),
+    ) -> Response:
+        headers = {"ETag": hs_facets_etag, "Cache-Control": "public, max-age=300"}
+        if _etag_matches(if_none_match, hs_facets_etag):
+            return Response(status_code=304, headers=headers)
+        return JSONResponse(content=hs_facets_snapshot, headers=headers)
+
+    @app.post("/api/v1/hs-classifier/classify")
+    def classify_hs_code(request: HsClassifyRequest) -> dict[str, object]:
+        try:
+            return hs_classifier.classify(request.to_spec())
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+
+    @app.post("/api/v1/counterfactual/optimize")
+    def optimize_counterfactuals(request: CounterfactualRequest) -> dict[str, object]:
+        try:
+            return counterfactual_optimizer.optimize_counterfactuals(request.to_spec())
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+
+    @app.post("/api/v1/regimes/recommend")
+    def recommend_customs_regimes(request: RegimeConfigureRequest) -> dict[str, object]:
+        try:
+            return regime_advisor.recommend(request.to_spec())
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+
+    @app.get("/api/v1/documents/templates")
+    def list_document_templates(
+        if_none_match: str | None = Header(default=None, alias="If-None-Match"),
+    ) -> Response:
+        headers = {"ETag": doc_templates_etag, "Cache-Control": "public, max-age=300"}
+        if _etag_matches(if_none_match, doc_templates_etag):
+            return Response(status_code=304, headers=headers)
+        return JSONResponse(content=doc_templates_snapshot, headers=headers)
+
+    @app.post("/api/v1/documents/prepare")
+    def prepare_documents(
+        request: DocumentPrepareRequest,
+        authorization: str | None = Header(default=None, alias="Authorization"),
+    ) -> dict[str, object]:
+        token = _extract_token(authorization)
+        user = auth_service.get_user_by_token(token) if token else None
+        user_info = {"name": user.name, "company": user.company} if user is not None else None
+        try:
+            package = doc_generator.prepare_from_recommendation(
+                mode=request.mode,
+                recommendation=request.recommendation,
+                user_info=user_info,
+                extra_inputs=request.extra_inputs,
+            )
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+        return package.to_dict()
+
+    @app.post("/api/v1/documents/generate")
+    def generate_document(request: DocumentGenerateRequest):
+        try:
+            if request.format == "html":
+                html_doc = doc_generator.generate_html_preview(
+                    request.template_code,
+                    request.fields,
+                    custom_title=request.custom_title,
+                    requirement_reason=request.requirement_reason,
+                )
+                return HTMLResponse(content=html_doc)
+            docx_bytes, filename = doc_generator.generate_docx(
+                request.template_code,
+                request.fields,
+                custom_title=request.custom_title,
+                requirement_reason=request.requirement_reason,
+            )
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+        return Response(
+            content=docx_bytes,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+
+    @app.post("/api/v1/documents/generate-bundle")
+    def generate_document_bundle(request: DocumentBundleRequest):
+        try:
+            zip_bytes = doc_generator.generate_bundle_zip([
+                {
+                    "template_code": item.template_code,
+                    "fields": item.fields,
+                    "custom_title": item.custom_title,
+                    "requirement_reason": item.requirement_reason,
+                }
+                for item in request.items
+            ])
+        except ValueError as err:
+            raise HTTPException(status_code=422, detail=str(err)) from err
+        safe_hs = re.sub(r"[^a-zA-Z0-9_-]+", "-", request.hs_code.strip()).strip("-").lower() or "shipment"
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={"Content-Disposition": f'attachment; filename="tradegraph-documents-{safe_hs}.zip"'},
+        )
 
     @app.post("/api/v1/auth/register")
     def auth_register(request: RegisterRequest) -> dict[str, object]:

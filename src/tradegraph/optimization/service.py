@@ -173,6 +173,57 @@ class ProvenanceCitation:
         }
 
 
+def _short_rdf_term(term: object) -> str:
+    text = str(term)
+    replacements = (
+        ("http://www.semanticweb.org/tradegraph/kb#", "tg:"),
+        ("http://www.semanticweb.org/tradegraph/case-data#", "cd:"),
+        ("http://www.semanticweb.org/tradegraph/catalog#", "cat:"),
+        ("http://www.semanticweb.org/tradegraph/opt-case#", "ex:"),
+        ("http://www.semanticweb.org/tradegraph/temp-import#", "ex:"),
+        ("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:"),
+        ("http://www.w3.org/2000/01/rdf-schema#", "rdfs:"),
+        ("http://www.w3.org/2002/07/owl#", "owl:"),
+    )
+    for prefix, short in replacements:
+        if text.startswith(prefix):
+            return short + text[len(prefix):]
+    if "/revision/" in text:
+        return "case:revision/" + text.rsplit("/revision/", 1)[-1]
+    return text
+
+
+@dataclass(frozen=True, slots=True)
+class SupportNodeSummary:
+    id: str
+    kind: str
+    reference_id: str | None = None
+    fact: str | None = None
+    rendering: str | None = None
+    bindings: tuple[tuple[str, str], ...] = ()
+    shape_id: str | None = None
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "id": self.id,
+            "kind": self.kind,
+            "reference_id": self.reference_id,
+            "fact": self.fact,
+            "rendering": self.rendering,
+            "bindings": [[k, v] for k, v in self.bindings],
+            "shape_id": self.shape_id,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class SupportEdgeSummary:
+    parent_id: str
+    child_id: str
+
+    def to_dict(self) -> dict[str, str]:
+        return {"parent_id": self.parent_id, "child_id": self.child_id}
+
+
 @dataclass(frozen=True, slots=True)
 class FindingExplanationSummary:
     policy_id: str
@@ -182,16 +233,22 @@ class FindingExplanationSummary:
     node_kinds: tuple[str, ...]
     source_citations: tuple[ProvenanceCitation, ...]
     diagnostics: tuple[str, ...] = ()
+    policy_label: str | None = None
+    support_nodes: tuple[SupportNodeSummary, ...] = ()
+    support_edges: tuple[SupportEdgeSummary, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
             "policy_id": self.policy_id,
+            "policy_label": self.policy_label,
             "status": self.status,
             "availability": self.availability,
             "reaches_asserted_facts": self.reaches_asserted_facts,
             "node_kinds": list(self.node_kinds),
             "source_citations": [c.to_dict() for c in self.source_citations],
             "diagnostics": list(self.diagnostics),
+            "support_nodes": [n.to_dict() for n in self.support_nodes],
+            "support_edges": [e.to_dict() for e in self.support_edges],
         }
 
 
@@ -874,6 +931,41 @@ ex:entry{idx} tg:entryMaterial ex:material{idx} ; tg:nonOriginatingInput {'true'
         report = service.assess(AssessmentRequest(self.kb.snapshot.sha256, revised.case_id, revised.revision))
         return report, service
 
+    def serialize_explanation(self, finding, exp) -> FindingExplanationSummary:
+        clause_iris = [ref.clause_iri for ref in exp.source_refs] or list(finding.source_clauses)
+        policy_def = self.kb.policy_catalog.get(finding.policy_id)
+        nodes = tuple(
+            SupportNodeSummary(
+                id=node.id,
+                kind=node.kind,
+                reference_id=_short_rdf_term(node.reference_id) if node.reference_id else None,
+                fact=(
+                    f"{_short_rdf_term(node.fact[0])} {_short_rdf_term(node.fact[1])} {_short_rdf_term(node.fact[2])}"
+                    if node.fact is not None else None
+                ),
+                rendering=node.rendering,
+                bindings=tuple((str(k), _short_rdf_term(v)) for k, v in node.bindings),
+                shape_id=_short_rdf_term(node.shape_id) if node.shape_id else None,
+            )
+            for node in exp.support_graph.nodes
+        )
+        edges = tuple(
+            SupportEdgeSummary(parent_id=parent, child_id=child)
+            for parent, child in exp.support_graph.edges
+        )
+        return FindingExplanationSummary(
+            policy_id=finding.policy_id,
+            policy_label=policy_def.label if policy_def is not None else finding.policy_id,
+            status=finding.status,
+            availability=exp.availability,
+            reaches_asserted_facts=exp.support_graph.reaches_asserted_facts(),
+            node_kinds=tuple(sorted({node.kind for node in exp.support_graph.nodes})),
+            source_citations=self.resolve_citations(clause_iris),
+            diagnostics=exp.diagnostics,
+            support_nodes=nodes,
+            support_edges=edges,
+        )
+
     def _explain_key_findings(
         self, service: AssessmentService, report: AssessmentReport, agr: str,
     ) -> tuple[FindingExplanationSummary, ...]:
@@ -902,16 +994,7 @@ ex:entry{idx} tg:entryMaterial ex:material{idx} ; tg:nonOriginatingInput {'true'
             if finding.status == "NOT_APPLICABLE":
                 continue
             exp = service.provenance.explain(finding.finding_id)
-            clause_iris = [ref.clause_iri for ref in exp.source_refs] or list(finding.source_clauses)
-            summaries.append(FindingExplanationSummary(
-                policy_id=finding.policy_id,
-                status=finding.status,
-                availability=exp.availability,
-                reaches_asserted_facts=exp.support_graph.reaches_asserted_facts(),
-                node_kinds=tuple(sorted({node.kind for node in exp.support_graph.nodes})),
-                source_citations=self.resolve_citations(clause_iris),
-                diagnostics=exp.diagnostics,
-            ))
+            summaries.append(self.serialize_explanation(finding, exp))
         return tuple(summaries)
 
     def _summarize_plan(

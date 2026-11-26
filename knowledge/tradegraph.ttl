@@ -35789,3 +35789,986 @@ ASK {
         catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
 CONSTRUCT { ?revision tg:hasDraftDocumentType tg:backToBackCooDocument . } WHERE {}"""
     ] ) .
+
+# Declarative Document Preparation & Draft Generator Templates (0.15.0)
+
+:DocumentDraftTemplate a owl:Class ;
+    rdfs:label "Template draf dokumen persyaratan kepabeanan dan perdagangan"@id .
+
+:TemplateFieldSpec a owl:Class ;
+    rdfs:label "Spesifikasi kolom masukan pada template dokumen"@id .
+
+:pibDeclarationDoc a owl:NamedIndividual, :DocumentType ;
+    rdfs:label "Draf Pemberitahuan Impor Barang (PIB / BC 2.0)"@id .
+
+:templateForDocumentType a owl:ObjectProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range :DocumentType .
+:templateForAgreement a owl:ObjectProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range :TradeAgreement .
+:hasTemplateField a owl:ObjectProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range :TemplateFieldSpec .
+
+:templateCode a owl:DatatypeProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range xsd:string .
+:templateTitle a owl:DatatypeProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range xsd:string .
+:templateSubtitle a owl:DatatypeProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range xsd:string .
+:templateFormNumber a owl:DatatypeProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range xsd:string .
+:templateIssuingPortal a owl:DatatypeProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range xsd:string .
+:templateDirection a owl:DatatypeProperty ;
+    rdfs:domain :DocumentDraftTemplate ; rdfs:range xsd:string .
+
+:fieldKey a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:string .
+:fieldLabel a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:string .
+:fieldSection a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:string .
+:fieldInputKind a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:string .
+:fieldOrder a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:integer .
+:fieldRequired a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:boolean .
+:fieldAutoFillKey a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:string .
+:fieldPlaceholder a owl:DatatypeProperty ;
+    rdfs:domain :TemplateFieldSpec ; rdfs:range xsd:string .
+
+# Reusable Field Specifications
+:fld-company-name a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "company_name" ; :fieldLabel "Nama Perusahaan (Importir / Eksportir)" ;
+    :fieldSection "IDENTITAS PIHAK" ; :fieldInputKind "text" ; :fieldOrder 10 ;
+    :fieldRequired true ; :fieldAutoFillKey "user_company" ; :fieldPlaceholder "PT Nusantara Logistik & Niaga" .
+
+:fld-company-npwp a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "company_npwp" ; :fieldLabel "NPWP (15/16 Digit)" ;
+    :fieldSection "IDENTITAS PIHAK" ; :fieldInputKind "text" ; :fieldOrder 11 ;
+    :fieldRequired true ; :fieldPlaceholder "01.234.567.8-901.000" .
+
+:fld-company-nib a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "company_nib" ; :fieldLabel "NIB / Jenis API (API-P / API-U)" ;
+    :fieldSection "IDENTITAS PIHAK" ; :fieldInputKind "text" ; :fieldOrder 12 ;
+    :fieldRequired true ; :fieldAutoFillKey "api_type" ; :fieldPlaceholder "1234567890123 / API-P" .
+
+:fld-company-address a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "company_address" ; :fieldLabel "Alamat Lengkap Perusahaan" ;
+    :fieldSection "IDENTITAS PIHAK" ; :fieldInputKind "textarea" ; :fieldOrder 13 ;
+    :fieldRequired true ; :fieldPlaceholder "Jl. Pelabuhan Raya No. 10, Jakarta Utara" .
+
+:fld-counterparty-name a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "counterparty_name" ; :fieldLabel "Nama Pemasok / Pembeli Luar Negeri (Consignor / Consignee)" ;
+    :fieldSection "IDENTITAS PIHAK" ; :fieldInputKind "text" ; :fieldOrder 14 ;
+    :fieldRequired true ; :fieldPlaceholder "Siam Steel Industries Co., Ltd." .
+
+:fld-counterparty-address a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "counterparty_address" ; :fieldLabel "Alamat & Negara Mitra Luar Negeri" ;
+    :fieldSection "IDENTITAS PIHAK" ; :fieldInputKind "textarea" ; :fieldOrder 15 ;
+    :fieldRequired false ; :fieldPlaceholder "Bangkok Industrial Estate, Thailand" .
+
+:fld-invoice-number a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "invoice_number" ; :fieldLabel "Nomor Commercial Invoice" ;
+    :fieldSection "DOKUMEN & TRANSPORTASI" ; :fieldInputKind "text" ; :fieldOrder 20 ;
+    :fieldRequired true ; :fieldPlaceholder "INV-2025/09/001" .
+
+:fld-invoice-date a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "invoice_date" ; :fieldLabel "Tanggal Invoice / Pengiriman" ;
+    :fieldSection "DOKUMEN & TRANSPORTASI" ; :fieldInputKind "date" ; :fieldOrder 21 ;
+    :fieldRequired true ; :fieldAutoFillKey "as_of_date" ; :fieldPlaceholder "2025-09-15" .
+
+:fld-bl-awb a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "bl_awb_number" ; :fieldLabel "Nomor Bill of Lading (B/L) / AWB" ;
+    :fieldSection "DOKUMEN & TRANSPORTASI" ; :fieldInputKind "text" ; :fieldOrder 22 ;
+    :fieldRequired true ; :fieldPlaceholder "MAEU123456789" .
+
+:fld-vessel-flight a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "vessel_flight" ; :fieldLabel "Nama Sarana Pengangkut (Kapal / Pesawat & Voy)" ;
+    :fieldSection "DOKUMEN & TRANSPORTASI" ; :fieldInputKind "text" ; :fieldOrder 23 ;
+    :fieldRequired false ; :fieldPlaceholder "MV Nusantara Express V.042" .
+
+:fld-port-loading a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "port_of_loading" ; :fieldLabel "Pelabuhan Muat (Port of Loading)" ;
+    :fieldSection "DOKUMEN & TRANSPORTASI" ; :fieldInputKind "text" ; :fieldOrder 24 ;
+    :fieldRequired true ; :fieldPlaceholder "Laem Chabang (THLCH) / Tanjung Priok (IDTPP)" .
+
+:fld-port-discharge a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "port_of_discharge" ; :fieldLabel "Pelabuhan Bongkar / Tujuan (Port of Discharge)" ;
+    :fieldSection "DOKUMEN & TRANSPORTASI" ; :fieldInputKind "text" ; :fieldOrder 25 ;
+    :fieldRequired true ; :fieldPlaceholder "Tanjung Priok (IDTPP) / Tokyo (JPTYO)" .
+
+:fld-hs-code a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "hs_code" ; :fieldLabel "Kode Pos Tarif HS (BTKI 2022)" ;
+    :fieldSection "KLASIFIKASI & NILAI BARANG" ; :fieldInputKind "text" ; :fieldOrder 30 ;
+    :fieldRequired true ; :fieldAutoFillKey "hs_code" ; :fieldPlaceholder "7209.26.10" .
+
+:fld-goods-desc a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "goods_description" ; :fieldLabel "Uraian Jenis Barang, Merek & Spesifikasi Teknis" ;
+    :fieldSection "KLASIFIKASI & NILAI BARANG" ; :fieldInputKind "textarea" ; :fieldOrder 31 ;
+    :fieldRequired true ; :fieldAutoFillKey "hs_description" ; :fieldPlaceholder "Uraian lengkap sesuai BTKI 2022 & spesifikasi" .
+
+:fld-origin-country a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "origin_country" ; :fieldLabel "Negara Asal / Muat Barang" ;
+    :fieldSection "KLASIFIKASI & NILAI BARANG" ; :fieldInputKind "text" ; :fieldOrder 32 ;
+    :fieldRequired true ; :fieldAutoFillKey "origin_country" ; :fieldPlaceholder "THAILAND / INDONESIA" .
+
+:fld-dest-country a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "destination_country" ; :fieldLabel "Negara Tujuan" ;
+    :fieldSection "KLASIFIKASI & NILAI BARANG" ; :fieldInputKind "text" ; :fieldOrder 33 ;
+    :fieldRequired true ; :fieldAutoFillKey "destination_country" ; :fieldPlaceholder "INDONESIA / JAPAN" .
+
+:fld-customs-value a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "customs_value" ; :fieldLabel "Nilai Pabean (CIF / FOB)" ;
+    :fieldSection "KLASIFIKASI & NILAI BARANG" ; :fieldInputKind "text" ; :fieldOrder 34 ;
+    :fieldRequired true ; :fieldAutoFillKey "customs_value" ; :fieldPlaceholder "USD 100,000.00" .
+
+:fld-package-qty a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "package_quantity" ; :fieldLabel "Jumlah & Jenis Kemasan (Packages)" ;
+    :fieldSection "KLASIFIKASI & NILAI BARANG" ; :fieldInputKind "text" ; :fieldOrder 35 ;
+    :fieldRequired true ; :fieldPlaceholder "40 Coils / 200 Cartons" .
+
+:fld-gross-net-weight a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "gross_net_weight" ; :fieldLabel "Berat Bruto / Berat Netto (Kg atau MT)" ;
+    :fieldSection "KLASIFIKASI & NILAI BARANG" ; :fieldInputKind "text" ; :fieldOrder 36 ;
+    :fieldRequired true ; :fieldAutoFillKey "quantity_mt" ; :fieldPlaceholder "52,000 Kg Bruto / 50,000 Kg Netto" .
+
+:fld-agreement-scheme a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "agreement_scheme" ; :fieldLabel "Skema Perjanjian FTA & Kode Fasilitas PIB" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 40 ;
+    :fieldRequired true ; :fieldAutoFillKey "agreement_with_code" ; :fieldPlaceholder "RCEP (Kode Fasilitas 69)" .
+
+:fld-origin-criterion a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "origin_criterion" ; :fieldLabel "Kriteria Asal Barang (Origin Criterion / PSR)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 41 ;
+    :fieldRequired true ; :fieldAutoFillKey "origin_criterion" ; :fieldPlaceholder "CTH / RVC40 / WO" .
+
+:fld-rvc-percent a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "rvc_percent" ; :fieldLabel "Persentase Regional Value Content (RVC %)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 42 ;
+    :fieldRequired false ; :fieldAutoFillKey "rvc_percent" ; :fieldPlaceholder "45.00%" .
+
+:fld-dv20-percent a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "dv20_percent" ; :fieldLabel "Persentase Nilai Tambah Domestik (DV20 % FOB)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 43 ;
+    :fieldRequired true ; :fieldAutoFillKey "dv20_percent" ; :fieldPlaceholder "25.00% (>= 20% FOB)" .
+
+:fld-highest-contrib a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "highest_contributor_country" ; :fieldLabel "Negara Kontributor Bahan Originating Tertinggi (Bila DV20 < 20%)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 44 ;
+    :fieldRequired false ; :fieldAutoFillKey "highest_contributor_country" ; :fieldPlaceholder "JAPAN (opsional bila DV20 < 20%)" .
+
+:fld-transit-hub a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "transshipment_hub" ; :fieldLabel "Negara / Hub Transshipment" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 45 ;
+    :fieldRequired true ; :fieldAutoFillKey "transshipment_hub" ; :fieldPlaceholder "SINGAPORE" .
+
+:fld-original-co-ref a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "original_co_reference" ; :fieldLabel "Nomor & Tanggal SKA Asal Indonesia (Original CO)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 46 ;
+    :fieldRequired true ; :fieldPlaceholder "ID-RCEP-2025-000123 tanggal 2025-09-15" .
+
+:fld-tpi-info a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "third_party_invoice_info" ; :fieldLabel "Catatan Third-Party Invoicing (Perusahaan & Negara Penerbit Invoice)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "textarea" ; :fieldOrder 47 ;
+    :fieldRequired false ; :fieldAutoFillKey "third_party_invoice_info" ; :fieldPlaceholder "Nama perusahaan penerbit invoice pihak ketiga & instruksi Box 13/14" .
+
+:fld-tax-summary a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "tax_or_duty_summary" ; :fieldLabel "Ringkasan Estimasi Bea Masuk / PDRI / Bea Keluar" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "textarea" ; :fieldOrder 48 ;
+    :fieldRequired false ; :fieldAutoFillKey "tax_or_duty_summary" ; :fieldPlaceholder "Otomatis terisi dari kalkulasi TradeGraph" .
+
+:fld-bpom-nie a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "bpom_nie_number" ; :fieldLabel "Nomor Izin Edar (NIE) BPOM / Nomor Registrasi Produk" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 49 ;
+    :fieldRequired true ; :fieldPlaceholder "DKL2312345601A1 / ML 123456789012" .
+
+:fld-batch-expiry a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "batch_and_expiry" ; :fieldLabel "Nomor Batch / Lot & Tanggal Kedaluwarsa Produk" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 50 ;
+    :fieldRequired true ; :fieldPlaceholder "Batch B2025-09, Exp 2027-09-30" .
+
+:fld-surveyor-office a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "surveyor_office" ; :fieldLabel "Kantor Surveyor Ditunjuk (KSO Sucofindo / Surveyor Indonesia)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "text" ; :fieldOrder 51 ;
+    :fieldRequired true ; :fieldPlaceholder "KSO Sucofindo - Surveyor Indonesia (KSO SCISI)" .
+
+:fld-lartas-quota-purpose a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "import_export_purpose" ; :fieldLabel "Tujuan Penggunaan / Rencana Produksi / Alokasi Kuota (Neraca Komoditas)" ;
+    :fieldSection "KRITERIA ASAL & KEPATUHAN" ; :fieldInputKind "textarea" ; :fieldOrder 52 ;
+    :fieldRequired true ; :fieldPlaceholder "Bahan baku industri manufaktur (API-P) sesuai Rencana Kebutuhan Neraca Komoditas" .
+
+:fld-signatory-name a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "signatory_name" ; :fieldLabel "Nama Pejabat Penandatangan" ;
+    :fieldSection "PENGESAHAN" ; :fieldInputKind "text" ; :fieldOrder 90 ;
+    :fieldRequired true ; :fieldAutoFillKey "user_name" ; :fieldPlaceholder "Budi Santoso" .
+
+:fld-signatory-title a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "signatory_title" ; :fieldLabel "Jabatan Penandatangan" ;
+    :fieldSection "PENGESAHAN" ; :fieldInputKind "text" ; :fieldOrder 91 ;
+    :fieldRequired true ; :fieldPlaceholder "Direktur Operasional / Manajer Ekspor-Impor" .
+
+:fld-sign-place-date a owl:NamedIndividual, :TemplateFieldSpec ;
+    :fieldKey "sign_place_date" ; :fieldLabel "Tempat & Tanggal Penandatanganan" ;
+    :fieldSection "PENGESAHAN" ; :fieldInputKind "text" ; :fieldOrder 92 ;
+    :fieldRequired true ; :fieldAutoFillKey "sign_place_date" ; :fieldPlaceholder "Jakarta, 2025-09-15" .
+
+# 15 Declarative Document Draft Templates
+:tpl-atiga-form-d a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "atiga-form-d" ;
+    :templateTitle "Draf Surat Keterangan Asal (SKA) Form D — ATIGA" ;
+    :templateSubtitle "Persiapan data pengajuan e-Form D / Form D ASEAN Trade in Goods Agreement" ;
+    :templateFormNumber "Form D / e-Form D (ATIGA)" ;
+    :templateIssuingPortal "e-SKA Kemendag / ASEAN Single Window (ASW)" ;
+    :templateDirection "BOTH" ;
+    :templateForDocumentType :atigaFormD, :atigaElectronicFormD, :formD ;
+    :templateForAgreement :atiga ;
+    :hasSourceClause :pmk35-submission, :pmk81-origin-evidence, :atiga-article-26 ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-rvc-percent, :fld-tpi-info,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-rcep-form-rcep a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "rcep-form-rcep" ;
+    :templateTitle "Draf Surat Keterangan Asal (SKA) Form RCEP" ;
+    :templateSubtitle "Persiapan data pengajuan Certificate of Origin RCEP (PMK 209/PMK.04/2022)" ;
+    :templateFormNumber "Form RCEP / e-Form RCEP" ;
+    :templateIssuingPortal "e-SKA Kemendag / Instansi Penerbit SKA (IPSKA)" ;
+    :templateDirection "BOTH" ;
+    :templateForDocumentType :rcepFormRcep, :rcepElectronicFormRcep ;
+    :templateForAgreement :rcep ;
+    :hasSourceClause :pmk209-pasal-8, :pmk209-pasal-9, :pmk35-submission ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-rvc-percent, :fld-tpi-info,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-acfta-form-e a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "acfta-form-e" ;
+    :templateTitle "Draf Surat Keterangan Asal (SKA) Form E — ACFTA" ;
+    :templateSubtitle "Persiapan data pengajuan Form E ASEAN–China Free Trade Area (PMK 171/PMK.04/2020)" ;
+    :templateFormNumber "Form E (ACFTA)" ;
+    :templateIssuingPortal "e-SKA Kemendag / IPSKA" ;
+    :templateDirection "BOTH" ;
+    :templateForDocumentType :acftaFormE ;
+    :templateForAgreement :acfta ;
+    :hasSourceClause :pmk171-pasal-7, :pmk35-submission ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-rvc-percent, :fld-tpi-info,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-ijepa-form-jiepa a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "ijepa-form-jiepa" ;
+    :templateTitle "Draf Surat Keterangan Asal (SKA) Form JIEPA — IJEPA" ;
+    :templateSubtitle "Persiapan data pengajuan Certificate of Origin Indonesia–Japan EPA (PMK 73/PMK.04/2021)" ;
+    :templateFormNumber "Form JIEPA (IJEPA)" ;
+    :templateIssuingPortal "e-SKA Kemendag / IPSKA" ;
+    :templateDirection "BOTH" ;
+    :templateForDocumentType :ijepaFormJiepa ;
+    :templateForAgreement :ijepa ;
+    :hasSourceClause :pmk73-pasal-7, :pmk35-submission ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-rvc-percent, :fld-tpi-info,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-ikcepa-form-kicepa a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "ikcepa-form-kicepa" ;
+    :templateTitle "Draf Surat Keterangan Asal (SKA) Form KICEPA — IK-CEPA" ;
+    :templateSubtitle "Persiapan data pengajuan SKA Indonesia–Korea CEPA (PMK 219/PMK.04/2022)" ;
+    :templateFormNumber "Form KICEPA (IK-CEPA)" ;
+    :templateIssuingPortal "e-SKA Kemendag / IPSKA" ;
+    :templateDirection "BOTH" ;
+    :templateForDocumentType :ikcepaFormKicepa ;
+    :templateForAgreement :ikcepa ;
+    :hasSourceClause :pmk219-pasal-9, :pmk35-submission ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-rvc-percent, :fld-tpi-info,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-iacepa-form-iacepa a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "iacepa-form-iacepa" ;
+    :templateTitle "Draf Surat Keterangan Asal (SKA) Form IA-CEPA" ;
+    :templateSubtitle "Persiapan data pengajuan SKA Indonesia–Australia CEPA (PMK 82/PMK.04/2020)" ;
+    :templateFormNumber "Form IA-CEPA" ;
+    :templateIssuingPortal "e-SKA Kemendag / IPSKA" ;
+    :templateDirection "BOTH" ;
+    :templateForDocumentType :iacepaFormIacepa ;
+    :templateForAgreement :iacepa ;
+    :hasSourceClause :pmk82-pasal-12, :pmk35-submission ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-rvc-percent, :fld-tpi-info,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-rcep-dv20 a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "rcep-dv20-statement" ;
+    :templateTitle "Surat Pernyataan Nilai Tambah Domestik RCEP (DV20 >= 20% FOB)" ;
+    :templateSubtitle "Pernyataan pemenuhan RCEP Tariff Differentials untuk pos Lampiran II (PMK 209/PMK.04/2022 Pasal 14)" ;
+    :templateFormNumber "Pernyataan DV20 (Lampiran II RCEP)" ;
+    :templateIssuingPortal "Produsen / Eksportir Pihak Pengekspor (Dilampirkan pada SKA RCEP)" ;
+    :templateDirection "IMPORT" ;
+    :templateForDocumentType :dv20Statement ;
+    :templateForAgreement :rcep ;
+    :hasSourceClause :pmk209-pasal-14 ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-counterparty-name,
+        :fld-invoice-number, :fld-invoice-date, :fld-hs-code, :fld-goods-desc,
+        :fld-origin-country, :fld-dest-country, :fld-customs-value,
+        :fld-dv20-percent, :fld-highest-contrib, :fld-rvc-percent,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-lartas-pi a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "lartas-persetujuan-impor" ;
+    :templateTitle "Draf Permohonan Persetujuan Impor (PI Kemendag)" ;
+    :templateSubtitle "Persiapan pengajuan Perizinan Berusaha Impor melalui sistem INATRADE / SINSW" ;
+    :templateFormNumber "PI-INATRADE (Kemendag)" ;
+    :templateIssuingPortal "INATRADE Kemendag / SINSW (INSW)" ;
+    :templateDirection "IMPORT" ;
+    :templateForDocumentType :persetujuanImpor ;
+    :hasSourceClause :permendag16-import ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-nib, :fld-company-address,
+        :fld-counterparty-name, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-customs-value,
+        :fld-gross-net-weight, :fld-lartas-quota-purpose,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-lartas-ls a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "lartas-laporan-surveyor" ;
+    :templateTitle "Draf Permohonan Verifikasi Teknis & Laporan Surveyor (LS Impor)" ;
+    :templateSubtitle "Persiapan pendaftaran Verifikasi atau Penelusuran Teknis Impor (VPTI) di negara muat" ;
+    :templateFormNumber "VPTI / LS Impor (KSO SCISI)" ;
+    :templateIssuingPortal "KSO Sucofindo–Surveyor Indonesia (VPTI Online)" ;
+    :templateDirection "IMPORT" ;
+    :templateForDocumentType :laporanSurveyor ;
+    :hasSourceClause :permendag16-import ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-nib, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-port-loading, :fld-port-discharge, :fld-hs-code, :fld-goods-desc,
+        :fld-origin-country, :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-surveyor-office, :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-bpom-ski a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "bpom-ski" ;
+    :templateTitle "Draf Permohonan Surat Keterangan Impor (SKI BPOM)" ;
+    :templateSubtitle "Persiapan pengajuan SKI Border / Post-Border Obat & Pangan Olahan (PerBPOM 28 Tahun 2023)" ;
+    :templateFormNumber "SKI e-BPOM (PerBPOM 28/2023)" ;
+    :templateIssuingPortal "e-BPOM / SINSW (INSW)" ;
+    :templateDirection "IMPORT" ;
+    :templateForDocumentType :bpomSkiBorder, :bpomSkiPostBorder ;
+    :hasSourceClause :bpom28-pasal-3-obat, :bpom28-pasal-3-pangan ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-nib, :fld-company-address,
+        :fld-counterparty-name, :fld-invoice-number, :fld-invoice-date, :fld-bl-awb,
+        :fld-port-discharge, :fld-hs-code, :fld-goods-desc, :fld-origin-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-bpom-nie, :fld-batch-expiry,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-bpom-izin-edar a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "bpom-izin-edar" ;
+    :templateTitle "Lembar Kesiapan Nomor Izin Edar (NIE) BPOM" ;
+    :templateSubtitle "Daftar data registrasi izin edar obat/pangan olahan untuk validasi pemasukan ke Indonesia" ;
+    :templateFormNumber "NIE / e-Registration BPOM" ;
+    :templateIssuingPortal "e-Registration BPOM (ereg-rba.pom.go.id)" ;
+    :templateDirection "IMPORT" ;
+    :templateForDocumentType :bpomIzinEdar ;
+    :hasSourceClause :bpom28-pasal-3-obat, :bpom28-pasal-3-pangan ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-nib, :fld-company-address,
+        :fld-counterparty-name, :fld-hs-code, :fld-goods-desc, :fld-origin-country,
+        :fld-bpom-nie, :fld-batch-expiry,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-pib-bc20 a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "pib-bc20-draft" ;
+    :templateTitle "Draf Pemberitahuan Impor Barang (PIB / BC 2.0) & Lembar Klaim Fasilitas FTA" ;
+    :templateSubtitle "Lembar kerja pengisian CEISA 4.0 beserta Kode Fasilitas PIB dan rincian PDRI" ;
+    :templateFormNumber "BC 2.0 (PIB — CEISA 4.0)" ;
+    :templateIssuingPortal "CEISA 4.0 DJBC / Portal Pengguna Jasa Bea Cukai" ;
+    :templateDirection "IMPORT" ;
+    :templateForDocumentType :pibDeclarationDoc ;
+    :hasSourceClause :pmk35-submission ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-nib, :fld-company-address,
+        :fld-counterparty-name, :fld-invoice-number, :fld-invoice-date, :fld-bl-awb,
+        :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-tax-summary,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-export-lartas a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "export-lartas-permit" ;
+    :templateTitle "Draf Permohonan Perizinan Lartas Ekspor (ET / PE / LS Ekspor)" ;
+    :templateSubtitle "Persiapan dokumen Eksportir Terdaftar, Persetujuan Ekspor, atau Verifikasi Teknis Ekspor (Permendag 9/2025)" ;
+    :templateFormNumber "ET / PE / LS Ekspor (INATRADE)" ;
+    :templateIssuingPortal "INATRADE Kemendag / SINSW & KSO Surveyor" ;
+    :templateDirection "EXPORT" ;
+    :templateForDocumentType :eksportirTerdaftar, :persetujuanEkspor, :laporanSurveyorEkspor ;
+    :hasSourceClause :permendag23-ekspor-umum ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-nib, :fld-company-address,
+        :fld-counterparty-name, :fld-invoice-number, :fld-invoice-date,
+        :fld-port-loading, :fld-port-discharge, :fld-hs-code, :fld-goods-desc,
+        :fld-dest-country, :fld-customs-value, :fld-gross-net-weight,
+        :fld-surveyor-office, :fld-lartas-quota-purpose,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-peb-bc30 a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "peb-bc30-draft" ;
+    :templateTitle "Draf Pemberitahuan Ekspor Barang (PEB / BC 3.0) & Lembar Bea Keluar" ;
+    :templateSubtitle "Lembar kerja pengisian PEB ke SKP DJBC untuk penerbitan NPE & perhitungan Bea Keluar" ;
+    :templateFormNumber "BC 3.0 (PEB — CEISA 4.0)" ;
+    :templateIssuingPortal "CEISA 4.0 DJBC (Pemberitahuan Ekspor Barang)" ;
+    :templateDirection "EXPORT" ;
+    :templateForDocumentType :pebDeclaration ;
+    :hasSourceClause :pmk155-pasal-2-peb, :pmk155-pasal-4-ekspor, :pmk38-pasal-13-formula ;
+    :hasTemplateField :fld-company-name, :fld-company-npwp, :fld-company-nib, :fld-company-address,
+        :fld-counterparty-name, :fld-counterparty-address, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-vessel-flight, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-tax-summary,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:tpl-back-to-back-co a owl:NamedIndividual, :DocumentDraftTemplate ;
+    :templateCode "back-to-back-co" ;
+    :templateTitle "Draf Permohonan Back-to-Back CO / Movement Certificate (Hub Transshipment)" ;
+    :templateSubtitle "Permohonan penerbitan ulang SKA di Negara Anggota hub transit dengan melampirkan SKA asal Indonesia" ;
+    :templateFormNumber "Back-to-Back CO / Movement Certificate" ;
+    :templateIssuingPortal "Otoritas Penerbit SKA di Negara Hub Transshipment" ;
+    :templateDirection "EXPORT" ;
+    :templateForDocumentType :backToBackCooDocument ;
+    :hasSourceClause :pmk209-pasal-10-b2b, :pmk131-pasal-9-b2b, :pmk171-pasal-8-mc ;
+    :hasTemplateField :fld-company-name, :fld-company-address, :fld-counterparty-name, :fld-counterparty-address,
+        :fld-original-co-ref, :fld-transit-hub, :fld-invoice-number, :fld-invoice-date,
+        :fld-bl-awb, :fld-port-loading, :fld-port-discharge,
+        :fld-hs-code, :fld-goods-desc, :fld-origin-country, :fld-dest-country,
+        :fld-customs-value, :fld-package-qty, :fld-gross-net-weight,
+        :fld-agreement-scheme, :fld-origin-criterion, :fld-tpi-info,
+        :fld-signatory-name, :fld-signatory-title, :fld-sign-place-date .
+
+:query-document-draft-templates a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "document-draft-templates" ;
+    rdfs:label "Katalog deklaratif template draf dokumen persyaratan kepabeanan beserta spesifikasi kolom dan pasal hukum"@id ;
+    catalog:parameters ( ) ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?tpl ?code ?title ?subtitle ?formNumber ?portal ?direction ?docType ?agreement ?clause
+    ?fieldKey ?fieldLabel ?fieldSection ?fieldKind ?fieldOrder ?fieldRequired ?autoFillKey ?placeholder
+WHERE {
+    ?tpl a tg:DocumentDraftTemplate ;
+        tg:templateCode ?code ;
+        tg:templateTitle ?title ;
+        tg:templateSubtitle ?subtitle ;
+        tg:templateFormNumber ?formNumber ;
+        tg:templateIssuingPortal ?portal ;
+        tg:templateDirection ?direction ;
+        tg:templateForDocumentType ?docType ;
+        tg:hasTemplateField ?field .
+    ?field a tg:TemplateFieldSpec ;
+        tg:fieldKey ?fieldKey ;
+        tg:fieldLabel ?fieldLabel ;
+        tg:fieldSection ?fieldSection ;
+        tg:fieldInputKind ?fieldKind ;
+        tg:fieldOrder ?fieldOrder ;
+        tg:fieldRequired ?fieldRequired .
+    OPTIONAL { ?field tg:fieldAutoFillKey ?autoFillKey . }
+    OPTIONAL { ?field tg:fieldPlaceholder ?placeholder . }
+    OPTIONAL { ?tpl tg:templateForAgreement ?agreement . }
+    OPTIONAL { ?tpl tg:hasSourceClause ?clause . }
+}
+ORDER BY ?code ?fieldOrder""" .
+
+# ============================================================================
+# STAGE 2 DECLARATIVE ONTOLOGY: INTERACTIVE HS CLASSIFICATION & CUSTOMS REGIMES
+# ============================================================================
+
+:CommodityClassificationProfile a owl:Class ;
+    rdfs:label "Profil atribut teknis klasifikasi pos tarif HS (BTKI 2022)"@id .
+
+:CustomsRegimeSpec a owl:Class ;
+    rdfs:label "Spesifikasi deklaratif rezim fasilitas kepabeanan Indonesia"@id .
+
+:profileForHsCode a owl:ObjectProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range :HSCode .
+
+:facetSector a owl:DatatypeProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range xsd:string .
+:facetMaterialGroup a owl:DatatypeProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range xsd:string .
+:facetProcessingState a owl:DatatypeProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range xsd:string .
+:facetIntendedApplication a owl:DatatypeProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range xsd:string .
+:classificationDisplayName a owl:DatatypeProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range xsd:string .
+:classificationTechnicalCriteria a owl:DatatypeProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range xsd:string .
+:classificationKeywords a owl:DatatypeProperty ;
+    rdfs:domain :CommodityClassificationProfile ; rdfs:range xsd:string .
+
+:regimeCode a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeTitle a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeSubtitle a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeDirection a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeDeclarationForm a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeDutyBenefit a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeVatBenefit a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeLartasExemption a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeTargetUse a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeReexportRequirement a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeRequiredLicense a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeKeyObligations a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeLegalBasisSummary a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeTargetTaskMode a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:string .
+:regimeDutyReliefPercent a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:decimal .
+:regimeVatReliefPercent a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:decimal .
+:regimeRequiresPhysicalIntact a owl:DatatypeProperty ;
+    rdfs:domain :CustomsRegimeSpec ; rdfs:range xsd:boolean .
+
+# 32 Featured BTKI 2022 HS8 Classification Profiles
+:cls-01012100 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-01012100 ;
+    :classificationDisplayName "Kuda Bibit Murni (Pure-Bred Breeding Horses)" ;
+    :facetSector "agro" ; :facetMaterialGroup "animal_livestock" ;
+    :facetProcessingState "raw_unprocessed" ; :facetIntendedApplication "agriculture_breeding" ;
+    :classificationTechnicalCriteria "Hewan hidup jenis kuda bibit murni (Bab 01, Pos 01.01)" ;
+    :classificationKeywords "kuda,bibit,hewan hidup,ternak,horse,breeding,livestock" .
+
+:cls-09012111 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-09012111 ;
+    :classificationDisplayName "Kopi Arabika Sangrai Utuh (Roasted Arabica Coffee, Non-Decaf)" ;
+    :facetSector "agro" ; :facetMaterialGroup "plant_crop" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Kopi Arabika disangrai, tidak didekafeinasi, bentuk biji utuh belum digiling" ;
+    :classificationKeywords "kopi,arabika,coffee,roasted,sangrai,biji kopi,minuman,pangan" .
+
+:cls-09021010 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-09021010 ;
+    :classificationDisplayName "Teh Hijau Daun Kemasan Ritel ≤ 3 kg (Green Tea Leaves)" ;
+    :facetSector "agro" ; :facetMaterialGroup "plant_crop" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Teh hijau tidak difermentasi berbentuk daun dalam kemasan ≤ 3 kg" ;
+    :classificationKeywords "teh,teh hijau,green tea,daun teh,minuman,pangan" .
+
+:cls-13019090 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-13019090 ;
+    :classificationDisplayName "Getah Pinus / Gondorukem Alam (Natural Pine Gum / Oleoresin)" ;
+    :facetSector "agro" ; :facetMaterialGroup "plant_crop" ;
+    :facetProcessingState "raw_unprocessed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Getah pinus / lak alami (oleoresin) untuk industri kimia & perekat; objek Bea Keluar PMK 68/2025" ;
+    :classificationKeywords "getah pinus,pine gum,oleoresin,gondorukem,resin,kehutanan,bea keluar" .
+
+:cls-14012010 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-14012010 ;
+    :classificationDisplayName "Rotan Utuh Mentah (Whole Unsplit Rattan)" ;
+    :facetSector "agro" ; :facetMaterialGroup "plant_crop" ;
+    :facetProcessingState "raw_unprocessed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Bahan nabati anyaman berupa rotan utuh mentah (Pos 14.01)" ;
+    :classificationKeywords "rotan,rattan,anyaman,hasil hutan,kayu,mebel" .
+
+:cls-15111000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-15111000 ;
+    :classificationDisplayName "Minyak Kelapa Sawit Mentah (Crude Palm Oil / CPO)" ;
+    :facetSector "agro" ; :facetMaterialGroup "plant_crop" ;
+    :facetProcessingState "raw_unprocessed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Minyak sawit mentah (CPO) belum dimurnikan; objek Bea Keluar spesifik progresif PMK 68/2025" ;
+    :classificationKeywords "cpo,sawit,minyak sawit mentah,crude palm oil,kelapa sawit,oleokimia,bea keluar" .
+
+:cls-15119036 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-15119036 ;
+    :classificationDisplayName "Minyak Sawit RBD Palm Olein (Kemasan Bersih ≤ 25 kg)" ;
+    :facetSector "agro" ; :facetMaterialGroup "plant_crop" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Fraksi cair minyak sawit telah dimurnikan (RBD Palm Olein) kemasan bersih ≤ 25 kg" ;
+    :classificationKeywords "rbd,palm olein,minyak goreng,sawit olahan,refined palm oil,pangan" .
+
+:cls-18010010 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-18010010 ;
+    :classificationDisplayName "Biji Kakao Utuh, Mentah atau Panggang (Whole Cocoa Beans)" ;
+    :facetSector "agro" ; :facetMaterialGroup "plant_crop" ;
+    :facetProcessingState "raw_unprocessed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Biji kakao utuh (mentah/panggang); objek Bea Keluar ad-valorem progresif PMK 68/2025" ;
+    :classificationKeywords "kakao,cocoa,cokelat,biji kakao,perkebunan,bea keluar" .
+
+:cls-23091010 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-23091010 ;
+    :classificationDisplayName "Makanan Anjing atau Kucing Mengandung Daging (Pet Food Retail)" ;
+    :facetSector "agro" ; :facetMaterialGroup "animal_livestock" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Olahan pakan hewan peliharaan (anjing/kucing) mengandung daging kemasan eceran" ;
+    :classificationKeywords "pakan hewan,pet food,makanan kucing,makanan anjing,daging,hewani" .
+
+:cls-26030000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-26030000 ;
+    :classificationDisplayName "Konsentrat Bijih Tembaga (Copper Ores & Concentrates ≥ 15% Cu)" ;
+    :facetSector "mining" ; :facetMaterialGroup "mineral_ore" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Bijih dan konsentrat tembaga kadar ≥ 15% Cu; objek Bea Keluar mineral & PE/LS" ;
+    :classificationKeywords "tembaga,copper,konsentrat,bijih tembaga,tambang,mineral,bea keluar" .
+
+:cls-26040000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-26040000 ;
+    :classificationDisplayName "Bijih Nikel dan Konsentratnya (Nickel Ores — Dilarang Ekspor)" ;
+    :facetSector "mining" ; :facetMaterialGroup "mineral_ore" ;
+    :facetProcessingState "raw_unprocessed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Bijih nikel mentah dan konsentratnya; DILARANG EKSPOR berdasarkan Permendag 8/2025" ;
+    :classificationKeywords "nikel,nickel,bijih nikel,nickel ore,tambang,mineral,dilarang ekspor" .
+
+:cls-27011100 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-27011100 ;
+    :classificationDisplayName "Batu Bara Antrasit Tidak Diaglomerasi (Anthracite Coal)" ;
+    :facetSector "mining" ; :facetMaterialGroup "mineral_ore" ;
+    :facetProcessingState "raw_unprocessed" ; :facetIntendedApplication "energy_fuel" ;
+    :classificationTechnicalCriteria "Batu bara antrasit kadar zat terbang rendah, tidak diaglomerasi; wajib ET + LS Ekspor" ;
+    :classificationKeywords "batu bara,antrasit,coal,anthracite,energi,tambang,bahan bakar" .
+
+:cls-30041015 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-30041015 ;
+    :classificationDisplayName "Obat Jadi Antibiotik Penisilin G (Sediaan Dosis Terukur)" ;
+    :facetSector "pharma" ; :facetMaterialGroup "chemical_pharma" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "medical_clinical" ;
+    :classificationTechnicalCriteria "Obat mengandung penisilin G dalam dosis terukur/ritel; wajib SKI Border & NIE BPOM" ;
+    :classificationKeywords "obat,antibiotik,penisilin,penicillin,farmasi,kesehatan,bpom,ski,nie" .
+
+:cls-41041110 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-41041110 ;
+    :classificationDisplayName "Kulit Sapi/Kerbau Samak Basah (Wet-Blue Bovine Hide)" ;
+    :facetSector "agro" ; :facetMaterialGroup "animal_livestock" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Kulit samak basah (wet-blue) full-grain tidak dibelah dari sapi/kerbau; objek Bea Keluar" ;
+    :classificationKeywords "kulit,kulit sapi,wet blue,leather,hide,samak,penyamakan,bea keluar" .
+
+:cls-58013610 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-58013610 ;
+    :classificationDisplayName "Kain Chenille Serat Buatan Dilapisi/Dilaminasi (Coated Textile)" ;
+    :facetSector "textile" ; :facetMaterialGroup "fabric_garment" ;
+    :facetProcessingState "plated_coated" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Kain tenunan chenille dari serat buatan yang dilapisi, ditutupi atau dilaminasi" ;
+    :classificationKeywords "kain,tekstil,chenille,laminasi,fabric,textile,serat buatan" .
+
+:cls-61012000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-61012000 ;
+    :classificationDisplayName "Mantel & Jaket Rajutan Pria dari Kapas (Men's Knitted Cotton Coat)" ;
+    :facetSector "textile" ; :facetMaterialGroup "fabric_garment" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Pakaian jadi mantel/jaket rajutan untuk pria/anak laki-laki dari bahan kapas" ;
+    :classificationKeywords "jaket,mantel,pakaian,garmen,kapas,rajutan,garment,cotton,coat,apparel" .
+
+:cls-63090000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-63090000 ;
+    :classificationDisplayName "Pakaian Bekas & Barang Tekstil Bekas (Worn Clothing — Dilarang Impor)" ;
+    :facetSector "textile" ; :facetMaterialGroup "fabric_garment" ;
+    :facetProcessingState "used_secondhand" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Pakaian dan tekstil bekas pakai (thrifting/balpres); DILARANG IMPOR Permendag 47/2025" ;
+    :classificationKeywords "pakaian bekas,baju bekas,thrifting,balpres,worn clothing,secondhand,dilarang impor" .
+
+:cls-72042100 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-72042100 ;
+    :classificationDisplayName "Sisa dan Skrap Baja Nirkarat (Stainless Steel Waste & Scrap)" ;
+    :facetSector "steel" ; :facetMaterialGroup "metal_alloy" ;
+    :facetProcessingState "scrap_waste" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Limbah/skrap peleburan ulang dari baja paduan stainless steel (Pos 72.04)" ;
+    :classificationKeywords "skrap,scrap,baja stainless,stainless steel,limbah logam,besi tua,daur ulang" .
+
+:cls-72081000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-72081000 ;
+    :classificationDisplayName "Baja Canai Panas Gulungan Berpola (Hot-Rolled Steel Coil / HRC)" ;
+    :facetSector "steel" ; :facetMaterialGroup "metal_alloy" ;
+    :facetProcessingState "hot_rolled" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Baja canai panas (HRC) dalam gulungan lebar ≥ 600 mm dengan pola relief/pickled" ;
+    :classificationKeywords "baja,hrc,hot rolled,canai panas,gulungan,coil,besi baja,pelat" .
+
+:cls-72092610 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-72092610 ;
+    :classificationDisplayName "Baja Canai Dingin Gulungan (Cold-Rolled Steel Coil / CRC, 0,5–1 mm)" ;
+    :facetSector "steel" ; :facetMaterialGroup "metal_alloy" ;
+    :facetProcessingState "cold_rolled" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Baja canai dingin (CRC) tidak dilapisi, tebal > 0,5 mm s/d 1 mm, lebar ≤ 1.250 mm; PI+LS & RCEP DV20" ;
+    :classificationKeywords "baja,crc,cold rolled,canai dingin,gulungan,coil,lembaran baja,steel,otomotif" .
+
+:cls-72101210 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-72101210 ;
+    :classificationDisplayName "Baja Lembaran Lapis Timah / Tinplate (Tebal < 0,5 mm, Karbon ≥ 0,6%)" ;
+    :facetSector "steel" ; :facetMaterialGroup "metal_alloy" ;
+    :facetProcessingState "plated_coated" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Produk canai datar besi/baja dilapisi timah (tinplate), tebal < 0,5 mm, karbon ≥ 0,6%" ;
+    :classificationKeywords "tinplate,baja lapis timah,kaleng,plated steel,coated steel,besi baja" .
+
+:cls-80011000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-80011000 ;
+    :classificationDisplayName "Timah Murni Batangan Tidak Ditempa (Unwrought Refined Tin ≥ 99,9%)" ;
+    :facetSector "mining" ; :facetMaterialGroup "metal_alloy" ;
+    :facetProcessingState "refined_processed" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Logam timah murni tidak dipadu (ingot/batangan); wajib ET + PE + LS Ekspor Permendag 9/2025" ;
+    :classificationKeywords "timah,tin,timah murni,ingot,batangan,logam,refined tin,smelter" .
+
+:cls-84137011 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-84137011 ;
+    :classificationDisplayName "Pompa Air Sentrifugal Satu Tahap (Centrifugal Water Pump ≤ 200 mm)" ;
+    :facetSector "machinery" ; :facetMaterialGroup "mechanical_equipment" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "commercial_machinery" ;
+    :classificationTechnicalCriteria "Pompa sentrifugal satu tahap inlet ≤ 200 mm; cakupan terverifikasi LS Impor & Impor Sementara Pameran" ;
+    :classificationKeywords "pompa,pompa air,sentrifugal,centrifugal pump,water pump,mesin,pameran" .
+
+:cls-84141000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-84141000 ;
+    :classificationDisplayName "Pompa Vakum Industri (Vacuum Pump)" ;
+    :facetSector "machinery" ; :facetMaterialGroup "mechanical_equipment" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "commercial_machinery" ;
+    :classificationTechnicalCriteria "Pompa udara atau pompa vakum untuk aplikasi pabrikasi/laboratorium (Pos 84.14)" ;
+    :classificationKeywords "pompa vakum,vacuum pump,kompresor,udara,mesin industri" .
+
+:cls-84151020 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-84151020 ;
+    :classificationDisplayName "Mesin Pengatur Suhu Udara / AC Split (Kapasitas ≤ 21,10 kW)" ;
+    :facetSector "machinery" ; :facetMaterialGroup "mechanical_equipment" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Air conditioner tipe dinding/jendela atau split dengan kapasitas pendinginan ≤ 21,10 kW" ;
+    :classificationKeywords "ac,air conditioner,pendingin udara,mesin pendingin,hvac,rumah tangga" .
+
+:cls-84221100 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-84221100 ;
+    :classificationDisplayName "Mesin Pencuci Piring Rumah Tangga (Household Dishwashing Machine)" ;
+    :facetSector "machinery" ; :facetMaterialGroup "mechanical_equipment" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Mesin pencuci piring elektrik khusus tipe rumah tangga (Pos 84.22); bebas Lartas impor" ;
+    :classificationKeywords "dishwasher,mesin cuci piring,pencuci piring,elektronik rumah tangga,dapur" .
+
+:cls-85011041 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-85011041 ;
+    :classificationDisplayName "Motor Listrik Mikro ≤ 37,5 W untuk AC/Kulkas/Mesin Cuci" ;
+    :facetSector "electronics" ; :facetMaterialGroup "electrical_component" ;
+    :facetProcessingState "component_part" ; :facetIntendedApplication "industrial_raw_material" ;
+    :classificationTechnicalCriteria "Motor listrik berdaya ≤ 37,5 W khusus komponen barang pos 84.15, 84.18, atau 84.50" ;
+    :classificationKeywords "motor listrik,electric motor,dinamo,komponen ac,kulkas,elektronik" .
+
+:cls-85042111 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-85042111 ;
+    :classificationDisplayName "Transformator Instrumen Dielektrik Cair (≤ 1 kVA, ≥ 110 kV)" ;
+    :facetSector "electronics" ; :facetMaterialGroup "electrical_component" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "energy_fuel" ;
+    :classificationTechnicalCriteria "Transformator instrumen tegangan tinggi (≥ 110 kV) dengan kapasitas ≤ 1 kVA" ;
+    :classificationKeywords "trafo,transformator,transformer,gardu induk,tegangan tinggi,listrik" .
+
+:cls-85076033 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-85076033 ;
+    :classificationDisplayName "Baterai Mobil Listrik / EV Lithium-Ion Traction Battery Pack" ;
+    :facetSector "electronics" ; :facetMaterialGroup "electrical_component" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "automotive_ev" ;
+    :classificationTechnicalCriteria "Akumulator listrik ion-litium khusus kendaraan bermotor listrik (Bab 87); IK-CEPA vs RCEP" ;
+    :classificationKeywords "baterai,battery,ev,mobil listrik,lithium,li-ion,akumulator,kendaraan listrik,otomotif" .
+
+:cls-85076090 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-85076090 ;
+    :classificationDisplayName "Baterai Lithium-Ion Non-EV / Penyimpanan Energi & Elektronik" ;
+    :facetSector "electronics" ; :facetMaterialGroup "electrical_component" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Akumulator listrik ion-litium selain tipe laptop, ponsel, atau kendaraan Bab 87" ;
+    :classificationKeywords "baterai,battery,lithium,li-ion,ess,powerbank,penyimpanan energi,elektronik" .
+
+:cls-85079092 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-85079092 ;
+    :classificationDisplayName "Separator Baterai Non-PVC Siap Pakai (Battery Separator Part)" ;
+    :facetSector "electronics" ; :facetMaterialGroup "electrical_component" ;
+    :facetProcessingState "component_part" ; :facetIntendedApplication "automotive_ev" ;
+    :classificationTechnicalCriteria "Bagian/komponen akumulator berupa separator baterai siap pakai dari bahan selain PVC" ;
+    :classificationKeywords "separator,komponen baterai,bagian baterai,battery part,ev,lithium,membran" .
+
+:cls-96050000 a owl:NamedIndividual, :CommodityClassificationProfile ;
+    :profileForHsCode :hs-96050000 ;
+    :classificationDisplayName "Set Perjalanan / Travel Kit (Rias, Jahit, Kebersihan)" ;
+    :facetSector "consumer" ; :facetMaterialGroup "mixed_goods" ;
+    :facetProcessingState "assembled_unit" ; :facetIntendedApplication "household_retail" ;
+    :classificationTechnicalCriteria "Set barang bepergian (travel set) untuk keperluan rias pribadi, menjahit, atau pembersih" ;
+    :classificationKeywords "travel kit,set bepergian,amenity kit,hotel,rias,jahit,konsumen" .
+
+# 5 Official Indonesian Customs Regimes (Constraint-Based Configuration Specs)
+:regime-general-fta-import a owl:NamedIndividual, :CustomsRegimeSpec ;
+    :regimeCode "general-fta-import" ;
+    :regimeTitle "Impor Umum untuk Dipakai (PIB BC 2.0) + Preferensi FTA" ;
+    :regimeSubtitle "Pemasukan barang untuk konsumsi/distribusi domestik dengan optimalisasi tarif preferensi SKA FTA" ;
+    :regimeDirection "IMPORT" ;
+    :regimeDeclarationForm "PIB / BC 2.0 (CEISA 4.0)" ;
+    :regimeDutyBenefit "Tarif Bea Masuk Preferensi FTA (0% – 6,6% sesuai jadwal PMK & pemenuhan RoO) atau MFN" ;
+    :regimeVatBenefit "PPN 11% + PPh 22 (2,5% dengan API / 7,5% tanpa API) dibayar saat pengeluaran" ;
+    :regimeLartasExemption "Tidak bebas Lartas — wajib melengkapi izin Border (PI/LS/SKI BPOM) sebelum rilis SPPB" ;
+    :regimeTargetUse "local_consumption", "manufacturing_local_sale", "commercial_trading" ;
+    :regimeReexportRequirement "NO_REEXPORT" ;
+    :regimeRequiredLicense "API-P", "API-U", "NONE" ;
+    :regimeKeyObligations "Ajukan PIB BC 2.0, lampirkan SKA/e-Form FTA valid untuk kode fasilitas PIB, penuhi Lartas Kemendag/BPOM, bayar BM & PDRI." ;
+    :regimeLegalBasisSummary "PMK 35/PMK.04/2023 (Tata Cara Tarif Preferensi FTA), Permendag 16/2025 jo. Permendag 47/2025 (Lartas Impor)" ;
+    :regimeTargetTaskMode "import" ;
+    :regimeDutyReliefPercent "0.0"^^xsd:decimal ;
+    :regimeVatReliefPercent "0.0"^^xsd:decimal ;
+    :regimeRequiresPhysicalIntact false ;
+    :hasSourceClause :pmk35-submission, :permendag16-import .
+
+:regime-temporary-import a owl:NamedIndividual, :CustomsRegimeSpec ;
+    :regimeCode "temporary-import" ;
+    :regimeTitle "Impor Sementara (Pembebasan / Keringanan BM + Jaminan)" ;
+    :regimeSubtitle "Pemasukan barang untuk tujuan sementara (pameran, proyek, uji teknis) yang wajib diekspor kembali utuh" ;
+    :regimeDirection "IMPORT" ;
+    :regimeDeclarationForm "PIB Impor Sementara (S-IS / Izin KPPBC)" ;
+    :regimeDutyBenefit "Pembebasan Bea Masuk 100% (pameran/penelitian) atau Keringanan 2%/bulan dengan penyerahan Jaminan" ;
+    :regimeVatBenefit "PPN & PPh 22 ditangguhkan / dibebaskan selama memenuhi syarat ekspor kembali tepat waktu" ;
+    :regimeLartasExemption "Dikecualikan dari ketentuan Lartas impor umum (Permendag 16/2025 Pasal 47 ayat 1) selama tidak dilarang mutlak" ;
+    :regimeTargetUse "exhibition_event", "temporary_project_testing" ;
+    :regimeReexportRequirement "SAME_CONDITION_REEXPORT" ;
+    :regimeRequiredLicense "API-P", "API-U", "NONE" ;
+    :regimeKeyObligations "Barang harus dapat diidentifikasi, tidak habis pakai, tidak berubah hakiki; wajib Izin Impor Sementara, Jaminan, dan realisasi ekspor kembali ≤ H+30 setelah izin berakhir." ;
+    :regimeLegalBasisSummary "PMK 178/PMK.04/2017 jo. PMK 106/PMK.04/2019 (Impor Sementara), Permendag 16/2025 Pasal 47 ayat 1" ;
+    :regimeTargetTaskMode "temp_import" ;
+    :regimeDutyReliefPercent "100.0"^^xsd:decimal ;
+    :regimeVatReliefPercent "100.0"^^xsd:decimal ;
+    :regimeRequiresPhysicalIntact true ;
+    :hasSourceClause :pmk178-article-2, :pmk106-exhibition, :pmk178-article-17, :permendag16-article-47 .
+
+:regime-kite-pembebasan a owl:NamedIndividual, :CustomsRegimeSpec ;
+    :regimeCode "kite-pembebasan" ;
+    :regimeTitle "Fasilitas KITE Pembebasan (Bahan Baku Olah-Ekspor)" ;
+    :regimeSubtitle "Pembebasan Bea Masuk & PPN tidak dipungut atas impor bahan baku/penolong untuk diolah lalu diekspor" ;
+    :regimeDirection "IMPORT" ;
+    :regimeDeclarationForm "PIB BC 2.0 Fasilitas KITE Pembebasan + Jaminan" ;
+    :regimeDutyBenefit "Pembebasan Bea Masuk 100% (0%) atas bahan baku yang hasil produksinya diekspor dalam 12 bulan" ;
+    :regimeVatBenefit "PPN & PPnBM tidak dipungut (0%) selama pertanggungjawaban ekspor (BCL.KT01) disetujui" ;
+    :regimeLartasExemption "Tetap tunduk pada ketentuan Lartas kecuali ada pengecualian khusus bahan baku industri berorientasi ekspor" ;
+    :regimeTargetUse "manufacturing_for_export" ;
+    :regimeReexportRequirement "PROCESSED_EXPORT" ;
+    :regimeRequiredLicense "API-P", "KITE_HOLDER" ;
+    :regimeKeyObligations "Wajib memiliki NIPER/penetapan KITE DJBC & API-P, menyelenggarakan IT Inventory, menyerahkan Jaminan, dan melaporkan realisasi ekspor (PEB + LPE) dalam batas 12 bulan." ;
+    :regimeLegalBasisSummary "PMK 149/PMK.04/2022 (Kemudahan Impor Tujuan Ekspor Pembebasan) jo. PMK 155/PMK.04/2008" ;
+    :regimeTargetTaskMode "import" ;
+    :regimeDutyReliefPercent "100.0"^^xsd:decimal ;
+    :regimeVatReliefPercent "100.0"^^xsd:decimal ;
+    :regimeRequiresPhysicalIntact false ;
+    :hasSourceClause :permendag16-import, :pmk155-pasal-2-peb .
+
+:regime-kawasan-berikat a owl:NamedIndividual, :CustomsRegimeSpec ;
+    :regimeCode "kawasan-berikat" ;
+    :regimeTitle "Pemasukan Kawasan Berikat / TPB (Dokumen BC 2.3)" ;
+    :regimeSubtitle "Penangguhan BM, PDRI tidak dipungut & penundaan Lartas untuk pabrik di dalam Kawasan Berikat" ;
+    :regimeDirection "IMPORT" ;
+    :regimeDeclarationForm "BC 2.3 (Pemasukan Barang ke Tempat Penimbunan Berikat)" ;
+    :regimeDutyBenefit "Penangguhan Bea Masuk 100% (0%) untuk bahan baku, barang modal & peralatan pabrik berorientasi ekspor" ;
+    :regimeVatBenefit "PPN & PPh 22 Impor tidak dipungut (0%) pada saat pemasukan ke Kawasan Berikat" ;
+    :regimeLartasExemption "Ketentuan pembatasan Lartas impor belum diberlakukan saat pemasukan BC 2.3 (berlaku jika dijual ke TLDDP via BC 2.5)" ;
+    :regimeTargetUse "industrial_bonded_zone", "manufacturing_for_export" ;
+    :regimeReexportRequirement "PROCESSED_EXPORT" ;
+    :regimeRequiredLicense "KB_OPERATOR", "API-P" ;
+    :regimeKeyObligations "Perusahaan wajib memiliki izin Pengusaha Kawasan Berikat (PKB/PDKB), CCTV & IT Inventory terhubung CEISA TPB, serta realisasi ekspor BC 3.0 (kuota lokal max 50% via BC 2.5)." ;
+    :regimeLegalBasisSummary "PMK 131/PMK.04/2018 jo. PMK 65/PMK.04/2021 (Kawasan Berikat)" ;
+    :regimeTargetTaskMode "import" ;
+    :regimeDutyReliefPercent "100.0"^^xsd:decimal ;
+    :regimeVatReliefPercent "100.0"^^xsd:decimal ;
+    :regimeRequiresPhysicalIntact false ;
+    :hasSourceClause :permendag16-import, :pmk155-pasal-2-peb .
+
+:regime-export-general-ska a owl:NamedIndividual, :CustomsRegimeSpec ;
+    :regimeCode "export-general-ska" ;
+    :regimeTitle "Ekspor Umum (PEB BC 3.0) + e-SKA Preferensi FTA" ;
+    :regimeSubtitle "Pengeluaran barang dari Daerah Pabean Indonesia dengan optimalisasi SKA FTA & manajemen Bea Keluar" ;
+    :regimeDirection "EXPORT" ;
+    :regimeDeclarationForm "PEB / BC 3.0 (CEISA 4.0) + e-SKA Kemendag" ;
+    :regimeDutyBenefit "PPN Ekspor 0% (Zero-Rated); Bea Keluar 0% kecuali komoditas objek PMK 68/2025 (CPO, kakao, kulit, mineral, getah pinus)" ;
+    :regimeVatBenefit "PPN 0% atas ekspor Barang Kena Pajak (pajak masukan dapat dikreditkan/restitusi)" ;
+    :regimeLartasExemption "Wajib penuhi izin Lartas Ekspor (ET/PE/LS) sesuai Permendag 9/2025 sebelum NPE terbit; barang Permendag 8/2025 dilarang mutlak" ;
+    :regimeTargetUse "outbound_export" ;
+    :regimeReexportRequirement "OUTBOUND_EXPORT" ;
+    :regimeRequiredLicense "API-P", "API-U", "KITE_HOLDER", "KB_OPERATOR", "NONE" ;
+    :regimeKeyObligations "Ajukan PEB BC 3.0 ke SKP DJBC, bayar Bea Keluar jika terutang, terbitkan e-SKA (Form D/E/RCEP/JIEPA/KICEPA/IA-CEPA) agar pembeli mendapat tarif preferensi." ;
+    :regimeLegalBasisSummary "PMK 155/PMK.04/2008 (PEB), PMK 38/2024 jo. PMK 68/2025 (Bea Keluar), Permendag 8 & 9/2025 (Ekspor)" ;
+    :regimeTargetTaskMode "export" ;
+    :regimeDutyReliefPercent "0.0"^^xsd:decimal ;
+    :regimeVatReliefPercent "100.0"^^xsd:decimal ;
+    :regimeRequiresPhysicalIntact false ;
+    :hasSourceClause :pmk155-pasal-2-peb, :pmk155-pasal-4-ekspor, :pmk38-pasal-13-formula .
+
+:query-hs-classification-profiles a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "hs-classification-profiles" ;
+    rdfs:label "Katalog deklaratif profil atribut teknis klasifikasi HS8 BTKI 2022"@id ;
+    catalog:parameters ( ) ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?profile ?hs ?code ?hsLabel ?mfn ?displayName ?sector ?materialGroup
+    ?processingState ?intendedApp ?criteria ?keywords
+WHERE {
+    ?profile a tg:CommodityClassificationProfile ;
+        tg:profileForHsCode ?hs ;
+        tg:classificationDisplayName ?displayName ;
+        tg:facetSector ?sector ;
+        tg:facetMaterialGroup ?materialGroup ;
+        tg:facetProcessingState ?processingState ;
+        tg:facetIntendedApplication ?intendedApp ;
+        tg:classificationTechnicalCriteria ?criteria ;
+        tg:classificationKeywords ?keywords .
+    ?hs tg:codeValue ?code .
+    OPTIONAL { ?hs rdfs:label ?hsLabel . }
+    OPTIONAL { ?hs tg:mfnDutyPercent ?mfn . }
+}
+ORDER BY ?code""" .
+
+:query-customs-regime-specs a owl:NamedIndividual, catalog:QueryDefinition ;
+    catalog:id "customs-regime-specs" ;
+    rdfs:label "Katalog deklaratif spesifikasi & kendala rezim fasilitas kepabeanan Indonesia"@id ;
+    catalog:parameters ( ) ;
+    catalog:sparql """PREFIX tg: <http://www.semanticweb.org/tradegraph/kb#>
+SELECT DISTINCT ?regime ?code ?title ?subtitle ?direction ?form ?dutyBenefit ?vatBenefit
+    ?lartasExemption ?targetUse ?reexportReq ?reqLicense ?obligations ?legalBasis
+    ?targetTaskMode ?dutyRelief ?vatRelief ?physicalIntact ?clause
+WHERE {
+    ?regime a tg:CustomsRegimeSpec ;
+        tg:regimeCode ?code ;
+        tg:regimeTitle ?title ;
+        tg:regimeSubtitle ?subtitle ;
+        tg:regimeDirection ?direction ;
+        tg:regimeDeclarationForm ?form ;
+        tg:regimeDutyBenefit ?dutyBenefit ;
+        tg:regimeVatBenefit ?vatBenefit ;
+        tg:regimeLartasExemption ?lartasExemption ;
+        tg:regimeTargetUse ?targetUse ;
+        tg:regimeReexportRequirement ?reexportReq ;
+        tg:regimeRequiredLicense ?reqLicense ;
+        tg:regimeKeyObligations ?obligations ;
+        tg:regimeLegalBasisSummary ?legalBasis ;
+        tg:regimeTargetTaskMode ?targetTaskMode ;
+        tg:regimeDutyReliefPercent ?dutyRelief ;
+        tg:regimeVatReliefPercent ?vatRelief ;
+        tg:regimeRequiresPhysicalIntact ?physicalIntact .
+    OPTIONAL { ?regime tg:hasSourceClause ?clause . }
+}
+ORDER BY ?code""" .
